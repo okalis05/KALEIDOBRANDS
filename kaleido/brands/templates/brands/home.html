@@ -1,0 +1,329 @@
+{% extends 'brands/base.html' %}
+{% load static %}
+
+{% block body %}
+
+<main>
+
+    <section id="home" class="hero-section section-panel">
+        <div class="container">
+            <div class="row align-items-center min-vh-100 g-5">
+                <div class="col-lg-6 reveal">
+                    <div class="eyebrow">
+                        Promotional Branding Studio
+                    </div>
+
+                    <h1>
+                        Branding That Inspires.
+                        <span>Impressions That Last.</span>
+                    </h1>
+
+                    <p class="hero-text">
+                        KaleidoBrands helps businesses stand out with polished promotional products,
+                        custom apparel, corporate gifts, and branded merchandise designed to leave a lasting impression.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="#contact" class="btn btn-kb-primary btn-lg">Start Your Project</a>
+                        <a href="#catalog" class="btn btn-kb-outline btn-lg">View Catalog</a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div>
+                            <strong>Premium</strong>
+                            <span>Product sourcing</span>
+                        </div>
+                        <div>
+                            <strong>Custom</strong>
+                            <span>Brand solutions</span>
+                        </div>
+                        <div>
+                            <strong>Fast</strong>
+                            <span>Quote support</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 reveal delay-1">
+                    <div class="hero-card glass-card">
+                        <img src="{% static 'brands/images/kb.png' %}" alt="KaleidoBrands full logo" class="hero-logo">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="about" class="section-panel">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-5 reveal">
+                    <div class="image-frame">
+                        <img src="{% static 'brands/images/kb-k.png' %}" alt="KaleidoBrands K symbol">
+                    </div>
+                </div>
+
+                <div class="col-lg-7 reveal delay-1">
+                    <div class="section-heading">
+                        <span>About Us</span>
+                        <h2>A minimal, polished branding partner for businesses that want to be remembered.</h2>
+                    </div>
+
+                    <p>
+                        KaleidoBrands was created to make promotional branding simple, elegant, and effective.
+                        We help businesses choose products that match their identity, audience, budget, and goals.
+                    </p>
+
+                    <div class="row g-3 mt-4">
+                        <div class="col-md-6">
+                            <div class="mini-card border-blue">
+                                <h4>Strategic Product Selection</h4>
+                                <p>We help you choose useful, attractive, and brand-aligned products.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mini-card border-red">
+                                <h4>Clean Brand Presentation</h4>
+                                <p>Your logo, colors, and message are handled with professional attention.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mini-card border-gold">
+                                <h4>Reliable Support</h4>
+                                <p>From idea to delivery, we guide the process with clear communication.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mini-card border-blue">
+                                <h4>Lasting Impressions</h4>
+                                <p>We focus on products people keep, use, and remember.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+    <section id="services" class="section-panel soft-bg">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Services</span>
+                <h2>Everything your brand needs to look sharp and stay visible.</h2>
+            </div>
+
+            <div class="row g-4 mt-4">
+                <div class="col-md-6 col-lg-3 reveal">
+                    <div class="service-card">
+                        <div class="service-mark red-mark"></div>
+                        <h3>Promotional Products</h3>
+                        <p>Pens, drinkware, bags, tech accessories, event items, office gifts, and everyday brand essentials.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3 reveal delay-1">
+                    <div class="service-card">
+                        <div class="service-mark blue-mark"></div>
+                        <h3>Custom Apparel</h3>
+                        <p>Branded shirts, polos, hats, jackets, uniforms, and team apparel for organizations and events.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3 reveal delay-2">
+                    <div class="service-card">
+                        <div class="service-mark gold-mark"></div>
+                        <h3>Corporate Gifts</h3>
+                        <p>Elegant appreciation gifts for clients, employees, teams, conferences, and business milestones.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3 reveal delay-3">
+                    <div class="service-card">
+                        <div class="service-mark blue-mark"></div>
+                        <h3>Brand Consulting</h3>
+                        <p>Guidance on product selection, logo placement, colors, campaign ideas, and presentation quality.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="catalog" class="section-panel">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 reveal">
+                    <div class="section-heading">
+                        <span>Catalog</span>
+                        <h2>Explore promotional products built for real business visibility.</h2>
+                    </div>
+
+                    <p>
+                        Browse curated categories for apparel, drinkware, office products, event giveaways,
+                        employee gifts, client appreciation, and custom branded merchandise.
+                    </p>
+
+                    <div class="catalog-links">
+                        <a href="https://www.kaeser-blair.com/" target="_blank" class="catalog-pill">Kaeser & Blair Catalog</a>
+                        <a href="#contact" class="catalog-pill">Request Product Ideas</a>
+                        <a href="#contact" class="catalog-pill">Get a Custom Quote</a>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 reveal delay-1">
+                    <div class="catalog-grid">
+                        <div class="catalog-box border-red">
+                            <span>01</span>
+                            <h4>Apparel</h4>
+                        </div>
+                        <div class="catalog-box border-blue">
+                            <span>02</span>
+                            <h4>Drinkware</h4>
+                        </div>
+                        <div class="catalog-box border-gold">
+                            <span>03</span>
+                            <h4>Office</h4>
+                        </div>
+                        <div class="catalog-box border-blue">
+                            <span>04</span>
+                            <h4>Events</h4>
+                        </div>
+                        <div class="catalog-box border-red">
+                            <span>05</span>
+                            <h4>Gifts</h4>
+                        </div>
+                        <div class="catalog-box border-gold">
+                            <span>06</span>
+                            <h4>Tech</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="process" class="section-panel soft-bg">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Process</span>
+                <h2>Simple, clear, and built around your brand goals.</h2>
+            </div>
+
+            <div class="timeline mt-5">
+                <div class="timeline-item reveal">
+                    <div class="timeline-number">1</div>
+                    <div>
+                        <h3>Tell us your goal</h3>
+                        <p>Share your event, audience, budget, logo, deadline, and brand style.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item reveal delay-1">
+                    <div class="timeline-number">2</div>
+                    <div>
+                        <h3>We curate product ideas</h3>
+                        <p>You receive clean, practical product options that fit your business needs.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item reveal delay-2">
+                    <div class="timeline-number">3</div>
+                    <div>
+                        <h3>You approve the design</h3>
+                        <p>We review placement, colors, mockups, and final details before production.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item reveal delay-3">
+                    <div class="timeline-number">4</div>
+                    <div>
+                        <h3>Your brand gets delivered</h3>
+                        <p>Your finished promotional products are prepared to create lasting impressions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="contact" class="section-panel contact-section">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-5 reveal">
+                    <div class="section-heading">
+                        <span>Contact</span>
+                        <h2>Ready to build your next brand impression?</h2>
+                    </div>
+
+                    <p>
+                        Call, email, or send a message. We will help you choose the right products for your business,
+                        event, team, or campaign.
+                    </p>
+
+                    <div class="contact-options">
+                        <a href="tel:5135109397">Call: 513-510-9397</a>
+                        <a href="mailto:okalis05@yahoo.com">Email: okalis05@yahoo.com</a>
+                        <a href="sms:5135109397">Text: 513-510-9397</a>
+                    </div>
+                </div>
+
+                <div class="col-lg-7 reveal delay-1">
+                    <div class="contact-card glass-card">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-success">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <form method="post">
+                            {% csrf_token %}
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label>Name</label>
+                                    <input type="text" name="name" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Email</label>
+                                    <input type="email" name="email" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Phone</label>
+                                    <input type="text" name="phone" class="form-control">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Company</label>
+                                    <input type="text" name="company" class="form-control">
+                                </div>
+
+                                <div class="col-12">
+                                    <label>Message</label>
+                                    <textarea name="message" rows="5" class="form-control" required></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
+                                        Send Message
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+{% endblock %}
