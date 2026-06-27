@@ -29,19 +29,18 @@ SECRET_KEY = config(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = False
 
-ALLOWED_HOSTS = config(
-    'ALLOWED_HOSTS',
-    default='127.0.0.1,localhost,.onrender.com',
-    cast=Csv()
-)
+ALLOWED_HOSTS = [
+    "kaleidobrands.com",
+    "www.kaleidobrands.com",
+    ".onrender.com",
+]
 
-CSRF_TRUSTED_ORIGINS = config(
-    'CSRF_TRUSTED_ORIGINS',
-    default='http://127.0.0.1:8000,http://localhost:8000,https://*.onrender.com',
-    cast=Csv()
-)
+CSRF_TRUSTED_ORIGINS = [
+    "https://kaleidobrands.com",
+    "https://www.kaleidobrands.com",
+]
 
 # Application definition
 INSTALLED_APPS = [
