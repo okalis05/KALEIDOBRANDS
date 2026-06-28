@@ -550,4 +550,31 @@ label {
 .footer-socials a:hover{
     transform:translateY(-4px) scale(1.1);
     opacity:.85;
+
+}
+/* ------Apparel catalog css --- */
+.catalog-box .btn-link{
+    color:#1f2937;
+    font-size:1.25rem;
+    font-weight:700;
+}
+
+.catalog-box .btn-link:hover{
+    color:#d62828;
+}
+
+.catalog-box .list-group-item{
+    border:none;
+    border-left:4px solid #0d6efd;
+    margin-bottom:8px;
+    border-radius:10px;
+    background:#f8f9fa;
+    transition:.25s;
+}
+
+.catalog-box .list-group-item:hover{
+    background:white;
+    border-left-color:#d62828;
+    transform:translateX(6px);
+    box-shadow:0 8px 18px rgba(0,0,0,.08);
 }
