@@ -578,3 +578,20 @@ label {
     transform:translateX(6px);
     box-shadow:0 8px 18px rgba(0,0,0,.08);
 }
+
+
+
+.btn-kb-tab {
+    border-radius: 999px !important;
+    font-weight: 800;
+    padding: 12px 22px;
+    color: var(--kb-blue);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--kb-border);
+}
+
+.btn-kb-tab.active {
+    color: #fff !important;
+    background: linear-gradient(135deg, var(--kb-red), var(--kb-gold)) !important;
+    box-shadow: 0 14px 30px rgba(240, 41, 47, 0.18);
+}

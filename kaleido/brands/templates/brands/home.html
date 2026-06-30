@@ -393,11 +393,6 @@
     </section>
 
 
-
-
-
-
-    <!------------------------------------------------------------------->
     <section id="contact" class="section-panel contact-section">
     <div class="container">
         <div class="row g-5 align-items-start">
@@ -567,80 +562,7 @@
         </div>
     </div>
 </section>
-<!---------------------------------------------------------------------------->
 
-
-    <section id="contact" class="section-panel contact-section">
-        <div class="container">
-            <div class="row g-5 align-items-center">
-                <div class="col-lg-5 reveal">
-                    <div class="section-heading">
-                        <span>Contact</span>
-                        <h2>Ready to build your next brand impression?</h2>
-                    </div>
-
-                    <p>
-                        Call, email, or send a message. We will help you choose the right products for your business,
-                        event, team, or campaign.
-                    </p>
-
-                    <div class="contact-options">
-                        <a href="tel:5135109397">Call: 513-510-9397</a>
-                        <a href="mailto:okalis05@yahoo.com">Email: okalis05@yahoo.com</a>
-                        <a href="sms:5135109397">Text: 513-510-9397</a>
-                    </div>
-                </div>
-
-                <div class="col-lg-7 reveal delay-1">
-                    <div class="contact-card glass-card">
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert alert-success">{{ message }}</div>
-                            {% endfor %}
-                        {% endif %}
-
-                        <form method="post">
-                            {% csrf_token %}
-
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label>Name</label>
-                                    <input type="text" name="name" class="form-control" required>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label>Email</label>
-                                    <input type="email" name="email" class="form-control" required>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label>Phone</label>
-                                    <input type="text" name="phone" class="form-control">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label>Company</label>
-                                    <input type="text" name="company" class="form-control">
-                                </div>
-
-                                <div class="col-12">
-                                    <label>Message</label>
-                                    <textarea name="message" rows="5" class="form-control" required></textarea>
-                                </div>
-
-                                <div class="col-12">
-                                    <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
-                                        Send Message
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
 
 </main>
 
