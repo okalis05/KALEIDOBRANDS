@@ -29,6 +29,8 @@ class QuoteRequest(models.Model):
     artwork = models.FileField(upload_to="quotes/artwork/", blank=True, null=True)
     colors = models.CharField(max_length=100, blank=True)
     decoration = models.CharField(max_length=50, blank=True)
+    STATUS_CHOICES = [("new", "New"),("reviewing", "Reviewing"),("quoted", "Quoted"),("ordered", "Ordered"),("shipped", "Shipped")]
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default="new")
 
     def __str__(self):
         return f"{self.name} - {self.product_interest}"

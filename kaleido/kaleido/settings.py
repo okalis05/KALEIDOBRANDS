@@ -48,6 +48,7 @@ CSRF_TRUSTED_ORIGINS = [
 # Application definition
 INSTALLED_APPS = [
     "brands",
+    "dashboard",
     "django.contrib.sitemaps",
     "django.contrib.admin",
     "django.contrib.auth",

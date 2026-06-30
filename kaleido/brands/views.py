@@ -64,6 +64,10 @@ Message:
                 quantity=request.POST.get("quantity") or None,
                 budget=request.POST.get("budget", "").strip(),
                 deadline=request.POST.get("deadline") or None,
+                colors=request.POST.get("colors", "").strip(),
+                decoration=request.POST.get("decoration", "").strip(),
+                logo=request.FILES.get("logo"),
+                artwork=request.FILES.get("artwork"),
                 message=request.POST.get("message", "").strip(),
             )
 
@@ -78,6 +82,10 @@ Product Interest: {quote.product_interest}
 Quantity: {quote.quantity}
 Budget: {quote.budget}
 Deadline: {quote.deadline}
+Colors: {quote.colors}
+Decoration: {quote.decoration}
+Logo Uploaded: {"Yes" if quote.logo else "No"}
+Artwork Uploaded: {"Yes" if quote.artwork else "No"}
 
 Project Details:
 {quote.message}

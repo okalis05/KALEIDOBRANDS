@@ -13,4 +13,5 @@ class ContactMessageAdmin(admin.ModelAdmin):
 class QuoteRequestAdmin(admin.ModelAdmin):
     list_display = ("name", "email", "phone", "company", "product_interest", "quantity", "created_at")
     search_fields = ("name", "email", "phone", "company", "product_interest", "message")
-    list_filter = ("created_at",)
+    list_filter = ("created_at","decoration")
+    readonly_fields = ("created_at",)
