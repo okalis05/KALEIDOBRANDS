@@ -15,15 +15,35 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path , include
+from django.contrib.sitemaps.views import sitemap
+from django.http import HttpResponse
+from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from brands.sitemaps import StaticViewSitemap
+
+
+def robots_txt(request):
+    lines = [
+        "User-agent: *",
+        "Allow: /",
+        "Sitemap: https://kaleidobrands.com/sitemap.xml",
+    ]
+    return HttpResponse("\n".join(lines), content_type="text/plain")
+
+
+sitemaps = {
+    "static": StaticViewSitemap,
+}
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("brands.urls"))
+    path("", include("brands.urls")),
+    path("robots.txt", robots_txt, name="robots_txt"),
+    path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
 ]
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

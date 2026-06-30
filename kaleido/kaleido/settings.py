@@ -31,11 +31,14 @@ SECRET_KEY = config(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    "kaleidobrands.com",
-    "www.kaleidobrands.com",
-    ".onrender.com",
-]
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='127.0.0.1,localhost,kaleidobrands.com,www.kaleidobrands.com,.onrender.com',
+    cast=Csv()
+)
+
+if DEBUG:
+    ALLOWED_HOSTS += ["*"]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://kaleidobrands.com",
@@ -45,6 +48,7 @@ CSRF_TRUSTED_ORIGINS = [
 # Application definition
 INSTALLED_APPS = [
     "brands",
+    "django.contrib.sitemaps",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
