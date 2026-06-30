@@ -486,7 +486,7 @@
 
                     <div class="tab-pane fade" id="quoteForm" role="tabpanel">
                         <div class="contact-card glass-card">
-                            <form method="post">
+                            <form method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input type="hidden" name="form_type" value="quote">
 
@@ -541,6 +541,60 @@
                                         <label>Deadline</label>
                                         <input type="date" name="deadline" class="form-control">
                                     </div>
+
+                                    <!-------------------------------------------------->
+                                    <div class="col-md-6">
+                                        <label class="form-label">Company Logo</label>
+                                        <input
+                                            type="file"
+                                            name="logo"
+                                            class="form-control"
+                                            accept=".png,.jpg,.jpeg,.svg,.pdf,.ai,.eps">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label">Artwork / Design Files</label>
+                                        <input
+                                            type="file"
+                                            name="artwork"
+                                            class="form-control"
+                                            multiple
+                                            accept=".png,.jpg,.jpeg,.pdf,.ai,.eps,.psd">
+                                    </div>
+
+
+
+
+
+
+
+
+
+                                <div class="col-md-6">
+                                    <label>Imprint Colors</label>
+                                    <input
+                                        type="text"
+                                        name="colors"
+                                        class="form-control"
+                                        placeholder="Red, White, Blue">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Decoration Method</label>
+
+                                    <select name="decoration" class="form-control">
+                                        <option>Embroidery</option>
+                                        <option>Screen Printing</option>
+                                        <option>DTF Printing</option>
+                                        <option>Heat Transfer</option>
+                                        <option>Laser Engraving</option>
+                                        <option>Not Sure</option>
+                                    </select>
+                                </div>
+
+
+
+                                    <!-------------------------------------------------->
 
                                     <div class="col-12">
                                         <label>Project Details</label>

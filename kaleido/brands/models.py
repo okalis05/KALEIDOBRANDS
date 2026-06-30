@@ -25,6 +25,10 @@ class QuoteRequest(models.Model):
     deadline = models.DateField(null=True, blank=True)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    logo = models.FileField(upload_to="quotes/logos/", blank=True, null=True)
+    artwork = models.FileField(upload_to="quotes/artwork/", blank=True, null=True)
+    colors = models.CharField(max_length=100, blank=True)
+    decoration = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
         return f"{self.name} - {self.product_interest}"
