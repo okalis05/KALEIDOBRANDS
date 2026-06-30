@@ -154,6 +154,7 @@
     </section>
 
 
+
     <section id="catalog" class="section-panel">
         <div class="container">
             <div class="row align-items-center g-5">
@@ -390,6 +391,183 @@
             </div>
         </div>
     </section>
+
+
+
+
+
+
+    <!------------------------------------------------------------------->
+    <section id="contact" class="section-panel contact-section">
+    <div class="container">
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-5 reveal">
+                <div class="section-heading">
+                    <span>Contact & Quote</span>
+                    <h2>Ready to build your next brand impression?</h2>
+                </div>
+
+                <p>
+                    Send us a message or request a quote for promotional products,
+                    custom apparel, corporate gifts, events, teams, or branded merchandise.
+                </p>
+
+                <div class="contact-options">
+                    <a href="tel:5135109397">Call: 513-510-9397</a>
+                    <a href="mailto:helpdesk@kaleidobrands.com">Support: helpdesk@kaleidobrands.com</a>
+                    <a href="mailto:sales@kaleidobrands.com">Quotes: sales@kaleidobrands.com</a>
+                    <a href="sms:5135109397">Text: 513-510-9397</a>
+                </div>
+            </div>
+
+            <div class="col-lg-7 reveal delay-1">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-success rounded-4 shadow-sm">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                <ul class="nav nav-pills mb-4 gap-2" id="contactTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active btn-kb-tab" id="message-tab" data-bs-toggle="pill" data-bs-target="#messageForm" type="button" role="tab">
+                            Send Message
+                        </button>
+                    </li>
+
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link btn-kb-tab" id="quote-tab" data-bs-toggle="pill" data-bs-target="#quoteForm" type="button" role="tab">
+                            Request Quote
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="messageForm" role="tabpanel">
+                        <div class="contact-card glass-card">
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="form_type" value="contact">
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label>Name</label>
+                                        <input type="text" name="name" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label>Email</label>
+                                        <input type="email" name="email" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label>Phone</label>
+                                        <input type="text" name="phone" class="form-control">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label>Company</label>
+                                        <input type="text" name="company" class="form-control">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label>Subject</label>
+                                        <input type="text" name="subject" class="form-control" placeholder="How can we help?">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label>Message</label>
+                                        <textarea name="message" rows="5" class="form-control" required></textarea>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
+                                            Send Message
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="quoteForm" role="tabpanel">
+                        <div class="contact-card glass-card">
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="form_type" value="quote">
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label>Name</label>
+                                        <input type="text" name="name" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label>Email</label>
+                                        <input type="email" name="email" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label>Phone</label>
+                                        <input type="text" name="phone" class="form-control">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label>Company</label>
+                                        <input type="text" name="company" class="form-control">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label>Product Interest</label>
+                                        <select name="product_interest" class="form-control" required>
+                                            <option value="">Select a product category</option>
+                                            <option value="Healthcare Scrubs">Healthcare Scrubs</option>
+                                            <option value="Polo Shirts">Polo Shirts</option>
+                                            <option value="Hats">Hats</option>
+                                            <option value="Custom T-Shirts">Custom T-Shirts</option>
+                                            <option value="Drinkware">Drinkware</option>
+                                            <option value="Bags">Bags</option>
+                                            <option value="Corporate Gifts">Corporate Gifts</option>
+                                            <option value="Trade Show Giveaways">Trade Show Giveaways</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label>Quantity</label>
+                                        <input type="number" name="quantity" min="1" class="form-control" placeholder="Example: 100">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label>Budget</label>
+                                        <input type="text" name="budget" class="form-control" placeholder="$500 - $2,000">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label>Deadline</label>
+                                        <input type="date" name="deadline" class="form-control">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label>Project Details</label>
+                                        <textarea name="message" rows="5" class="form-control" placeholder="Tell us product colors, logo placement, event date, audience, and any catalog item numbers." required></textarea>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
+                                            Submit Quote Request
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!---------------------------------------------------------------------------->
 
 
     <section id="contact" class="section-panel contact-section">
