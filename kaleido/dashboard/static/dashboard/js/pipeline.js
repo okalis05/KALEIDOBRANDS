@@ -44,6 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         showToast("Quote moved successfully.");
                         updatePipelineCount(evt.from);
                         updatePipelineCount(evt.to);
+                        if (typeof refreshDashboardStats === "function") {
+                            refreshDashboardStats();
+                    }
 
                 } catch (err) {
 

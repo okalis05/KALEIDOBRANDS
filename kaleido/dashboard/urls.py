@@ -14,4 +14,6 @@ router.register("quotes", views.QuoteRequestViewSet, basename="quotes")
 urlpatterns = [
     path("", views.dashboard_home, name="home"),
     path("api/", include(router.urls)),
+    path("api/stats/", views.dashboard_stats_api, name="stats_api"),
+    
 ]

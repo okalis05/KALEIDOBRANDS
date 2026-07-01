@@ -10,7 +10,9 @@
 
                 <div class="kpi-info">
                     <small>Total Revenue</small>
-                    <h2>${{ total_revenue|default:"0"|floatformat:2 }}</h2>
+                    <h2 data-stat="estimated_revenue">
+                        ${{ estimated_revenue|default:"0"|floatformat:0 }}
+                    </h2>
                     <span class="trend up">▲ +12.6%</span>
                 </div>
 
@@ -26,7 +28,9 @@
 
                 <div class="kpi-info">
                     <small>Total Quotes</small>
-                    <h2>{{ total_quotes }}</h2>
+                    <h2 data-stat="total_quotes">
+                        {{ total_quotes }}
+                    </h2>
                     <span class="trend up">▲ Active Pipeline</span>
                 </div>
 
@@ -42,7 +46,9 @@
 
                 <div class="kpi-info">
                     <small>Contacts</small>
-                    <h2>{{ total_messages }}</h2>
+                    <h2 data-stat="total_contacts">
+                        {{ total_contacts }}
+                    </h2>
                     <span class="trend up">▲ New Leads</span>
                 </div>
 
@@ -58,7 +64,9 @@
 
                 <div class="kpi-info">
                     <small>In Production</small>
-                    <h2>{{ production_quotes }}</h2>
+                    <h2 data-stat="orders_in_production">
+                        {{ orders_in_production }}
+                    </h2>
                     <span class="trend neutral">● Processing</span>
                 </div>
 

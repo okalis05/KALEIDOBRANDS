@@ -10,6 +10,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
 
 from .serializers import ContactMessageSerializer, QuoteRequestSerializer, QuoteStatusUpdateSerializer
 
@@ -191,3 +192,21 @@ class QuoteRequestViewSet(viewsets.ModelViewSet):
             })
 
         return Response(serializer.errors, status=400)
+    
+
+@api_view(["GET"])
+@permission_classes([IsAdminUser])
+def dashboard_stats_api(request):
+    total_quotes = QuoteRequest.objects.count()
+    total_contacts = ContactMessage.objects.count()
+    pending_quotes = QuoteRequest.objects.filter(status__in=["new", "reviewing"]).count()
+    orders_in_production = QuoteRequest.objects.filter(in_production=True).count()
+    estimated_revenue = QuoteRequest.objects.aggregate(total=Sum("estimated_value"))["total"] or 0
+
+    return Response({
+        "total_quotes": total_quotes,
+        "total_contacts": total_contacts,
+        "pending_quotes": pending_quotes,
+        "orders_in_production": orders_in_production,
+        "estimated_revenue": float(estimated_revenue),
+    })
