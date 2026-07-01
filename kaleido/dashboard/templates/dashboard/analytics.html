@@ -1,0 +1,15 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}KaleidoBrands Analytics{% endblock %}
+
+{% block content %}
+<section class="dash-card mb-4">
+    <h1 class="fw-bold">📊 Analytics</h1>
+    <p class="text-muted mb-0">
+        Revenue, quotes, lead sources, product categories, and business performance.
+    </p>
+</section>
+
+{% include "dashboard/partials/charts.html" %}
+{% include "dashboard/partials/kpis.html" %}
+{% endblock %}

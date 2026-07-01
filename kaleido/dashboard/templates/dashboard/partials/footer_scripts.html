@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const trendChart = document.getElementById("trendChart");
     if (trendChart) {
-        new Chart(trendChart, {
+        trendChartInstance = new Chart(trendChart, {
             type: "line",
             data: {
                 labels: quoteLabels,
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const leadSourceChart = document.getElementById("leadSourceChart");
     if (leadSourceChart) {
-        new Chart(leadSourceChart, {
+        leadSourceChartInstance = new Chart(leadSourceChart, {
             type: "doughnut",
             data: {
                 labels: leadSourceLabels,

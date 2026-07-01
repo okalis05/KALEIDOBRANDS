@@ -47,6 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (typeof refreshDashboardStats === "function") {
                             refreshDashboardStats();
                     }
+                if (typeof refreshDashboardCharts === "function") {
+                    refreshDashboardCharts();
+                    }
 
                 } catch (err) {
 

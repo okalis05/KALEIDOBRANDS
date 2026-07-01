@@ -1,0 +1,42 @@
+<section class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold">📅 Calendar & Timeline</h3>
+            <p class="text-muted mb-0">Upcoming deadlines, follow-ups, and production dates.</p>
+        </div>
+
+        <span class="dash-pill">{{ upcoming_deadlines|length }} Upcoming</span>
+    </div>
+
+    <div class="dash-card">
+        {% for quote in upcoming_deadlines %}
+            <div class="timeline-row">
+                <div class="timeline-date">
+                    <strong>{{ quote.deadline|date:"M d" }}</strong>
+                    <span>{{ quote.deadline|date:"Y" }}</span>
+                </div>
+
+                <div class="timeline-dot"></div>
+
+                <div class="timeline-content">
+                    <h5>{{ quote.company|default:quote.name }}</h5>
+                    <p class="mb-1">{{ quote.product_interest }}</p>
+                    <small class="text-muted">
+                        Qty: {{ quote.quantity|default:"N/A" }} |
+                        Status: {{ quote.status|title }}
+                    </small>
+                </div>
+
+                <a href="/admin/brands/quoterequest/{{ quote.id }}/change/"
+                   class="timeline-action">
+                    Open
+                </a>
+            </div>
+        {% empty %}
+            <div class="text-center py-5">
+                <h4>No upcoming deadlines.</h4>
+                <p class="text-muted mb-0">New quote deadlines will appear here.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>

@@ -1,65 +1,92 @@
 <section class="mb-5">
-    <div class="dash-card">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h3 class="fw-bold">👥 CRM Leads</h3>
-                <p class="text-muted mb-0">Recent customers, quote interest, lead score, and quick actions.</p>
-            </div>
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="dash-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 class="fw-bold mb-1">New Leads</h4>
+                        <p class="text-muted mb-0">Recent contact messages from potential customers.</p>
+                    </div>
+                    <span class="dash-pill">CRM</span>
+                </div>
 
-            <span class="badge bg-primary">{{ latest_quotes|length }} Recent Leads</span>
-        </div>
-
-        <div class="row g-4">
-            {% for quote in latest_quotes %}
-                <div class="col-xl-3 col-md-6">
+                {% for contact in latest_contacts %}
                     <div class="crm-card">
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="crm-avatar">
-                                {{ quote.name|slice:":1"|upper }}
+                        <div class="crm-avatar">
+                            {{ contact.name|slice:":1"|upper }}
+                        </div>
+
+                        <div class="crm-body">
+                            <div class="d-flex justify-content-between gap-2">
+                                <div>
+                                    <strong>{{ contact.name }}</strong>
+                                    <p class="text-muted small mb-1">{{ contact.company|default:"Individual lead" }}</p>
+                                </div>
+
+                                <span class="lead-status new">New</span>
                             </div>
 
-                            <div>
-                                <strong>{{ quote.name }}</strong>
-                                <small>{{ quote.company|default:"Individual Customer" }}</small>
-                            </div>
-                        </div>
+                            <p class="mb-2">{{ contact.message|truncatewords:18 }}</p>
 
-                        <div class="crm-meta">
-                            <span>Product</span>
-                            <strong>{{ quote.product_interest }}</strong>
-                        </div>
-
-                        <div class="crm-meta">
-                            <span>Quantity</span>
-                            <strong>{{ quote.quantity|default:"Not provided" }}</strong>
-                        </div>
-
-                        <div class="crm-meta">
-                            <span>Lead Score</span>
-                            <strong>
-                                {% if quote.quantity and quote.quantity >= 250 %}
-                                    95
-                                {% elif quote.quantity and quote.quantity >= 100 %}
-                                    82
-                                {% else %}
-                                    68
+                            <div class="crm-actions">
+                                <a href="mailto:{{ contact.email }}">Email</a>
+                                {% if contact.phone %}
+                                    <a href="tel:{{ contact.phone }}">Call</a>
                                 {% endif %}
-                            </strong>
-                        </div>
-
-                        <div class="crm-actions">
-                            <a href="mailto:{{ quote.email }}">Email</a>
-                            {% if quote.phone %}
-                                <a href="tel:{{ quote.phone }}">Call</a>
-                            {% endif %}
+                                <a href="/admin/brands/contactmessage/">View</a>
+                            </div>
                         </div>
                     </div>
+                {% empty %}
+                    <p class="text-muted">No new leads yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="dash-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h4 class="fw-bold mb-1">Hot Prospects</h4>
+                        <p class="text-muted mb-0">High-value or high-quantity quote opportunities.</p>
+                    </div>
+                    <span class="dash-pill">Sales</span>
                 </div>
-            {% empty %}
-                <div class="col-12">
-                    <p class="text-muted mb-0">No CRM leads yet.</p>
-                </div>
-            {% endfor %}
+
+                {% for quote in hot_prospects %}
+                    <div class="crm-card">
+                        <div class="crm-avatar hot">
+                            {{ quote.name|slice:":1"|upper }}
+                        </div>
+
+                        <div class="crm-body">
+                            <div class="d-flex justify-content-between gap-2">
+                                <div>
+                                    <strong>{{ quote.company|default:quote.name }}</strong>
+                                    <p class="text-muted small mb-1">{{ quote.product_interest }}</p>
+                                </div>
+
+                                <span class="lead-status hot">Hot</span>
+                            </div>
+
+                            <p class="mb-2">
+                                Qty: {{ quote.quantity|default:"N/A" }} |
+                                Est: ${{ quote.estimated_value|default:"0" }}
+                            </p>
+
+                            <div class="crm-actions">
+                                <a href="mailto:{{ quote.email }}">Email</a>
+                                {% if quote.phone %}
+                                    <a href="tel:{{ quote.phone }}">Call</a>
+                                {% endif %}
+                                <a href="/admin/brands/quoterequest/{{ quote.id }}/change/">Open Quote</a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No hot prospects yet.</p>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </section>

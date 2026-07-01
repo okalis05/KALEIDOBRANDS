@@ -1,16 +1,18 @@
-<section class="mb-4">
+<section class="mb-5">
+
     <div class="row g-4">
+
         <div class="col-lg-8">
             <div class="dash-card">
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h3 class="mb-1">📈 Quote & Contact Trends</h3>
-                        <p class="text-muted mb-0">Recent business activity from your website forms.</p>
+                        <h4 class="fw-bold mb-1">Quote & Contact Trends</h4>
+                        <p class="text-muted mb-0">Recent lead activity across your business.</p>
                     </div>
-                    <span class="badge bg-primary">Last 7 Days</span>
+                    <span class="dash-pill">Live Analytics</span>
                 </div>
 
-                <div class="chart-box">
+                <div class="chart-container">
                     <canvas id="trendChart"></canvas>
                 </div>
             </div>
@@ -18,18 +20,22 @@
 
         <div class="col-lg-4">
             <div class="dash-card">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div>
-                        <h3 class="mb-1">🎯 Lead Sources</h3>
-                        <p class="text-muted mb-0">Where quote requests are coming from.</p>
-                    </div>
-                    <span class="badge bg-dark">Sources</span>
-                </div>
+                <h4 class="fw-bold mb-1">Lead Sources</h4>
+                <p class="text-muted mb-4">Where quote requests are coming from.</p>
 
-                <div class="chart-box">
+                <div class="chart-container small-chart">
                     <canvas id="leadSourceChart"></canvas>
                 </div>
             </div>
         </div>
+
     </div>
+
 </section>
+
+{{ quote_labels|json_script:"quote-labels" }}
+{{ quote_values|json_script:"quote-values" }}
+{{ contact_labels|json_script:"contact-labels" }}
+{{ contact_values|json_script:"contact-values" }}
+{{ lead_source_labels|json_script:"lead-source-labels" }}
+{{ lead_source_values|json_script:"lead-source-values" }}

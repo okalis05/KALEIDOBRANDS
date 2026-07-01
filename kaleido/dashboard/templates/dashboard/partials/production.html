@@ -1,0 +1,139 @@
+<section class="mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h3 class="fw-bold">
+                🚚 Production Command Center
+            </h3>
+
+            <p class="text-muted mb-0">
+                Monitor every job currently moving through production.
+            </p>
+        </div>
+
+        <span class="dash-pill">
+            {{ production_jobs|length }} Active Jobs
+        </span>
+
+    </div>
+
+    <div class="row g-4">
+
+        {% for quote in production_jobs %}
+
+        <div class="col-xl-4 col-lg-6">
+
+            <div class="dash-card production-card">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <h5 class="mb-1">
+
+                            {{ quote.company|default:quote.name }}
+
+                        </h5>
+
+                        <small class="text-muted">
+
+                            {{ quote.product_interest }}
+
+                        </small>
+
+                    </div>
+
+                    <span class="production-badge">
+
+                        {{ quote.status|title }}
+
+                    </span>
+
+                </div>
+
+                <hr>
+
+                <div class="production-details">
+
+                    <div>
+                        <strong>Quantity</strong><br>
+                        {{ quote.quantity }}
+                    </div>
+
+                    <div>
+                        <strong>Estimated Value</strong><br>
+                        ${{ quote.estimated_value|default:"0" }}
+                    </div>
+
+                    <div>
+                        <strong>Deadline</strong><br>
+                        {{ quote.deadline|default:"Not Set" }}
+                    </div>
+
+                </div>
+
+                <div class="progress mt-4">
+
+                    {% if quote.status == "reviewing" %}
+                        <div class="progress-bar bg-warning"
+                             style="width:25%">
+                        </div>
+
+                    {% elif quote.status == "quoted" %}
+                        <div class="progress-bar bg-info"
+                             style="width:50%">
+                        </div>
+
+                    {% elif quote.status == "ordered" %}
+                        <div class="progress-bar bg-primary"
+                             style="width:75%">
+                        </div>
+
+                    {% elif quote.status == "shipped" %}
+                        <div class="progress-bar bg-success"
+                             style="width:100%">
+                        </div>
+
+                    {% else %}
+
+                        <div class="progress-bar"
+                             style="width:10%">
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="mt-4">
+
+                    <a href="/admin/brands/quoterequest/{{ quote.id }}/change/"
+                       class="btn btn-outline-primary w-100">
+
+                        Open Job
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+
+            <div class="dash-card text-center py-5">
+
+                <h4>No production jobs.</h4>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
