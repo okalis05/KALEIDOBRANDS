@@ -1,0 +1,108 @@
+<section class="mb-5">
+
+    <div class="dash-card">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+
+                <h3 class="fw-bold">
+                    🔔 Activity Center
+                </h3>
+
+                <p class="text-muted mb-0">
+                    Recent customer interactions and business activity.
+                </p>
+
+            </div>
+
+            <span class="badge bg-danger">
+                LIVE
+            </span>
+
+        </div>
+
+        <div class="activity-feed">
+
+            {% for contact in latest_contacts %}
+
+            <div class="activity-item">
+
+                <div class="activity-icon bg-primary">
+
+                    📩
+
+                </div>
+
+                <div class="activity-content">
+
+                    <strong>{{ contact.name }}</strong>
+
+                    <p>
+
+                        Sent a new contact message
+
+                    </p>
+
+                    <small>
+
+                        {{ contact.created_at|timesince }} ago
+
+                    </small>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+
+            {% for quote in latest_quotes %}
+
+            <div class="activity-item">
+
+                <div class="activity-icon bg-success">
+
+                    📦
+
+                </div>
+
+                <div class="activity-content">
+
+                    <strong>{{ quote.company|default:quote.name }}</strong>
+
+                    <p>
+
+                        Requested
+
+                        {{ quote.product_interest }}
+
+                    </p>
+
+                    <small>
+
+                        {{ quote.created_at|timesince }} ago
+
+                    </small>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+            {% if not latest_contacts and not latest_quotes %}
+
+            <div class="text-center text-muted py-5">
+
+                No recent activity.
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>

@@ -1,0 +1,246 @@
+<section class="mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h3 class="fw-bold">
+                📦 Quote Pipeline
+            </h3>
+
+            <p class="text-muted mb-0">
+                Drag-and-drop style production workflow
+            </p>
+        </div>
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col">
+
+            <div class="dash-card pipeline-column" data-status="new">
+
+                <h5 class="pipeline-title bg-primary">
+                    NEW
+                    <span>{{ pipeline_counts.new }}</span>
+                </h5>
+
+                {% for quote in pipeline.new %}
+
+                <div  class="pipeline-card"
+                    draggable="true"
+                    data-id="{{ quote.id }}"
+                    data-status="{{ quote.status }}">
+
+                    <strong>{{ quote.company }}</strong>
+
+                    <small>{{ quote.product_interest }}</small>
+                    
+
+                    <div class="pipeline-footer">
+
+                        Qty {{ quote.quantity }}
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <div class="pipeline-empty">
+
+                    No Quotes
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div class="col">
+
+            <div class="dash-card pipeline-column" data-status="reviewing">
+
+                <h5 class="pipeline-title bg-warning text-dark">
+
+                    REVIEWING
+
+                    <span>{{ pipeline_counts.reviewing }}</span>
+
+                </h5>
+
+                {% for quote in pipeline.reviewing %}
+
+                <div
+                    class="pipeline-card"
+                    draggable="true"
+                    data-id="{{ quote.id }}"
+                    data-status="{{ quote.status }}">
+
+                    <strong>{{ quote.company }}</strong>
+
+                    <small>{{ quote.product_interest }}</small>
+                       
+
+                    <div class="pipeline-footer">
+
+                        Qty {{ quote.quantity }}
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <div class="pipeline-empty">
+
+                    Empty
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div class="col">
+
+            <div class="dash-card pipeline-column" data-status="quoted">
+
+                <h5 class="pipeline-title bg-info">
+
+                    QUOTED
+
+                    <span>{{ pipeline_counts.quoted }}</span>
+
+                </h5>
+
+                {% for quote in pipeline.quoted %}
+
+                <div class="pipeline-card"
+                    draggable="true"
+                    data-id="{{ quote.id }}"
+                    data-status="{{ quote.status }}">
+
+                    <strong>{{ quote.company }}</strong>
+
+                    <small>{{ quote.product_interest }}</small>
+
+                        <div class="pipeline-actions mt-3">
+
+                            <button
+                                class="btn btn-sm btn-outline-primary move-next"
+                                data-id="{{ quote.id }}">
+                                Next →
+                            </button>
+
+                        </div>
+
+                    <div class="pipeline-footer">
+
+                        ${{ quote.estimated_value }}
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <div class="pipeline-empty">
+
+                    Empty
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div class="col">
+
+            <div class="dash-card pipeline-column" data-status="ordered">
+
+                <h5 class="pipeline-title bg-success">
+
+                    ORDERED
+
+                    <span>{{ pipeline_counts.ordered }}</span>
+
+                </h5>
+
+                {% for quote in pipeline.ordered %}
+
+                <div class="pipeline-card"
+                    draggable="true"
+                    data-id="{{ quote.id }}"
+                    data-status="{{ quote.status }}">
+
+                    <strong>{{ quote.company }}</strong>
+
+                    <small>{{ quote.product_interest }}</small>
+                    
+
+                </div>
+
+                {% empty %}
+
+                <div class="pipeline-empty">
+
+                    Empty
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div class="col">
+
+            <div class="dash-card pipeline-column" data-status="shipped">
+
+                <h5 class="pipeline-title bg-dark">
+
+                    SHIPPED
+
+                    <span>{{ pipeline_counts.shipped }}</span>
+
+                </h5>
+
+                {% for quote in pipeline.shipped %}
+
+                <div class="pipeline-card"
+                    draggable="true"
+                    data-id="{{ quote.id }}"
+                    data-status="{{ quote.status }}">
+
+                    <strong>{{ quote.company }}</strong>
+
+                    <small>{{ quote.product_interest }}</small>
+                      
+
+                </div>
+
+                {% empty %}
+
+                <div class="pipeline-empty">
+
+                    Empty
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

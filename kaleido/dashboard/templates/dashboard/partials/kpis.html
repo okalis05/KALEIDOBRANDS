@@ -1,0 +1,71 @@
+<section class="mb-5">
+
+    <div class="row g-4">
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="dash-card kpi-card revenue-card">
+
+                <div class="kpi-icon">💰</div>
+
+                <div class="kpi-info">
+                    <small>Total Revenue</small>
+                    <h2>${{ total_revenue|default:"0"|floatformat:2 }}</h2>
+                    <span class="trend up">▲ +12.6%</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="dash-card kpi-card">
+
+                <div class="kpi-icon">📦</div>
+
+                <div class="kpi-info">
+                    <small>Total Quotes</small>
+                    <h2>{{ total_quotes }}</h2>
+                    <span class="trend up">▲ Active Pipeline</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="dash-card kpi-card">
+
+                <div class="kpi-icon">👥</div>
+
+                <div class="kpi-info">
+                    <small>Contacts</small>
+                    <h2>{{ total_messages }}</h2>
+                    <span class="trend up">▲ New Leads</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="dash-card kpi-card">
+
+                <div class="kpi-icon">🚚</div>
+
+                <div class="kpi-info">
+                    <small>In Production</small>
+                    <h2>{{ production_quotes }}</h2>
+                    <span class="trend neutral">● Processing</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

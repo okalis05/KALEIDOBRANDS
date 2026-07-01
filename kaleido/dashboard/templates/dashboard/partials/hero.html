@@ -1,0 +1,127 @@
+{% load static %}
+
+<section class="dash-card hero-card mb-4">
+
+    <div class="row align-items-center g-4">
+
+        <!-- LEFT -->
+        <div class="col-lg-8">
+
+            <div class="d-flex align-items-center mb-4">
+
+                <img src="{% static 'brands/images/kb-k.png' %}"
+                     class="dash-hero-logo me-3"
+                     alt="KaleidoBrands">
+
+                <div>
+
+                    <span class="dash-pill">
+                        KaleidoBrands Executive Command Center
+                    </span>
+
+                    <h1 class="display-5 fw-bold mt-3 mb-2">
+                        Welcome Back,
+                        {{ request.user.first_name|default:request.user.username }}
+                    </h1>
+
+                    <p class="lead text-muted mb-0">
+                        Monitor leads, quotes, customer activity, production,
+                        analytics, artwork, and sales performance from one place.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="row g-3 mt-2">
+
+                <div class="col-md-3 col-6">
+                    <div class="mini-stat">
+                        <small>Messages</small>
+                        <h3>{{ total_messages }}</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="mini-stat">
+                        <small>Quotes</small>
+                        <h3>{{ total_quotes }}</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="mini-stat">
+                        <small>Pending</small>
+                        <h3>{{ pending_quotes }}</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="mini-stat">
+                        <small>Production</small>
+                        <h3>{{ production_quotes }}</h3>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-4">
+
+            <div class="hero-side-panel">
+
+                <h5 class="fw-bold mb-3">
+                    Quick Actions
+                </h5>
+
+                <div class="d-grid gap-3">
+
+                    <a href="/"
+                       class="btn btn-primary btn-lg">
+                        🌐 View Website
+                    </a>
+
+                    <a href="/admin/"
+                       class="btn btn-dark btn-lg">
+                        ⚙ Django Admin
+                    </a>
+
+                    <a href="/dashboard/api/quotes/"
+                       class="btn btn-outline-primary">
+                        📦 Quote API
+                    </a>
+
+                    <a href="/dashboard/api/contacts/"
+                       class="btn btn-outline-secondary">
+                        👥 Contact API
+                    </a>
+
+                </div>
+
+                <hr>
+
+                <div class="mt-3">
+
+                    <small class="text-muted">
+                        Today
+                    </small>
+
+                    <h5 class="fw-bold">
+                        {% now "l, F j, Y" %}
+                    </h5>
+
+                    <small class="text-success">
+                        ✔ Dashboard Online
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

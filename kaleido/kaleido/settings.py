@@ -29,7 +29,7 @@ SECRET_KEY = config(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS',
@@ -49,6 +49,7 @@ CSRF_TRUSTED_ORIGINS = [
 INSTALLED_APPS = [
     "brands",
     "dashboard",
+    "rest_framework",
     "django.contrib.sitemaps",
     "django.contrib.admin",
     "django.contrib.auth",

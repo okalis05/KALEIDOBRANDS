@@ -1,0 +1,23 @@
+{% load static %}
+
+<nav class="dashboard-navbar">
+    <div class="dash-brand">
+        <img src="{% static 'brands/images/kb-k.png' %}" alt="KaleidoBrands">
+        <div>
+            <strong>KaleidoBrands</strong>
+            <span>Command Center</span>
+        </div>
+    </div>
+
+    <div class="dash-nav-links">
+        <a href="/dashboard/" class="active">Dashboard</a>
+        <a href="/admin/brands/contactmessage/">Messages</a>
+        <a href="/admin/brands/quoterequest/">Quotes</a>
+        <a href="/">Website</a>
+    </div>
+
+    <div class="dash-nav-actions">
+        <button id="themeToggle" class="dash-theme-btn">🌙</button>
+        <a href="/admin/" class="dash-admin-link">Admin</a>
+    </div>
+</nav>

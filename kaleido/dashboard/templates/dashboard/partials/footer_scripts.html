@@ -1,0 +1,64 @@
+{{ quote_labels|json_script:"quote-labels" }}
+{{ quote_values|json_script:"quote-values" }}
+{{ contact_labels|json_script:"contact-labels" }}
+{{ contact_values|json_script:"contact-values" }}
+{{ lead_source_labels|json_script:"lead-source-labels" }}
+{{ lead_source_values|json_script:"lead-source-values" }}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const quoteLabels = JSON.parse(document.getElementById("quote-labels").textContent);
+    const quoteValues = JSON.parse(document.getElementById("quote-values").textContent);
+    const contactLabels = JSON.parse(document.getElementById("contact-labels").textContent);
+    const contactValues = JSON.parse(document.getElementById("contact-values").textContent);
+    const leadSourceLabels = JSON.parse(document.getElementById("lead-source-labels").textContent);
+    const leadSourceValues = JSON.parse(document.getElementById("lead-source-values").textContent);
+
+    const trendChart = document.getElementById("trendChart");
+    if (trendChart) {
+        new Chart(trendChart, {
+            type: "line",
+            data: {
+                labels: quoteLabels,
+                datasets: [
+                    {
+                        label: "Quotes",
+                        data: quoteValues,
+                        borderWidth: 3,
+                        tension: 0.35,
+                        fill: true
+                    },
+                    {
+                        label: "Contacts",
+                        data: contactValues,
+                        borderWidth: 3,
+                        tension: 0.35,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    const leadSourceChart = document.getElementById("leadSourceChart");
+    if (leadSourceChart) {
+        new Chart(leadSourceChart, {
+            type: "doughnut",
+            data: {
+                labels: leadSourceLabels,
+                datasets: [{
+                    data: leadSourceValues
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    }
+});
+</script>

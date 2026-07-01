@@ -1,0 +1,65 @@
+<section class="mb-5">
+    <div class="dash-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold">👥 CRM Leads</h3>
+                <p class="text-muted mb-0">Recent customers, quote interest, lead score, and quick actions.</p>
+            </div>
+
+            <span class="badge bg-primary">{{ latest_quotes|length }} Recent Leads</span>
+        </div>
+
+        <div class="row g-4">
+            {% for quote in latest_quotes %}
+                <div class="col-xl-3 col-md-6">
+                    <div class="crm-card">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="crm-avatar">
+                                {{ quote.name|slice:":1"|upper }}
+                            </div>
+
+                            <div>
+                                <strong>{{ quote.name }}</strong>
+                                <small>{{ quote.company|default:"Individual Customer" }}</small>
+                            </div>
+                        </div>
+
+                        <div class="crm-meta">
+                            <span>Product</span>
+                            <strong>{{ quote.product_interest }}</strong>
+                        </div>
+
+                        <div class="crm-meta">
+                            <span>Quantity</span>
+                            <strong>{{ quote.quantity|default:"Not provided" }}</strong>
+                        </div>
+
+                        <div class="crm-meta">
+                            <span>Lead Score</span>
+                            <strong>
+                                {% if quote.quantity and quote.quantity >= 250 %}
+                                    95
+                                {% elif quote.quantity and quote.quantity >= 100 %}
+                                    82
+                                {% else %}
+                                    68
+                                {% endif %}
+                            </strong>
+                        </div>
+
+                        <div class="crm-actions">
+                            <a href="mailto:{{ quote.email }}">Email</a>
+                            {% if quote.phone %}
+                                <a href="tel:{{ quote.phone }}">Call</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p class="text-muted mb-0">No CRM leads yet.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

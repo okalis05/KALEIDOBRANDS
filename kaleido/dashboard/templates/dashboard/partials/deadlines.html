@@ -1,0 +1,26 @@
+<section class="mb-5">
+    <div class="dash-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold">📅 Upcoming Deadlines</h3>
+                <p class="text-muted mb-0">Quotes with deadlines in the next 30 days.</p>
+            </div>
+            <span class="badge bg-warning text-dark">{{ upcoming_deadlines|length }} Upcoming</span>
+        </div>
+
+        {% for quote in upcoming_deadlines %}
+            <div class="deadline-item">
+                <div>
+                    <strong>{{ quote.company|default:quote.name }}</strong>
+                    <span>{{ quote.product_interest }}</span>
+                </div>
+
+                <div class="deadline-date">
+                    {{ quote.deadline }}
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-muted mb-0">No upcoming deadlines.</p>
+        {% endfor %}
+    </div>
+</section>
