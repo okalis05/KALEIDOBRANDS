@@ -9,9 +9,7 @@
         <div class="container">
             <div class="row align-items-center min-vh-100 g-5">
                 <div class="col-lg-6 reveal">
-                    <div class="eyebrow">
-                        Promotional Branding Studio
-                    </div>
+                    <div class="eyebrow">Promotional Branding Studio</div>
 
                     <h1>
                         Branding That Inspires.
@@ -24,8 +22,8 @@
                     </p>
 
                     <div class="hero-actions">
-                        <a href="#contact" class="btn btn-kb-primary btn-lg">Start Your Project</a>
-                        <a href="#catalog" class="btn btn-kb-outline btn-lg">View Catalog</a>
+                        <a href="#quoteForm" class="btn btn-kb-primary btn-lg">Request a Quote</a>
+                        <a href="#catalog" class="btn btn-kb-outline btn-lg">Browse Catalogs</a>
                     </div>
 
                     <div class="hero-stats">
@@ -45,14 +43,39 @@
                 </div>
 
                 <div class="col-lg-6 reveal delay-1">
-                    <div class="hero-card glass-card">
+                    <div class="hero-card glass-card hero-showcase">
                         <img src="{% static 'brands/images/kb.png' %}" alt="KaleidoBrands full logo" class="hero-logo">
+                        <div class="floating-tag tag-one">Apparel</div>
+                        <div class="floating-tag tag-two">Corporate Gifts</div>
+                        <div class="floating-tag tag-three">Events</div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <section class="trust-strip">
+        <div class="container">
+            <div class="trust-grid">
+                <div>
+                    <strong>Healthcare</strong>
+                    <span>Scrubs, uniforms, wellness campaigns</span>
+                </div>
+                <div>
+                    <strong>Corporate</strong>
+                    <span>Executive gifts and employee kits</span>
+                </div>
+                <div>
+                    <strong>Events</strong>
+                    <span>Trade shows and conference giveaways</span>
+                </div>
+                <div>
+                    <strong>Teams</strong>
+                    <span>Polos, hats, shirts and spirit wear</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section id="about" class="section-panel">
         <div class="container">
@@ -66,7 +89,7 @@
                 <div class="col-lg-7 reveal delay-1">
                     <div class="section-heading">
                         <span>About Us</span>
-                        <h2>A minimal, polished branding partner for businesses that want to be remembered.</h2>
+                        <h2>A polished branding partner for businesses that want to be remembered.</h2>
                     </div>
 
                     <p>
@@ -106,294 +129,204 @@
                 </div>
             </div>
         </div>
-
     </section>
-
 
     <section id="services" class="section-panel soft-bg">
-        <div class="container">
-            <div class="section-heading text-center reveal">
-                <span>Services</span>
-                <h2>Everything your brand needs to look sharp and stay visible.</h2>
+    <div class="container">
+        <div class="section-heading text-center reveal">
+            <span>Services</span>
+            <h2>Everything your brand needs to look sharp and stay visible.</h2>
+        </div>
+
+        <div class="row g-4 mt-4">
+            <div class="col-md-6 col-lg-3 reveal">
+                <div class="service-card">
+                    <div class="service-mark red-mark"></div>
+                    <h3>Promotional Products</h3>
+                    <p>Pens, drinkware, bags, tech accessories, event items, office gifts, and everyday brand essentials.</p>
+                </div>
             </div>
 
-            <div class="row g-4 mt-4">
-                <div class="col-md-6 col-lg-3 reveal">
-                    <div class="service-card">
-                        <div class="service-mark red-mark"></div>
-                        <h3>Promotional Products</h3>
-                        <p>Pens, drinkware, bags, tech accessories, event items, office gifts, and everyday brand essentials.</p>
-                    </div>
+            <div class="col-md-6 col-lg-3 reveal delay-1">
+                <div class="service-card">
+                    <div class="service-mark blue-mark"></div>
+                    <h3>Custom Apparel</h3>
+                    <p>Branded shirts, polos, hats, jackets, uniforms, and team apparel for organizations and events.</p>
                 </div>
+            </div>
 
-                <div class="col-md-6 col-lg-3 reveal delay-1">
-                    <div class="service-card">
-                        <div class="service-mark blue-mark"></div>
-                        <h3>Custom Apparel</h3>
-                        <p>Branded shirts, polos, hats, jackets, uniforms, and team apparel for organizations and events.</p>
-                    </div>
+            <div class="col-md-6 col-lg-3 reveal delay-2">
+                <div class="service-card">
+                    <div class="service-mark gold-mark"></div>
+                    <h3>Corporate Gifts</h3>
+                    <p>Elegant appreciation gifts for clients, employees, teams, conferences, and business milestones.</p>
                 </div>
+            </div>
 
-                <div class="col-md-6 col-lg-3 reveal delay-2">
-                    <div class="service-card">
-                        <div class="service-mark gold-mark"></div>
-                        <h3>Corporate Gifts</h3>
-                        <p>Elegant appreciation gifts for clients, employees, teams, conferences, and business milestones.</p>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-3 reveal delay-3">
-                    <div class="service-card">
-                        <div class="service-mark blue-mark"></div>
-                        <h3>Brand Consulting</h3>
-                        <p>Guidance on product selection, logo placement, colors, campaign ideas, and presentation quality.</p>
-                    </div>
+            <div class="col-md-6 col-lg-3 reveal delay-3">
+                <div class="service-card">
+                    <div class="service-mark blue-mark"></div>
+                    <h3>Brand Consulting</h3>
+                    <p>Guidance on product selection, logo placement, colors, campaign ideas, and presentation quality.</p>
                 </div>
             </div>
         </div>
-    </section>
-
-
-
-    <section id="catalog" class="section-panel">
-        <div class="container">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-6 reveal">
-                    <div class="section-heading">
-                        <span>Catalog</span>
-                        <h2>Explore promotional products built for real business visibility.</h2>
-                    </div>
-
-                    <p>
-                        Browse curated categories for apparel, drinkware, office products, event giveaways,
-                        employee gifts, client appreciation, and custom branded merchandise.
-                    </p>
-
-                    <div class="catalog-links">
-
-
-
-
-
-
-
-
-
-<section class="container-fluid py-5">
-
-    <div class="container text-center mb-5">
-        <h1 class="display-5 fw-bold">
-            Promotional Products Catalog
-        </h1>
-
-        <p class="lead">
-            Browse thousands of premium promotional products available through
-            KaleidoBrands. When you find an item you like, contact us for pricing,
-            customization, and ordering assistance.
-        </p>
     </div>
-
-    <div class="ratio ratio-16x9 shadow rounded overflow-hidden">
-
-        <iframe
-            src="https://online.flippingbook.com/view/1003101311/"
-            title="KaleidoBrands Catalog"
-            allowfullscreen
-            loading="lazy"
-            style="border:0;">
-        </iframe>
-
-    </div>
-
 </section>
 
+<section id="catalog" class="section-panel">
+    <div class="container">
+        <div class="section-heading text-center reveal">
+            <span>Catalog Hub</span>
+            <h2>Explore promotional products built for real business visibility.</h2>
+            <p class="mx-auto mt-3" style="max-width:760px;">
+                Browse curated categories for apparel, drinkware, office products, event giveaways,
+                employee gifts, client appreciation, and custom branded merchandise.
+            </p>
+        </div>
 
+        <div class="catalog-search-wrap reveal">
+            <input type="search" id="catalogSearch" class="catalog-search-input" placeholder="Search catalogs: polos, hats, scrubs, drinkware, gifts, trade shows...">
+        </div>
 
+        <div class="row g-4 mt-4" id="catalogCards">
+            {% for category in catalog_categories %}
+                <div class="col-md-6 col-lg-4 catalog-card-wrap" data-title="{{ category.title|lower }}" data-keywords="{{ category.keywords|lower }}">
+                    <div class="catalog-card glass-card">
+                        <div class="catalog-card-top">
+                            <span>{{ forloop.counter|stringformat:"02d" }}</span>
+                            <div class="catalog-icon">{{ category.icon }}</div>
+                        </div>
 
+                        <h3>{{ category.title }}</h3>
+                        <p>{{ category.description }}</p>
 
+                        {% if category.links %}
+                            <div class="catalog-mini-links">
+                                {% for link in category.links %}
+                                    <a href="{{ link.url }}" target="_blank">{{ link.label }}</a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
 
-
-
-
-
-
-
-
-
-
-
-
-                        <a href="https://www.kaeser-blair.com/" target="_blank" class="catalog-pill">Kaeser & Blair Catalog</a>
-                        <a href="#contact" class="catalog-pill">Request Product Ideas</a>
-                        <a href="#contact" class="catalog-pill">Get a Custom Quote</a>
+                        <a href="#quoteForm" class="catalog-detail-link">Request {{ category.title }} ideas →</a>
                     </div>
                 </div>
+            {% endfor %}
+        </div>
 
-                <div class="col-lg-6 reveal delay-1">
-                    <div class="catalog-grid">
-
-
-
-
-
-
-
-                      
-                        <div class="catalog-box border-red">
-
-    <span>01</span>
-
-    <h4>
-        <button
-            class="btn btn-link text-decoration-none text-dark fw-bold p-0"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#apparelCatalogs"
-            aria-expanded="false">
-
-            Apparel
-        </button>
-    </h4>
-
-    <div class="collapse mt-3" id="apparelCatalogs">
-
-        <div class="list-group">
-            <iframe
-                src="https://online.flippingbook.com/view/440891710/"
-
-                title="KaleidoBrands Catalog"
-                allowfullscreen
-                loading="lazy"
-                style="border:0;">
-
-                🩺 Healthcare Scrubs Catalog
-            </iframe>
-            <iframe
-                src="https://online.flippingbook.com/view/440744366/"
-                title="KaleidoBrands Catalog"
-                allowfullscreen
-                loading="lazy"
-                style="border:0;">
-
-                👕 Polo Shirts Catalog
-            </iframe>
-            <iframe
-                src="https://online.flippingbook.com/view/440842574/"
-                title="KaleidoBrands Catalog"
-                allowfullscreen
-                loading="lazy"
-                style="border:0;">
-
-                🧢 Hats Catalog
-            </iframe>
-         </div>    
-
-            <!--- <a
-                href="https://online.flippingbook.com/view/440891710/"
-                target="_blank"
-                class="list-group-item list-group-item-action">
-
-                🩺 Healthcare Scrubs Catalog
-
-            </a>
-
-            <a
-                href="https://online.flippingbook.com/view/440744366/"
-                target="_blank"
-                class="list-group-item list-group-item-action">
-
-                👕 Polo Shirts Catalog
-
-            </a>
-
-            <a
-                href="https://online.flippingbook.com/view/440842574/"
-                target="_blank"
-                class="list-group-item list-group-item-action">
-
-                🧢 Hats Catalog
-
-            </a> --->
-            
-       
-
+        <div class="main-catalog-frame reveal mt-5">
+            <div class="ratio ratio-16x9 shadow rounded-5 overflow-hidden">
+                <iframe
+                    src="https://online.flippingbook.com/view/1003101311/"
+                    title="KaleidoBrands Main Catalog"
+                    allowfullscreen
+                    loading="lazy"
+                    style="border:0;">
+                </iframe>
+            </div>
+        </div>
     </div>
+</section>
 
-</div>
+<section id="featured" class="section-panel soft-bg">
+    <div class="container">
+        <div class="section-heading text-center reveal">
+            <span>Featured Ideas</span>
+            <h2>Popular promotional products that move fast.</h2>
+        </div>
 
-    
-                        <div class="catalog-box border-blue">
-                            <span>02</span>
-                            <h4>Drinkware</h4>
-                        </div>
-                        <div class="catalog-box border-gold">
-                            <span>03</span>
-                            <h4>Office</h4>
-                        </div>
-                        <div class="catalog-box border-blue">
-                            <span>04</span>
-                            <h4>Events</h4>
-                        </div>
-                        <div class="catalog-box border-red">
-                            <span>05</span>
-                            <h4>Gifts</h4>
-                        </div>
-                        <div class="catalog-box border-gold">
-                            <span>06</span>
-                            <h4>Tech</h4>
-                        </div>
+        <div class="row g-4 mt-4">
+            {% for product in featured_products %}
+                <div class="col-md-6 col-lg-3 reveal">
+                    <div class="product-card">
+                        <div class="product-icon">{{ product.icon }}</div>
+                        <h4>{{ product.title }}</h4>
+                        <p>{{ product.description }}</p>
+                        <a href="#quoteForm">Request quote</a>
                     </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section id="process" class="section-panel">
+    <div class="container">
+        <div class="section-heading text-center reveal">
+            <span>Process</span>
+            <h2>Simple, clear, and built around your brand goals.</h2>
+        </div>
+
+        <div class="timeline mt-5">
+            <div class="timeline-item reveal">
+                <div class="timeline-number">1</div>
+                <div>
+                    <h3>Tell us your goal</h3>
+                    <p>Share your event, audience, budget, logo, deadline, and brand style.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item reveal delay-1">
+                <div class="timeline-number">2</div>
+                <div>
+                    <h3>We curate product ideas</h3>
+                    <p>You receive clean, practical product options that fit your business needs.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item reveal delay-2">
+                <div class="timeline-number">3</div>
+                <div>
+                    <h3>You approve the design</h3>
+                    <p>We review placement, colors, mockups, and final details before production.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item reveal delay-3">
+                <div class="timeline-number">4</div>
+                <div>
+                    <h3>Your brand gets delivered</h3>
+                    <p>Your finished promotional products are prepared to create lasting impressions.</p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
+<section class="section-panel soft-bg">
+    <div class="container">
+        <div class="section-heading text-center reveal">
+            <span>Why Choose Us</span>
+            <h2>Built for businesses that care about presentation.</h2>
+        </div>
 
-    <section id="process" class="section-panel soft-bg">
-        <div class="container">
-            <div class="section-heading text-center reveal">
-                <span>Process</span>
-                <h2>Simple, clear, and built around your brand goals.</h2>
+        <div class="row g-4 mt-4">
+            <div class="col-md-4 reveal">
+                <div class="mini-card border-red">
+                    <h4>Concierge Support</h4>
+                    <p>You get product guidance instead of guessing through thousands of items alone.</p>
+                </div>
             </div>
 
-            <div class="timeline mt-5">
-                <div class="timeline-item reveal">
-                    <div class="timeline-number">1</div>
-                    <div>
-                        <h3>Tell us your goal</h3>
-                        <p>Share your event, audience, budget, logo, deadline, and brand style.</p>
-                    </div>
+            <div class="col-md-4 reveal delay-1">
+                <div class="mini-card border-blue">
+                    <h4>Clean Quote Workflow</h4>
+                    <p>Upload your logo, share your goals, and receive organized next steps.</p>
                 </div>
+            </div>
 
-                <div class="timeline-item reveal delay-1">
-                    <div class="timeline-number">2</div>
-                    <div>
-                        <h3>We curate product ideas</h3>
-                        <p>You receive clean, practical product options that fit your business needs.</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item reveal delay-2">
-                    <div class="timeline-number">3</div>
-                    <div>
-                        <h3>You approve the design</h3>
-                        <p>We review placement, colors, mockups, and final details before production.</p>
-                    </div>
-                </div>
-
-                <div class="timeline-item reveal delay-3">
-                    <div class="timeline-number">4</div>
-                    <div>
-                        <h3>Your brand gets delivered</h3>
-                        <p>Your finished promotional products are prepared to create lasting impressions.</p>
-                    </div>
+            <div class="col-md-4 reveal delay-2">
+                <div class="mini-card border-gold">
+                    <h4>Professional Brand Fit</h4>
+                    <p>We help match products, colors, decoration, and timing to your campaign.</p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-
-    <section id="contact" class="section-panel contact-section">
+<section id="contact" class="section-panel contact-section">
     <div class="container">
         <div class="row g-5 align-items-start">
             <div class="col-lg-5 reveal">
@@ -489,6 +422,14 @@
                             <form method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input type="hidden" name="form_type" value="quote">
+                                <input type="hidden" name="saved_products" id="savedProductsField">
+
+                                <div class="quote-progress">
+                                    <span class="active">1 Product</span>
+                                    <span>2 Details</span>
+                                    <span>3 Artwork</span>
+                                    <span>4 Submit</span>
+                                </div>
 
                                 <div class="row g-3">
                                     <div class="col-md-6">
@@ -542,66 +483,43 @@
                                         <input type="date" name="deadline" class="form-control">
                                     </div>
 
-                                    <!-------------------------------------------------->
                                     <div class="col-md-6">
-                                        <label class="form-label">Company Logo</label>
-                                        <input
-                                            type="file"
-                                            name="logo"
-                                            class="form-control"
-                                            accept=".png,.jpg,.jpeg,.svg,.pdf,.ai,.eps">
+                                        <label>Company Logo</label>
+                                        <input type="file" name="logo" class="form-control" accept=".png,.jpg,.jpeg,.svg,.pdf,.ai,.eps">
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label">Artwork / Design Files</label>
-                                        <input
-                                            type="file"
-                                            name="artwork"
-                                            class="form-control"
-                                            multiple
-                                            accept=".png,.jpg,.jpeg,.pdf,.ai,.eps,.psd">
+                                        <label>Artwork / Design Files</label>
+                                        <input type="file" name="artwork" class="form-control" accept=".png,.jpg,.jpeg,.pdf,.ai,.eps,.psd">
                                     </div>
 
+                                    <div class="col-md-6">
+                                        <label>Imprint Colors</label>
+                                        <input type="text" name="colors" class="form-control" placeholder="Red, White, Blue">
+                                    </div>
 
+                                    <div class="col-md-6">
+                                        <label>Decoration Method</label>
+                                        <select name="decoration" class="form-control">
+                                            <option value="Not Sure">Not Sure</option>
+                                            <option value="Embroidery">Embroidery</option>
+                                            <option value="Screen Printing">Screen Printing</option>
+                                            <option value="DTF Printing">DTF Printing</option>
+                                            <option value="Heat Transfer">Heat Transfer</option>
+                                            <option value="Laser Engraving">Laser Engraving</option>
+                                        </select>
+                                    </div>
 
+                                    <div class="col-12">
+                                        <label>Additional Details</label>
+                                        <textarea name="message" rows="5" class="form-control" placeholder="Tell us product colors, logo placement, event date, audience, and any catalog item numbers." required></textarea>
+                                    </div>
 
-
-
-
-
-
-                                <div class="col-md-6">
-                                    <label>Imprint Colors</label>
-                                    <input
-                                        type="text"
-                                        name="colors"
-                                        class="form-control"
-                                        placeholder="Red, White, Blue">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label>Decoration Method</label>
-
-                                    <select name="decoration" class="form-control">
-                                        <option>Embroidery</option>
-                                        <option>Screen Printing</option>
-                                        <option>DTF Printing</option>
-                                        <option>Heat Transfer</option>
-                                        <option>Laser Engraving</option>
-                                        <option>Not Sure</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-12">
-                                    <label>Additional Details</label>
-                                    <textarea name="message" rows="5" class="form-control" placeholder="Tell us product colors, logo placement, event date, audience, and any catalog item numbers." required></textarea>
-                                </div>
-
-                                <div class="col-12">
-                                    <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
-                                        Submit Quote Request
-                                    </button>
-                                </div>
+                                    <div class="col-12">
+                                        <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
+                                            Submit Quote Request
+                                        </button>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -612,7 +530,6 @@
         </div>
     </div>
 </section>
-
 
 </main>
 

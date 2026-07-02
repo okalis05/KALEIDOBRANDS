@@ -4,36 +4,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>KaleidoBrands | Branding That Inspires. Impressions That Last.</title>
+    <title>{% block title %}KaleidoBrands | Promotional Products, Branded Apparel & Corporate Gifts{% endblock %}</title>
 
-    <meta name="description" content="KaleidoBrands helps businesses create memorable promotional products, branded merchandise, apparel, corporate gifts, and custom marketing solutions.">
-    <meta name="keywords" content="KaleidoBrands, promotional products, branded merchandise, custom apparel, corporate gifts, business branding, Palmyra PA">
+    <meta name="description" content="{% block meta_description %}KaleidoBrands provides premium promotional products, custom branded apparel, corporate gifts, catalogs, and branding solutions that help businesses create lasting impressions.{% endblock %}">
+    <meta name="keywords" content="promotional products, branded apparel, corporate gifts, custom merchandise, business branding, custom hats, polo shirts, healthcare scrubs, KaleidoBrands">
     <meta name="author" content="KaleidoBrands">
-
-    <meta property="og:title" content="KaleidoBrands">
-    <meta property="og:description" content="Branding that inspires. Impressions that last.">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="{% static 'brands/images/kb.png' %}">
-
-    <link rel="icon" href="{% static 'brands/images/kb-k.png' %}">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{% static 'brands/css/style.css' %}" rel="stylesheet">
-
-
-    <!--- SEO Tags installation-->
-    <title>KaleidoBrands | Promotional Products, Branded Apparel & Corporate Gifts</title>
-
-    <meta name="description" content="KaleidoBrands provides premium promotional products, custom branded apparel, corporate gifts, catalogs, and branding solutions that help businesses create lasting impressions.">
-
-    <meta name="keywords" content="promotional products, branded apparel, corporate gifts, custom merchandise, business branding, Kaeser Blair, custom hats, polo shirts, healthcare scrubs, KaleidoBrands">
-
-    <link rel="canonical" href="https://kaleidobrands.com/">
-
     <meta name="robots" content="index, follow">
+
+    <link rel="canonical" href="{% block canonical %}https://kaleidobrands.com/{% endblock %}">
+    <link rel="icon" href="{% static 'brands/images/kb-k.png' %}">
 
     <meta property="og:title" content="KaleidoBrands | Branding That Inspires. Impressions That Last.">
     <meta property="og:description" content="Premium promotional products, branded apparel, corporate gifts, and custom branding solutions.">
@@ -46,9 +27,11 @@
     <meta name="twitter:description" content="Premium promotional products and custom branding solutions.">
     <meta name="twitter:image" content="https://kaleidobrands.com/static/brands/images/kb.png">
 
-    <!------ Intalling structured data JSON-LD---------->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'brands/css/style.css' %}" rel="stylesheet">
+
     <script type="application/ld+json">
-        {
+    {
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
         "name": "KaleidoBrands",
@@ -57,6 +40,7 @@
         "image": "https://kaleidobrands.com/static/brands/images/kb.png",
         "description": "KaleidoBrands provides promotional products, branded apparel, corporate gifts, and custom branding solutions.",
         "email": "sales@kaleidobrands.com",
+        "telephone": "+1-513-510-9397",
         "areaServed": "United States",
         "address": {
             "@type": "PostalAddress",
@@ -66,43 +50,18 @@
             "addressCountry": "US"
         },
         "sameAs": [
-            "https://www.facebook.com/kaleidobrands",
-            "https://www.linkedin.com/company/kaleidobrands"
-        ],
-        "makesOffer": [
-            {
-            "@type": "Offer",
-            "itemOffered": {
-                "@type": "Service",
-                "name": "Promotional Products"
-            }
-            },
-            {
-            "@type": "Offer",
-            "itemOffered": {
-                "@type": "Service",
-                "name": "Branded Apparel"
-            }
-            },
-            {
-            "@type": "Offer",
-            "itemOffered": {
-                "@type": "Service",
-                "name": "Corporate Gifts"
-            }
-            }
+            "https://www.facebook.com/kaleidobrands/",
+            "https://www.linkedin.com/company/kaleidobrands/"
         ]
-        }
+    }
     </script>
 
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-9W066MEVJF"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-9W066MEVJF');
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag("js", new Date());
+        gtag("config", "G-9W066MEVJF");
     </script>
 
     {% block head %}{% endblock %}
@@ -112,25 +71,32 @@
 
 <nav class="navbar navbar-expand-lg fixed-top kb-navbar">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center gap-2" href="#home">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'brands:home' %}#home">
             <img src="{% static 'brands/images/kb-k.png' %}" alt="KaleidoBrands K logo" class="nav-logo">
             <span>Kaleido<span>Brands</span></span>
         </a>
 
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-label="Open navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav ms-auto align-items-lg-center">
-                <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
-                <li class="nav-item"><a class="nav-link" href="#catalog">Catalog</a></li>
-                <li class="nav-item"><a class="nav-link" href="#process">Process</a></li>
-                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'brands:home' %}#home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'brands:home' %}#about">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'brands:home' %}#services">Services</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'brands:home' %}#catalog">Catalog</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'products:home' %}">Products</a></li>
+                <li class="nav-item">
+                    <a class="nav-link quote-cart-nav" href="{% url 'products:quote_cart' %}">
+                        Quote Cart
+                        <span id="quoteCartCount" class="quote-cart-count">0</span>
+                    </a>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'brands:home' %}#process">Process</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'brands:home' %}#contact">Contact</a></li>
                 <li class="nav-item ms-lg-3">
-                    <a class="btn btn-kb-primary" href="tel:5135109397">Call Now</a>
+                    <a class="btn btn-kb-primary" href="{% url 'brands:home' %}#quoteForm">Request Quote</a>
                 </li>
             </ul>
         </div>
@@ -161,54 +127,35 @@
                 <a href="#catalog">Catalog</a>
                 <a href="#process">How It Works</a>
                 <a href="#contact">Request Quote</a>
+                <a href="{% url 'products:home' %}">Products</a>
+                <a href="{% url 'products:quote_cart' %}">Quote Cart</a>
             </div>
 
             <div class="col-md-3">
                 <h5>Get in Touch</h5>
                 <a href="tel:5135109397">513-510-9397</a>
-                <a href="mailto:okalis05@yahoo.com">okalis05@yahoo.com</a>
-                <a href="#contact">Palmyra, PA 17078</a>
+                <a href="mailto:sales@kaleidobrands.com">sales@kaleidobrands.com</a>
+                <a href="mailto:helpdesk@kaleidobrands.com">helpdesk@kaleidobrands.com</a>
+                <a href="https://www.google.com/maps/search/Palmyra,+PA+17078" target="_blank">Palmyra, PA 17078</a>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <div>
-                © {% now "Y" %} KaleidoBrands. All rights reserved.
+            <div>© {% now "Y" %} KaleidoBrands. All rights reserved.</div>
+
+            <div class="footer-socials">
+                <a href="https://www.facebook.com/kaleidobrands/" target="_blank" aria-label="Facebook">
+                    <img src="{% static 'brands/images/facebook.png' %}" alt="Facebook">
+                </a>
+
+                <a href="https://www.linkedin.com/company/kaleidobrands/" target="_blank" aria-label="LinkedIn">
+                    <img src="{% static 'brands/images/linkedin.png' %}" alt="LinkedIn">
+                </a>
+
+                <a href="https://www.google.com/maps/search/Palmyra,+PA+17078" target="_blank" aria-label="Location">
+                    <img src="{% static 'brands/images/location.png' %}" alt="Location">
+                </a>
             </div>
-
-            <div class="footer-socials mt-3">
-
-    <a href="https://www.facebook.com/kaleidobrands/"
-       target="_blank"
-       aria-label="Facebook"
-       title="Follow us on Facebook">
-        <img src="{% static 'brands/images/facebook.png' %}"
-             alt="Facebook"
-             width="32"
-             height="32">
-    </a>
-
-    <a href="https://www.linkedin.com/company/kaleidobrands/"
-       target="_blank"
-       aria-label="LinkedIn"
-       title="Follow us on LinkedIn">
-        <img src="{% static 'brands/images/linkedin.png' %}"
-             alt="LinkedIn"
-             width="32"
-             height="32">
-    </a>
-
-    <a href="https://www.google.com/maps/search/Palmyra,+PA+17078"
-       target="_blank"
-       aria-label="Location"
-       title="Palmyra, PA 17078">
-        <img src="{% static 'brands/images/location.png' %}"
-             alt="Location"
-             width="32"
-             height="32">
-    </a>
-
-</div>
         </div>
     </div>
 </footer>
@@ -218,5 +165,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'brands/js/main.js' %}"></script>
 
+{% block scripts %}{% endblock %}
 </body>
 </html>

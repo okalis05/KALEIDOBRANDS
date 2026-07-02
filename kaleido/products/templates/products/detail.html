@@ -1,0 +1,208 @@
+{% extends "brands/base.html" %}
+
+{% block title %}{{ product.name }} | KaleidoBrands{% endblock %}
+{% block meta_description %}{{ product.short_description|default:product.description|truncatechars:155 }}{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+
+    <section class="product-breadcrumb-section">
+        <div class="container">
+            <div class="product-breadcrumb">
+                <a href="{% url 'brands:home' %}">Home</a>
+                <span>›</span>
+                <a href="{% url 'products:home' %}">Products</a>
+                {% if product.category %}
+                    <span>›</span>
+                    <a href="{% url 'products:category' product.category.slug %}">
+                        {{ product.category.name }}
+                    </a>
+                {% endif %}
+                <span>›</span>
+                <strong>{{ product.name }}</strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-panel product-detail-page">
+        <div class="container">
+            <div class="row g-5 align-items-start">
+
+                <div class="col-lg-6 reveal">
+                    <div class="product-gallery glass-card">
+                        <div class="product-main-image">
+                            {% if product.image %}
+                                <img id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
+                            {% elif product.gallery_images.first %}
+                                <img id="mainProductImage" src="{{ product.gallery_images.first.image.url }}" alt="{{ product.name }}">
+                            {% else %}
+                                <div class="product-detail-placeholder product-placeholder-themed large">
+                                    <span>{{ product.category.icon|default:"✨" }}</span>
+                                    <strong>{{ product.name|slice:":2"|upper }}</strong>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% if product.gallery_images.all %}
+                            <div class="product-thumbnails">
+                                {% if product.image %}
+                                    <button type="button" class="product-thumb active" data-image="{{ product.image.url }}">
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                    </button>
+                                {% endif %}
+
+                                {% for item in product.gallery_images.all %}
+                                    <button type="button" class="product-thumb" data-image="{{ item.image.url }}">
+                                        <img src="{{ item.image.url }}" alt="{{ item.alt_text|default:product.name }}">
+                                    </button>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-lg-6 reveal delay-1">
+                    <div class="product-info-panel">
+                        <div class="section-heading">
+                            <span>{{ product.category.name|default:"Product" }}</span>
+                            <h1>{{ product.name }}</h1>
+                        </div>
+
+                        <p class="product-detail-copy">
+                            {{ product.description|default:product.short_description }}
+                        </p>
+
+                        <div class="product-price-strip">
+                            <div>
+                                <small>Starting Price</small>
+                                <strong>
+                                    {% if product.starting_price %}
+                                        From ${{ product.starting_price }}
+                                    {% else %}
+                                        Request Quote
+                                    {% endif %}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <small>Minimum Quantity</small>
+                                <strong>{{ product.min_quantity }}</strong>
+                            </div>
+                        </div>
+
+                        {% if product.color_list %}
+                            <div class="product-detail-block">
+                                <h4>Available Colors</h4>
+                                <div class="product-tags">
+                                    {% for color in product.color_list %}
+                                        <span class="product-tag color-tag">{{ color }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if product.decoration_list %}
+                            <div class="product-detail-block">
+                                <h4>Decoration Methods</h4>
+                                <div class="product-tags">
+                                    {% for method in product.decoration_list %}
+                                        <span class="product-tag">{{ method }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if product.industry_list %}
+                            <div class="product-detail-block">
+                                <h4>Best For</h4>
+                                <div class="product-tags">
+                                    {% for industry in product.industry_list %}
+                                        <a href="{% url 'products:search' %}?q={{ industry }}" class="product-tag industry-tag">
+                                            {{ industry }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="product-spec-grid">
+                            <div>
+                                <strong>Supplier</strong>
+                                <span>{{ product.supplier|default:"KaleidoBrands" }}</span>
+                            </div>
+
+                            <div>
+                                <strong>Lead Time</strong>
+                                <span>{{ product.lead_time|default:"Varies by product" }}</span>
+                            </div>
+
+                            <div>
+                                <strong>Setup Fee</strong>
+                                <span>{{ product.setup_fee|default:"Varies" }}</span>
+                            </div>
+
+                            <div>
+                                <strong>Material</strong>
+                                <span>{{ product.material|default:"Varies" }}</span>
+                            </div>
+
+                            <div>
+                                <strong>Dimensions</strong>
+                                <span>{{ product.dimensions|default:"Varies" }}</span>
+                            </div>
+
+                            <div>
+                                <strong>SKU</strong>
+                                <span>{{ product.sku|default:"Available upon request" }}</span>
+                            </div>
+                        </div>
+
+                        <div class="product-quote-panel">
+                            <button
+                                type="button"
+                                class="save-product-btn"
+                                data-name="{{ product.name }}"
+                                data-url="{{ product.get_absolute_url }}"
+                                data-category="{{ product.category.name|default:'Product' }}">
+                                Save to Quote Cart
+                            </button>
+
+                            <a href="{% url 'brands:home' %}#quoteForm" class="btn btn-kb-primary btn-lg w-100">
+                                Request Quote
+                            </a>
+
+                            {% if product.supplier_url %}
+                                <a href="{{ product.supplier_url }}" target="_blank" class="btn btn-kb-outline btn-lg w-100">
+                                    Supplier Details
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            {% if related_products %}
+                <div class="section-heading text-center mt-5 pt-5 reveal">
+                    <span>Related Products</span>
+                    <h2>You may also like.</h2>
+                </div>
+
+                <div class="row g-4 mt-4">
+                    {% for product in related_products %}
+                        <div class="col-md-6 col-lg-3 reveal">
+                            {% include "products/partials/product_card.html" %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="{% static 'products/js/product_detail.js' %}"></script>
+<script src="{% static 'products/js/quote_cart.js' %}"></script>
+{% endblock %}

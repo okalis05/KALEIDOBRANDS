@@ -1,0 +1,38 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Quote Cart | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Quote Cart</span>
+                <h1>Your Saved Product Ideas</h1>
+                <p class="mx-auto mt-3" style="max-width:760px;">
+                    Save products you like, then send them to KaleidoBrands for pricing and customization help.
+                </p>
+            </div>
+
+            <div class="quote-cart-panel glass-card reveal">
+                <div id="quoteCartItems"></div>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'brands:home' %}#quoteForm" class="btn btn-kb-primary btn-lg">
+                        Request Quote for Saved Ideas
+                    </a>
+
+                    <button class="btn btn-kb-outline btn-lg" id="clearQuoteCart" type="button">
+                        Clear Saved Ideas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="{% static 'products/js/quote_cart.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "brands/base.html" %}
+{% load static %}
+
+{% block title %}Products | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Product Explorer</span>
+                <h1>Browse Promotional Products</h1>
+                <p class="mx-auto mt-3" style="max-width:760px;">
+                    Explore apparel, drinkware, healthcare products, corporate gifts, trade show items, bags, office products, and technology accessories.
+                </p>
+            </div>
+
+            <form action="{% url 'products:search' %}" method="get" class="catalog-search-wrap reveal">
+                <input type="search" name="q" class="catalog-search-input" placeholder="Search products: polos, hats, scrubs, tumblers, gifts...">
+            </form>
+
+            <div class="row g-4 mt-5">
+                {% for category in categories %}
+                    <div class="col-md-6 col-lg-3 reveal">
+                        <a href="{% url 'products:category' category.slug %}" class="product-category-card">
+                            <div class="product-category-icon">{{ category.icon }}</div>
+                            <h3>{{ category.name }}</h3>
+                            <p>{{ category.description }}</p>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="section-heading text-center mt-5 pt-5 reveal">
+                <span>Featured Products</span>
+                <h2>Popular branded product ideas.</h2>
+            </div>
+
+            <div class="row g-4 mt-4">
+                {% for product in featured %}
+                    <div class="col-md-6 col-lg-3 reveal">
+                        {% include "products/partials/product_card.html" %}
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="mini-card text-center">
+                            <h4>No featured products yet.</h4>
+                            <p>Add products in Django Admin or run the seed command.</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <div id="liveResults" class="live-results"></div>
+
+</main>
+{% endblock %}
+{% block scripts %}
+{% load static %}
+<script src="{% static 'products/js/search.js' %}"></script>
+<script src="{% static 'products/js/search.js' %}"></script>
+<script src="{% static 'products/js/quote_cart.js' %}"></script>
+{% endblock %}
