@@ -18,15 +18,17 @@
 
 <body>
 
+
 <div class="dashboard-app">
 
-    {% include "dashboard/partials/navbar.html" %}
+    {% include "dashboard/partials/sidebar.html" %}
 
     <main class="dashboard-main">
         {% block content %}{% endblock %}
     </main>
 
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'dashboard/js/darkmode.js' %}"></script>

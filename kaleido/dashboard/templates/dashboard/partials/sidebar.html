@@ -1,0 +1,56 @@
+{% load static %}
+
+<aside class="dashboard-sidebar">
+
+    <div class="sidebar-brand">
+
+        <img src="{% static 'brands/images/kb.png' %}" alt="KaleidoBrands" class="sidebar-logo">
+
+
+    </div>
+
+    <nav>
+
+        <a href="{% url 'dashboard:home' %}">
+            🏠 Dashboard
+        </a>
+
+        <a href="{% url 'dashboard:analytics' %}">
+            📊 Analytics
+        </a>
+
+        <a href="{% url 'dashboard:crm' %}">
+            👥 CRM
+        </a>
+
+        <a href="#">
+            💼 Quotes
+        </a>
+
+        <a href="#">
+            🚚 Production
+        </a>
+
+        <a href="#">
+            👤 Customers
+        </a>
+
+        <a href="#">
+            🎨 Artwork
+        </a>
+
+        <a href="#">
+            📅 Calendar
+        </a>
+
+        <a href="#">
+            📈 Reports
+        </a>
+
+        <a href="/admin/">
+            ⚙ Django Admin
+        </a>
+
+    </nav>
+
+</aside>
