@@ -341,10 +341,10 @@
                 </p>
 
                 <div class="contact-options">
-                    <a href="tel:5135109397">Call: 513-510-9397</a>
+                    <a href="tel:+15135109397">Call: 513-510-9397</a>
                     <a href="mailto:helpdesk@kaleidobrands.com">Support: helpdesk@kaleidobrands.com</a>
                     <a href="mailto:sales@kaleidobrands.com">Quotes: sales@kaleidobrands.com</a>
-                    <a href="sms:5135109397">Text: 513-510-9397</a>
+                    <a href="sms:+15135109397">Text: 513-510-9397</a>
                 </div>
             </div>
 
@@ -423,6 +423,7 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="form_type" value="quote">
                                 <input type="hidden" name="saved_products" id="savedProductsField">
+                                <div id="savedProductsPreview" class="saved-products-preview"></div>
 
                                 <div class="quote-progress">
                                     <span class="active">1 Product</span>

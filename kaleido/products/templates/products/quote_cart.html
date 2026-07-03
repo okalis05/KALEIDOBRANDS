@@ -15,10 +15,18 @@
             </div>
 
             <div class="quote-cart-panel glass-card reveal">
+                <div class="quote-cart-header">
+                    <div>
+                        <h3>Saved Products</h3>
+                        <p>Review the products you want pricing for before submitting your quote request.</p>
+                    </div>
+
+                    <span id="quoteCartPageCount" class="quote-cart-page-count">0 items</span>
+                </div>
                 <div id="quoteCartItems"></div>
 
                 <div class="text-center mt-4">
-                    <a href="{% url 'brands:home' %}#quoteForm" class="btn btn-kb-primary btn-lg">
+                    <a href="{% url 'brands:home' %}?quote=1#contact" class="btn btn-kb-primary btn-lg">
                         Request Quote for Saved Ideas
                     </a>
 

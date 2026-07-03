@@ -36,10 +36,7 @@
                             {% elif product.gallery_images.first %}
                                 <img id="mainProductImage" src="{{ product.gallery_images.first.image.url }}" alt="{{ product.name }}">
                             {% else %}
-                                <div class="product-detail-placeholder product-placeholder-themed large">
-                                    <span>{{ product.category.icon|default:"✨" }}</span>
-                                    <strong>{{ product.name|slice:":2"|upper }}</strong>
-                                </div>
+                                <div class="product-detail-placeholder">KB</div>
                             {% endif %}
                         </div>
 
@@ -167,7 +164,7 @@
                                 Save to Quote Cart
                             </button>
 
-                            <a href="{% url 'brands:home' %}#quoteForm" class="btn btn-kb-primary btn-lg w-100">
+                            <a href="{% url 'brands:home' %}?quote=1#contact" class="btn btn-kb-primary btn-lg w-100">
                                 Request Quote
                             </a>
 
