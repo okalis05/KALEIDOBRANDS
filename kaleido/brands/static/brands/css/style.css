@@ -2074,3 +2074,313 @@ label {
     color: var(--kb-text);
     font-weight: 800;
 }
+
+.recent-products-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.recent-product-pill {
+    display: block;
+    min-width: 210px;
+    padding: 16px 18px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.86);
+    border: 1px solid var(--kb-border);
+    color: var(--kb-text);
+    box-shadow: 0 14px 35px rgba(15,23,42,.06);
+    transition: .25s ease;
+}
+
+.recent-product-pill:hover {
+    color: var(--kb-blue);
+    transform: translateY(-4px);
+}
+
+.recent-product-pill strong {
+    display: block;
+    font-weight: 950;
+}
+
+.recent-product-pill span {
+    color: var(--kb-muted);
+    font-weight: 700;
+}
+
+/* ==============================
+   PHASE 2 FINAL POLISH
+============================== */
+
+.quote-cart-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quote-cart-count {
+    min-width: 22px;
+    height: 22px;
+    padding: 0 7px;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 999px;
+    color: #fff;
+    font-size: .72rem;
+    font-weight: 950;
+    background: linear-gradient(135deg, var(--kb-red), var(--kb-gold));
+    box-shadow: 0 6px 15px rgba(240,41,47,.30);
+}
+
+.floating-cart-wrap {
+    position: fixed;
+    right: 22px;
+    bottom: 84px;
+    z-index: 70;
+}
+
+.floating-quote-cart {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: linear-gradient(135deg, var(--kb-blue), var(--kb-blue-bright));
+    color: #fff;
+    font-size: 1.35rem;
+    box-shadow: 0 18px 40px rgba(0,75,155,.28);
+    transition: .25s ease;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+}
+
+.floating-quote-cart.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.floating-quote-cart:hover {
+    color: #fff;
+    transform: translateY(-4px) scale(1.06);
+}
+
+.floating-quote-cart span {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 7px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--kb-red), var(--kb-gold));
+    color: #fff;
+    font-size: .72rem;
+    font-weight: 950;
+}
+
+.floating-cart-preview {
+    position: absolute;
+    right: 0;
+    bottom: 68px;
+    width: 260px;
+    padding: 18px;
+    border-radius: 22px;
+    background: rgba(255,255,255,.96);
+    border: 1px solid var(--kb-border);
+    box-shadow: var(--kb-shadow);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: .25s ease;
+}
+
+.floating-cart-wrap:hover .floating-cart-preview {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.floating-cart-preview strong,
+.quote-cart-header h3,
+.quote-cart-item strong {
+    display: block;
+    font-weight: 950;
+}
+
+.floating-cart-preview a {
+    display: block;
+    color: var(--kb-blue);
+    font-weight: 800;
+    margin-bottom: 7px;
+}
+
+.floating-cart-preview small {
+    display: block;
+    color: var(--kb-muted);
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+.kb-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translate(-50%, 20px);
+    z-index: 100;
+    padding: 14px 22px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--kb-blue), var(--kb-blue-bright));
+    color: #fff;
+    font-weight: 900;
+    box-shadow: var(--kb-shadow);
+    opacity: 0;
+    pointer-events: none;
+    transition: .25s ease;
+}
+
+.kb-toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.quote-cart-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.quote-cart-header p {
+    margin-bottom: 0;
+}
+
+.quote-cart-page-count {
+    flex: 0 0 auto;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-weight: 950;
+    color: #fff;
+    background: linear-gradient(135deg, var(--kb-blue), var(--kb-blue-bright));
+}
+
+.quote-cart-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.remove-cart-item {
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-weight: 900;
+    color: #fff;
+    background: linear-gradient(135deg, var(--kb-red), var(--kb-gold));
+}
+
+.saved-products-preview {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 18px;
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(0,75,155,.07);
+    border: 1px solid rgba(0,75,155,.12);
+}
+
+.saved-products-preview strong {
+    color: var(--kb-blue);
+    font-weight: 950;
+}
+
+.saved-products-preview span {
+    display: inline-flex;
+    width: fit-content;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--kb-text);
+    font-weight: 800;
+}
+
+.recent-products-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.recent-product-pill {
+    display: block;
+    min-width: 210px;
+    padding: 16px 18px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.86);
+    border: 1px solid var(--kb-border);
+    color: var(--kb-text);
+    box-shadow: 0 14px 35px rgba(15,23,42,.06);
+    transition: .25s ease;
+}
+
+.recent-product-pill:hover {
+    color: var(--kb-blue);
+    transform: translateY(-4px);
+}
+
+.recent-product-pill strong {
+    display: block;
+    font-weight: 950;
+}
+
+.recent-product-pill span {
+    color: var(--kb-muted);
+    font-weight: 700;
+}
+
+.share-product-btn {
+    text-align: center;
+}
+
+/* Mobile polish */
+
+@media (max-width: 768px) {
+    .floating-cart-wrap {
+        right: 16px;
+        bottom: 82px;
+    }
+
+    .floating-cart-preview {
+        display: none;
+    }
+
+    .quote-cart-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .quote-cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .quote-cart-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .kb-toast {
+        width: calc(100% - 32px);
+        text-align: center;
+        border-radius: 18px;
+    }
+}

@@ -5,7 +5,12 @@
 
 {% block body %}
 <main class="inner-page">
-
+    <div
+    id="recentProductData"
+    data-name="{{ product.name }}"
+    data-url="{{ product.get_absolute_url }}"
+    data-category="{{ product.category.name|default:'Product' }}">
+    </div>              
     <section class="product-breadcrumb-section">
         <div class="container">
             <div class="product-breadcrumb">
@@ -163,6 +168,13 @@
                                 data-category="{{ product.category.name|default:'Product' }}">
                                 Save to Quote Cart
                             </button>
+                            <button
+                                type="button"
+                                class="btn btn-kb-outline btn-lg w-100 share-product-btn"
+                                data-title="{{ product.name }}"
+                                data-url="{{ request.build_absolute_uri }}">
+                                Share Product
+                            </button>
 
                             <a href="{% url 'brands:home' %}?quote=1#contact" class="btn btn-kb-primary btn-lg w-100">
                                 Request Quote
@@ -194,12 +206,28 @@
                 </div>
             {% endif %}
         </div>
+        <div class="section-heading text-center mt-5 pt-5 reveal">
+            <span>Recently Viewed</span>
+            <h2>Your recent product ideas.</h2>
+        </div>
+
+        <div id="recentlyViewedProducts" class="recent-products-row reveal"></div>
+        <div class="section-heading text-center mt-5 pt-5 reveal">
+            <span>Recently Viewed</span>
+            <h2>Your recent product ideas.</h2>
+        </div>
+
+        <div id="recentlyViewedProducts" class="recent-products-row reveal"></div>
+
+
+
     </section>
 </main>
 {% endblock %}
-
 {% block scripts %}
 {% load static %}
 <script src="{% static 'products/js/product_detail.js' %}"></script>
 <script src="{% static 'products/js/quote_cart.js' %}"></script>
+<script src="{% static 'products/js/recently_viewed.js' %}"></script>
+<script src="{% static 'products/js/share_product.js' %}"></script>
 {% endblock %}

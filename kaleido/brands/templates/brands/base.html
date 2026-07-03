@@ -159,6 +159,7 @@
         </div>
     </div>
 </footer>
+
 <div class="floating-cart-wrap">
     <a href="{% url 'products:quote_cart' %}" class="floating-quote-cart" aria-label="Open quote cart">
         🛒
@@ -166,11 +167,13 @@
     </a>
 <div class="floating-cart-preview" id="floatingCartPreview"></div>
 </div>
+
 <button class="scroll-top" id="scrollTop" aria-label="Back to top">↑</button>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'brands/js/main.js' %}"></script>
 
 {% block scripts %}{% endblock %}
+<div id="kbToast" class="kb-toast"></div>
 </body>
 </html>

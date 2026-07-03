@@ -61,26 +61,28 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function updateSavedProductsField() {
-        if (!savedProductsField) return;
-
         const items = getCart();
-        savedProductsField.value = items.map(function (item) {
-            return `${item.name} (${item.category}) - ${item.url}`;
-        }).join("\n");
-    }
-    if (savedProductsPreview) {
-        if (!items.length) {
-            savedProductsPreview.innerHTML = "";
-            return;
+
+        if (savedProductsField) {
+            savedProductsField.value = items.map(function (item) {
+                return `${item.name} (${item.category}) - ${item.url}`;
+            }).join("\n");
         }
 
-        savedProductsPreview.innerHTML = `
-            <strong>Saved product ideas included:</strong>
-            ${items.map(function (item) {
-                return `<span>${item.name}</span>`;
-            }).join("")}`;
-}
-    
+        if (savedProductsPreview) {
+            if (!items.length) {
+                savedProductsPreview.innerHTML = "";
+                return;
+            }
+
+            savedProductsPreview.innerHTML = `
+                <strong>Saved product ideas included:</strong>
+                ${items.map(function (item) {
+                    return `<span>${item.name}</span>`;
+                }).join("")}
+            `;
+        }
+    }
 
     function renderCart() {
         if (!cartItems) return;
@@ -105,6 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <strong>${item.name}</strong>
                         <span>${item.category}</span>
                     </div>
+
                     <div class="quote-cart-actions">
                         <a href="${item.url}">View</a>
                         <button type="button" class="remove-cart-item" data-url="${item.url}">
@@ -126,11 +129,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateCartCount();
                 updateFloatingPreview();
                 updateSavedProductsField();
+                showToast("Product removed");
             });
         });
     }
 
     buttons.forEach(function (button) {
+        const exists = getCart().some(function (saved) {
+            return saved.url === button.dataset.url;
+        });
+
+        if (exists) {
+            button.textContent = "Saved ✓";
+            button.classList.add("saved");
+        }
+
         button.addEventListener("click", function (event) {
             event.preventDefault();
             event.stopPropagation();
@@ -142,11 +155,12 @@ document.addEventListener("DOMContentLoaded", function () {
             };
 
             const cart = getCart();
-            const exists = cart.some(function (saved) {
+
+            const alreadySaved = cart.some(function (saved) {
                 return saved.url === item.url;
             });
 
-            if (!exists) {
+            if (!alreadySaved) {
                 cart.push(item);
                 saveCart(cart);
             }
@@ -157,6 +171,7 @@ document.addEventListener("DOMContentLoaded", function () {
             updateCartCount();
             updateFloatingPreview();
             updateSavedProductsField();
+            showToast("Product saved to Quote Cart");
         });
     });
 
@@ -167,21 +182,10 @@ document.addEventListener("DOMContentLoaded", function () {
             updateCartCount();
             updateFloatingPreview();
             updateSavedProductsField();
+            showToast("Quote Cart cleared");
         });
     }
-buttons.forEach(function (button) {
-    const cart = getCart();
 
-    const exists = cart.some(function (saved) {
-        return saved.url === button.dataset.url;
-    });
-
-    if (exists) {
-        button.textContent = "Saved ✓";
-        button.classList.add("saved");
-        showToast("Product saved to Quote Cart");
-    }
-});
     renderCart();
     updateCartCount();
     updateFloatingPreview();
