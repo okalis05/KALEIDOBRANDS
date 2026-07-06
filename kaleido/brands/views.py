@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
-
+from django.core.mail import EmailMessage
 from .models import ContactMessage, QuoteRequest
 
 
@@ -69,14 +69,17 @@ FEATURED_PRODUCTS = [
 
 
 def send_business_email(subject, body, reply_to_email=None, receiver=None):
-    send_mail(
+    email = EmailMessage(
         subject=subject,
-        message=body,
+        body=body,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[receiver or settings.CONTACT_RECEIVER_EMAIL],
-        fail_silently=False,
-        reply_to=[reply_to_email] if reply_to_email else None,
+        to=[receiver or settings.CONTACT_RECEIVER_EMAIL],
     )
+
+    if reply_to_email:
+        email.reply_to = [reply_to_email]
+
+    email.send(fail_silently=False)
 
 
 def home(request):

@@ -1,0 +1,111 @@
+{% extends "brands/base.html" %}
+{% load static %}
+
+
+{% block meta_description %}
+Search {{ supplier.name }} supplier products by category, SKU, decoration method, industry, and product name.
+{% endblock %}
+
+{% block canonical %}
+{{ request.build_absolute_uri }}
+{% endblock %}
+
+{% block og_title %}
+Search {{ supplier.name }} Products | KaleidoBrands
+{% endblock %}
+
+{% block og_description %}
+Search {{ supplier.name }} promotional products, apparel, drinkware, gifts, and branded merchandise.
+{% endblock %}
+
+{% block og_url %}
+{{ request.build_absolute_uri }}
+{% endblock %}
+
+
+{% block title %}Search {{ supplier.name }} Products | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>{{ supplier.name }}</span>
+                <h1>Supplier Product Search</h1>
+                <p class="mx-auto mt-3" style="max-width:760px;">
+                    Search imported supplier products by product name, SKU, category,
+                    industry, color, or decoration method.
+                </p>
+            </div>
+
+            <form action="{% url 'products:supplier_search' supplier.slug %}" method="get" class="product-filter-panel reveal">
+                <div class="row g-3">
+                    <div class="col-lg-6">
+                        <label>Search</label>
+                        <input
+                            type="search"
+                            name="q"
+                            value="{{ query }}"
+                            class="form-control"
+                            placeholder="polo, scrubs, tumbler, tote, cap..."
+                        >
+                    </div>
+
+                    <div class="col-lg-4">
+                        <label>Category</label>
+                        <select name="category" class="form-control">
+                            <option value="">All Supplier Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.slug }}" {% if category_slug == category.slug %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2 d-flex align-items-end">
+                        <button class="btn btn-kb-primary w-100" type="submit">Search</button>
+                    </div>
+
+                    <div class="col-12">
+                        <a href="{% url 'products:supplier_search' supplier.slug %}" class="btn btn-kb-outline">
+                            Reset
+                        </a>
+
+                        <a href="{% url 'products:supplier_detail' supplier.slug %}" class="btn btn-kb-outline">
+                            Supplier Home
+                        </a>
+                    </div>
+                </div>
+            </form>
+
+            {% if query %}
+                <p class="text-center mt-4 text-muted">
+                    Showing supplier results for <strong>{{ query }}</strong>
+                </p>
+            {% endif %}
+
+            <div class="row g-4 mt-5">
+                {% for product in products %}
+                    <div class="col-md-6 col-lg-3 reveal">
+                        {% include "products/partials/product_card.html" %}
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="mini-card text-center">
+                            <h4>No matching supplier products found.</h4>
+                            <p>Try searching for apparel, drinkware, healthcare, gifts, bags, caps, or trade shows.</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'products/js/quote_cart.js' %}"></script>
+{% endblock %}

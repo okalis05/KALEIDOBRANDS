@@ -1,17 +1,34 @@
 <a href="{{ product.get_absolute_url }}" class="product-result-card">
+
+
     <div class="product-result-image">
-        {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}">
-        {% else %}
-            <div class="product-placeholder product-placeholder-themed">
-                <span>{{ product.category.icon|default:"✨" }}</span>
-                <strong>{{ product.name|slice:":2"|upper }}</strong>
-            </div>
-        {% endif %}
+
+    {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+
+    {% elif product.external_image_url %}
+        <img src="{{ product.external_image_url }}" alt="{{ product.name }}">
+
+    {% else %}
+
+        <div class="product-placeholder product-placeholder-themed">
+            <span>{{ product.category.icon|default:"✨" }}</span>
+            <strong>{{ product.name|slice:":2"|upper }}</strong>
+        </div>
+
+    {% endif %}
+
     </div>
 
     <div class="product-result-body">
-        <small>{{ product.category.name|default:"KaleidoBrands" }}</small>
+        <div class="product-card-badges">
+            <small>{{ product.category.name|default:"KaleidoBrands" }}</small>
+
+            {% if product.supplier_record %}
+                <span class="supplier-mini-badge">{{ product.supplier_record.name }}</span>
+            {% endif %}
+        </div>
+
         <h4>{{ product.name }}</h4>
         <p>{{ product.short_description|truncatewords:16 }}</p>
 
@@ -23,12 +40,14 @@
                 <strong>Quote</strong>
             {% endif %}
         </div>
+
         <button
             type="button"
             class="save-product-btn"
             data-name="{{ product.name }}"
             data-url="{{ product.get_absolute_url }}"
-            data-category="{{ product.category.name|default:'Product' }}">
+            data-category="{{ product.category.name|default:'Product' }}"
+            aria-label="Save {{ product.name }} to quote cart">
             Save to Quote Cart
         </button>
     </div>

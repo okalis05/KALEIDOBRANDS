@@ -1,0 +1,71 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Quote History | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Quote History</span>
+                <h1>View Quote Requests</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    Enter the email used on your quote request to view submitted quote details.
+                </p>
+            </div>
+
+            {% if not request.user.is_staff %}
+                <form method="get" class="product-filter-panel reveal">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-lg-9">
+                            <label>Email Address</label>
+                            <input
+                                type="email"
+                                name="email"
+                                value="{{ email }}"
+                                class="form-control"
+                                placeholder="you@example.com"
+                                required>
+                        </div>
+
+                        <div class="col-lg-3">
+                            <button class="btn btn-kb-primary w-100" type="submit">
+                                Search Quotes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+
+            <div class="supplier-admin-panel mt-5 reveal">
+                <h3>Submitted Quotes</h3>
+
+                {% for quote in quotes %}
+                    <div class="supplier-admin-row">
+                        <div>
+                            <strong>{{ quote.project_name|default:"Quote Request" }}</strong>
+                            <span>
+                                {{ quote.customer_name }} · {{ quote.email }} · {{ quote.created_at }}
+                            </span>
+                        </div>
+
+                        {% if request.user.is_staff %}
+                            <a href="{% url 'products:quote_detail' quote.id %}">View</a>
+                        {% else %}
+                            <a href="{% url 'products:quote_detail' quote.id %}?email={{ email }}">View</a>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p class="text-muted">
+                        {% if email %}
+                            No quote requests found for this email.
+                        {% else %}
+                            Enter your email to search quote requests.
+                        {% endif %}
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

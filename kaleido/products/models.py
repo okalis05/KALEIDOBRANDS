@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from .models_quote import *
+
 
 
 class Category(models.Model):
@@ -19,9 +21,64 @@ class Category(models.Model):
         return self.name
 
 
+class Supplier(models.Model):
+    name = models.CharField(max_length=150)
+    slug = models.SlugField(unique=True)
+    website = models.URLField(blank=True)
+    api_base_url = models.URLField(blank=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
+class SupplierCatalog(models.Model):
+    supplier = models.ForeignKey(
+        Supplier,
+        on_delete=models.CASCADE,
+        related_name="catalogs",
+    )
+    name = models.CharField(max_length=180)
+    catalog_url = models.URLField(blank=True)
+    description = models.TextField(blank=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return f"{self.supplier.name} - {self.name}"
+
+
 class Product(models.Model):
     category = models.ForeignKey(
         Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="products",
+    )
+
+    supplier = models.CharField(
+    max_length=120,
+    blank=True,
+    default="Kaeser & Blair",
+)
+
+    supplier_record = models.ForeignKey(
+        Supplier,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="products",
+)
+
+    catalog = models.ForeignKey(
+        SupplierCatalog,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -34,9 +91,9 @@ class Product(models.Model):
     description = models.TextField(blank=True)
 
     sku = models.CharField(max_length=80, blank=True)
-    supplier = models.CharField(max_length=120, blank=True, default="Kaeser & Blair")
     supplier_product_id = models.CharField(max_length=120, blank=True)
     supplier_url = models.URLField(blank=True)
+    external_image_url = models.URLField(blank=True)
 
     image = models.ImageField(upload_to="products/", blank=True, null=True)
 
@@ -52,6 +109,9 @@ class Product(models.Model):
     material = models.CharField(max_length=120, blank=True)
     dimensions = models.CharField(max_length=120, blank=True)
 
+    source = models.CharField(max_length=80, blank=True, default="manual")
+    last_synced_at = models.DateTimeField(null=True, blank=True)
+
     is_featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
@@ -59,6 +119,12 @@ class Product(models.Model):
 
     class Meta:
         ordering = ["name"]
+        indexes = [
+            models.Index(fields=["slug"]),
+            models.Index(fields=["sku"]),
+            models.Index(fields=["supplier_product_id"]),
+            models.Index(fields=["source"]),
+        ]
 
     def __str__(self):
         return self.name
@@ -81,6 +147,13 @@ class Product(models.Model):
             return []
         return [industry.strip() for industry in self.industries.split(",") if industry.strip()]
 
+    def display_image_url(self):
+        if self.image:
+            return self.image.url
+        if self.external_image_url:
+            return self.external_image_url
+        return ""
+
 
 class ProductImage(models.Model):
     product = models.ForeignKey(
@@ -88,7 +161,8 @@ class ProductImage(models.Model):
         on_delete=models.CASCADE,
         related_name="gallery_images",
     )
-    image = models.ImageField(upload_to="products/gallery/")
+    image = models.ImageField(upload_to="products/gallery/", blank=True, null=True)
+    external_image_url = models.URLField(blank=True)
     alt_text = models.CharField(max_length=160, blank=True)
     order = models.PositiveIntegerField(default=0)
 
@@ -97,3 +171,41 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"{self.product.name} image"
+
+    @property
+    def display_url(self):
+        if self.image:
+            return self.image.url
+        return self.external_image_url
+
+
+class SupplierSyncLog(models.Model):
+    STATUS_CHOICES = [
+        ("started", "Started"),
+        ("success", "Success"),
+        ("failed", "Failed"),
+        ("partial", "Partial"),
+    ]
+
+    supplier = models.ForeignKey(
+        Supplier,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="started")
+    message = models.TextField(blank=True)
+    products_created = models.PositiveIntegerField(default=0)
+    products_updated = models.PositiveIntegerField(default=0)
+    products_failed = models.PositiveIntegerField(default=0)
+    started_at = models.DateTimeField(auto_now_add=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-started_at"]
+
+    def __str__(self):
+        supplier_name = self.supplier.name if self.supplier else "Unknown Supplier"
+        return f"{supplier_name} sync - {self.status}"
+    
+

@@ -2384,3 +2384,360 @@ label {
         border-radius: 18px;
     }
 }
+
+/* ==============================
+   PHASE 3 SUPPLIER CATALOG
+============================== */
+
+.supplier-hero {
+    background:
+        radial-gradient(circle at top left, rgba(240,41,47,.08), transparent 28%),
+        radial-gradient(circle at top right, rgba(0,75,155,.12), transparent 34%),
+        var(--kb-white);
+}
+
+.supplier-hero-copy {
+    max-width: 680px;
+    font-size: 1.08rem;
+}
+
+.supplier-search-box {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    max-width: 720px;
+    margin-top: 28px;
+}
+
+.supplier-card {
+    padding: 34px;
+    border-radius: 36px;
+    text-align: center;
+}
+
+.supplier-card-mark {
+    width: 92px;
+    height: 92px;
+    border-radius: 28px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 20px;
+    font-size: 2rem;
+    font-weight: 950;
+    color: #fff;
+    background: linear-gradient(135deg, var(--kb-blue), var(--kb-red));
+    box-shadow: 0 18px 40px rgba(0,75,155,.22);
+}
+
+.supplier-card h3 {
+    font-weight: 950;
+    letter-spacing: -.04em;
+}
+
+.supplier-card-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.supplier-card-stats div {
+    padding: 16px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.76);
+    border: 1px solid var(--kb-border);
+}
+
+.supplier-card-stats strong {
+    display: block;
+    font-size: 1.6rem;
+    font-weight: 950;
+    color: var(--kb-blue);
+}
+
+.supplier-card-stats span {
+    color: var(--kb-muted);
+    font-weight: 800;
+    font-size: .85rem;
+}
+
+.supplier-category-strip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 46px;
+}
+
+.supplier-category-strip a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.86);
+    border: 1px solid var(--kb-border);
+    color: var(--kb-blue);
+    font-weight: 900;
+    transition: .25s ease;
+}
+
+.supplier-category-strip a:hover {
+    transform: translateY(-3px);
+    color: var(--kb-red);
+    box-shadow: 0 14px 32px rgba(15,23,42,.08);
+}
+
+.product-card-badges {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.supplier-mini-badge {
+    display: inline-flex;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: rgba(240,41,47,.08);
+    color: var(--kb-red);
+    font-size: .68rem;
+    font-weight: 950;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .supplier-search-box {
+        grid-template-columns: 1fr;
+    }
+
+    .supplier-card-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .product-card-badges {
+        flex-direction: column;
+    }
+}
+
+/* ==============================
+   PHASE 3 SUPPLIER SYNC DASHBOARD
+============================== */
+
+.supplier-stat-card {
+    height: 100%;
+    padding: 28px;
+    border-radius: 28px;
+    background: rgba(255,255,255,.86);
+    border: 1px solid var(--kb-border);
+    box-shadow: 0 18px 45px rgba(15,23,42,.06);
+    text-align: center;
+}
+
+.supplier-stat-card span {
+    display: block;
+    color: var(--kb-muted);
+    font-weight: 850;
+    margin-bottom: 10px;
+}
+
+.supplier-stat-card strong {
+    display: block;
+    color: var(--kb-blue);
+    font-size: 3rem;
+    font-weight: 950;
+    letter-spacing: -.06em;
+}
+
+.supplier-admin-panel {
+    height: 100%;
+    padding: 28px;
+    border-radius: 30px;
+    background: rgba(255,255,255,.86);
+    border: 1px solid var(--kb-border);
+    box-shadow: 0 18px 45px rgba(15,23,42,.06);
+}
+
+.supplier-admin-panel h3 {
+    font-weight: 950;
+    margin-bottom: 20px;
+}
+
+.supplier-admin-row,
+.sync-log-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: center;
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(247,249,252,.88);
+    border: 1px solid var(--kb-border);
+    margin-bottom: 12px;
+}
+
+.supplier-admin-row strong,
+.sync-log-row strong {
+    display: block;
+    font-weight: 950;
+}
+
+.supplier-admin-row span,
+.sync-log-row span,
+.sync-log-row small {
+    display: block;
+    color: var(--kb-muted);
+    font-weight: 700;
+    font-size: .86rem;
+}
+
+.supplier-admin-row a {
+    font-weight: 950;
+    color: var(--kb-blue);
+}
+
+.sync-status {
+    flex: 0 0 auto;
+    border-radius: 999px;
+    padding: 8px 12px;
+    color: #fff !important;
+    font-weight: 950 !important;
+    font-size: .75rem !important;
+}
+
+.sync-status.started {
+    background: linear-gradient(135deg, var(--kb-blue), var(--kb-blue-bright));
+}
+
+.sync-status.success {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+}
+
+.sync-status.failed {
+    background: linear-gradient(135deg, #dc2626, var(--kb-red));
+}
+
+.sync-status.partial {
+    background: linear-gradient(135deg, var(--kb-gold), #f97316);
+}
+
+@media (max-width: 768px) {
+    .supplier-admin-row,
+    .sync-log-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ==============================
+   PHASE 3 SUPPLIER CSV UPLOAD
+============================== */
+
+.supplier-upload-card {
+    max-width: 760px;
+    margin: 42px auto 0;
+    padding: 34px;
+    border-radius: 34px;
+}
+
+.supplier-upload-card label {
+    font-weight: 950;
+    margin-bottom: 10px;
+}
+
+.supplier-upload-help {
+    margin-top: 18px;
+    padding: 18px;
+    border-radius: 20px;
+    background: rgba(0,75,155,.07);
+    border: 1px solid rgba(0,75,155,.12);
+    color: var(--kb-muted);
+    font-weight: 700;
+}
+
+.supplier-upload-help strong {
+    color: var(--kb-blue);
+}
+
+.supplier-upload-actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+}
+
+.supplier-message-wrap {
+    max-width: 760px;
+    margin: 32px auto 0;
+}
+
+.product-gallery{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.product-main-image{
+    width:100%;
+    border-radius:24px;
+    object-fit:cover;
+}
+
+.product-thumbnails{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.product-thumbnail{
+    width:90px;
+    height:90px;
+    object-fit:cover;
+    border-radius:14px;
+    cursor:pointer;
+    border:2px solid transparent;
+    transition:.25s;
+}
+
+.product-thumbnail:hover{
+    border-color:var(--kb-red);
+    transform:translateY(-2px);
+}
+
+/* ==============================
+   PHASE 3 SUPPLIER ANALYTICS
+============================== */
+
+.supplier-metric-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--kb-border);
+}
+
+.supplier-metric-row:last-child {
+    border-bottom: 0;
+}
+
+.supplier-metric-row span {
+    color: var(--kb-muted);
+    font-weight: 800;
+}
+
+.supplier-metric-row strong {
+    color: var(--kb-blue);
+    font-weight: 950;
+}
+
+/* ==============================
+   PHASE 3 SUPPLIER ANALYTICS CHARTS
+============================== */
+
+.supplier-chart-box {
+    position: relative;
+    height: 320px;
+    width: 100%;
+}

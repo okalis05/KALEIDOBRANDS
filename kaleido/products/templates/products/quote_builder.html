@@ -1,0 +1,79 @@
+{% extends "brands/base.html" %}
+{% load static %}
+
+{% block title %}
+Quote Builder | KaleidoBrands
+{% endblock %}
+
+{% block body %}
+
+<main class="inner-page">
+
+<section class="section-panel">
+
+<div class="container">
+
+<div class="section-heading text-center">
+
+<span>Quote Builder</span>
+
+<h1>Build Your Custom Quote</h1>
+
+<p>
+
+Select multiple supplier products,
+
+adjust quantities,
+
+then request one professional quote.
+
+</p>
+
+</div>
+
+<form method="post">
+
+{% csrf_token %}
+<input type="hidden" name="quote_items" id="quoteItemsJSON">
+<div class="row">
+
+<div class="col-lg-7">
+
+<div id="quoteBuilderItems">
+
+</div>
+
+</div>
+
+<div class="col-lg-5">
+
+<div class="glass-card p-4">
+
+{{ form.as_p }}
+
+<button
+class="btn btn-kb-primary w-100 btn-lg">
+
+Submit Quote Request
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+</section>
+
+</main>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'products/js/quote_builder.js' %}"></script>
+{% endblock %}

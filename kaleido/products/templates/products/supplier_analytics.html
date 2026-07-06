@@ -1,0 +1,177 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Supplier Analytics | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>Supplier Intelligence</span>
+                <h1>Supplier Product Analytics</h1>
+                <p class="mx-auto mt-3" style="max-width:760px;">
+                    Track supplier product volume, pricing, categories, and import coverage across the KaleidoBrands catalog.
+                </p>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-md-3 reveal">
+                    <div class="supplier-stat-card">
+                        <span>Total Products</span>
+                        <strong>{{ total_supplier_products }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-3 reveal delay-1">
+                    <div class="supplier-stat-card">
+                        <span>Active Products</span>
+                        <strong>{{ active_supplier_products }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-3 reveal delay-2">
+                    <div class="supplier-stat-card">
+                        <span>Featured Products</span>
+                        <strong>{{ featured_supplier_products }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-3 reveal delay-3">
+                    <div class="supplier-stat-card">
+                        <span>Avg. Price</span>
+                        <strong>${{ average_price|floatformat:2 }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4 mt-5">
+                <div class="col-lg-7 reveal">
+                    <div class="supplier-admin-panel">
+                        <h3>Products by Category</h3>
+                        <div class="supplier-chart-box">
+                            <canvas id="supplierCategoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 reveal delay-1">
+                    <div class="supplier-admin-panel">
+                        <h3>Pricing Snapshot</h3>
+                        <div class="supplier-chart-box">
+                            <canvas id="supplierPricingChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-4 reveal">
+                    <div class="supplier-admin-panel">
+                        <h3>Pricing Snapshot</h3>
+
+                        <div class="supplier-metric-row">
+                            <span>Lowest Starting Price</span>
+                            <strong>${{ min_price|floatformat:2 }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Highest Starting Price</span>
+                            <strong>${{ max_price|floatformat:2 }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Avg. Minimum Quantity</span>
+                            <strong>{{ average_min_quantity|floatformat:0 }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 reveal delay-1">
+                    <div class="supplier-admin-panel">
+                        <h3>Products by Supplier</h3>
+
+                        {% for row in products_by_supplier %}
+                            <div class="supplier-metric-row">
+                                <span>{{ row.supplier_record__name|default:"Unknown" }}</span>
+                                <strong>{{ row.total }}</strong>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No supplier products yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-lg-4 reveal delay-2">
+                    <div class="supplier-admin-panel">
+                        <h3>Top Categories</h3>
+
+                        {% for row in products_by_category %}
+                            <div class="supplier-metric-row">
+                                <span>{{ row.category__name|default:"Uncategorized" }}</span>
+                                <strong>{{ row.total }}</strong>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No categories yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="supplier-admin-panel mt-5 reveal">
+                <h3>Recently Imported / Updated Products</h3>
+
+                {% for product in recent_supplier_products %}
+                    <div class="supplier-admin-row">
+                        <div>
+                            <strong>{{ product.name }}</strong>
+                            <span>
+                                {{ product.category.name|default:"Uncategorized" }}
+                                · {{ product.supplier_record.name|default:"Supplier" }}
+                                · SKU {{ product.sku|default:"N/A" }}
+                            </span>
+                        </div>
+
+                        <a href="{{ product.get_absolute_url }}">View</a>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No recently imported products yet.</p>
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'products:supplier_sync_dashboard' %}" class="btn btn-kb-outline btn-lg">
+                    Sync Dashboard
+                </a>
+
+                <a href="{% url 'products:supplier_csv_upload' %}" class="btn btn-kb-primary btn-lg">
+                    Upload Supplier CSV
+                </a>
+
+                <a href="{% url 'products:supplier_analytics' %}" class="btn btn-kb-outline btn-lg">
+                    Supplier Analytics
+                </a>
+
+                <a href="{% url 'products:supplier_stats_api' %}" class="btn btn-kb-outline btn-lg">
+                    Stats API
+                </a>
+
+                <a href="{% url 'products:supplier_categories_api' %}" class="btn btn-kb-outline btn-lg">
+                    Categories API
+                </a>
+
+                <a href="{% url 'products:supplier_pricing_api' %}" class="btn btn-kb-outline btn-lg">
+                    Pricing API
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+{% endblock %}
+{% block scripts %}
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'products/js/supplier_analytics.js' %}"></script>
+{% endblock %}

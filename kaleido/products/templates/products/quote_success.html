@@ -1,0 +1,39 @@
+{% extends "brands/base.html" %}
+{% load static %}
+
+{% block title %}Quote Request Received | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="quote-success-card glass-card text-center">
+                <span class="quote-success-icon">✓</span>
+
+                <h1>Thank you.</h1>
+
+                <p>
+                    Your quote request has been received.
+                    Our branding specialists will contact you within one business day.
+                </p>
+
+                <div class="mt-4">
+                    <a href="{% url 'products:home' %}" class="btn btn-kb-primary btn-lg">
+                        Continue Browsing Products
+                    </a>
+
+                    <a href="{% url 'brands:home' %}" class="btn btn-kb-outline btn-lg">
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    localStorage.removeItem("kbQuoteCart");
+</script>
+{% endblock %}

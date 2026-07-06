@@ -1,0 +1,133 @@
+{% extends "brands/base.html" %}
+{% load static %}
+
+{% block title %}{{ supplier.name }} Products | KaleidoBrands{% endblock %}
+
+
+{% block meta_description %}
+Browse {{ supplier.name }} promotional products, apparel, drinkware, corporate gifts, and branded merchandise through KaleidoBrands.
+{% endblock %}
+
+{% block canonical %}
+{{ request.build_absolute_uri }}
+{% endblock %}
+
+{% block og_title %}
+{{ supplier.name }} Products | KaleidoBrands
+{% endblock %}
+
+{% block og_description %}
+Explore imported {{ supplier.name }} promotional products connected to KaleidoBrands quote requests.
+{% endblock %}
+
+
+{% block body %}
+<main class="inner-page">
+
+    <section class="section-panel supplier-hero">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-7 reveal">
+                    <div class="section-heading">
+                        <span>Supplier Catalog</span>
+                        <h1>{{ supplier.name }} Product Collection</h1>
+                    </div>
+
+                    <p class="supplier-hero-copy">
+                        Browse imported promotional products, apparel, drinkware, gifts,
+                        healthcare items, and event merchandise connected to the KaleidoBrands quote workflow.
+                    </p>
+
+                    <form action="{% url 'products:supplier_search' supplier.slug %}" method="get" class="supplier-search-box">
+                        <input
+                            type="search"
+                            name="q"
+                            class="form-control"
+                            placeholder="Search {{ supplier.name }} products: polos, scrubs, tumblers..."
+                        >
+                        <button class="btn btn-kb-primary" type="submit">Search</button>
+                    </form>
+
+                    <div class="supplier-hero-actions mt-4">
+                        <a href="{% url 'products:supplier_search' supplier.slug %}" class="btn btn-kb-outline btn-lg">
+                            Browse All Products
+                        </a>
+
+                        {% if supplier.website %}
+                            <a href="{{ supplier.website }}" target="_blank" class="btn btn-kb-outline btn-lg">
+                                Supplier Website
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-lg-5 reveal delay-1">
+                    <div class="supplier-card glass-card">
+                        <div class="supplier-card-mark">KB</div>
+                        <h3>{{ supplier.name }}</h3>
+                        <p>Integrated supplier catalog connected to KaleidoBrands product search and quote requests.</p>
+
+                        <div class="supplier-card-stats">
+                            <div>
+                                <strong>{{ products|length }}</strong>
+                                <span>Shown Products</span>
+                            </div>
+
+                            <div>
+                                <strong>{{ categories|length }}</strong>
+                                <span>Categories</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if categories %}
+                <div class="supplier-category-strip reveal">
+                    {% for category in categories %}
+                        <a href="{% url 'products:supplier_search' supplier.slug %}?category={{ category.slug }}">
+                            <span>{{ category.icon|default:"✨" }}</span>
+                            {{ category.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="section-panel soft-bg">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Imported Products</span>
+                <h2>Supplier products ready for quote requests.</h2>
+            </div>
+
+            <div class="row g-4 mt-4">
+                {% for product in products %}
+                    <div class="col-md-6 col-lg-3 reveal">
+                        {% include "products/partials/product_card.html" %}
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="mini-card text-center">
+                            <h4>No supplier products imported yet.</h4>
+                            <p>Run the supplier CSV import command to populate this catalog.</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'products:supplier_search' supplier.slug %}" class="btn btn-kb-primary btn-lg">
+                    View Full Supplier Catalog
+                </a>
+            </div>
+        </div>
+    </section>
+
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'products/js/quote_cart.js' %}"></script>
+{% endblock %}

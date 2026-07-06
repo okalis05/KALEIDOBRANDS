@@ -1,0 +1,112 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Supplier Sync Dashboard | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>Supplier Operations</span>
+                <h1>Supplier Sync Dashboard</h1>
+                <p class="mx-auto mt-3" style="max-width:760px;">
+                    Monitor imported supplier products, sync activity, and Kaeser & Blair catalog health.
+                </p>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-md-4 reveal">
+                    <div class="supplier-stat-card">
+                        <span>Total Supplier Products</span>
+                        <strong>{{ total_supplier_products }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-4 reveal delay-1">
+                    <div class="supplier-stat-card">
+                        <span>Kaeser & Blair Products</span>
+                        <strong>{{ kaeser_products }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-4 reveal delay-2">
+                    <div class="supplier-stat-card">
+                        <span>Active Supplier Products</span>
+                        <strong>{{ active_supplier_products }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-5 reveal">
+                    <div class="supplier-admin-panel">
+                        <h3>Suppliers</h3>
+
+                        {% for supplier in suppliers %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ supplier.name }}</strong>
+                                    <span>{{ supplier.product_count }} products</span>
+                                </div>
+
+                                <a href="{% url 'products:supplier_detail' supplier.slug %}">
+                                    View
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No suppliers configured yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-lg-7 reveal delay-1">
+                    <div class="supplier-admin-panel">
+                        <h3>Recent Sync Logs</h3>
+
+                        {% for log in logs %}
+                            <div class="sync-log-row">
+                                <div>
+                                    <strong>
+                                        {{ log.supplier.name|default:"Unknown Supplier" }}
+                                    </strong>
+
+                                    <span>
+                                        Created {{ log.products_created }},
+                                        Updated {{ log.products_updated }},
+                                        Failed {{ log.products_failed }}
+                                    </span>
+
+                                    <small>{{ log.started_at }}</small>
+                                </div>
+
+                                <span class="sync-status {{ log.status }}">
+                                    {{ log.status|title }}
+                                </span>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No sync logs yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'products:supplier_csv_upload' %}" class="btn btn-kb-primary btn-lg">
+                    Upload Supplier CSV
+                </a>
+                <a href="/admin/products/suppliersynclog/" class="btn btn-kb-outline btn-lg">
+                    View Logs in Admin
+                </a>
+
+                <a href="/admin/products/product/" class="btn btn-kb-primary btn-lg">
+                    Manage Products
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+{% endblock %}

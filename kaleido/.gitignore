@@ -1,0 +1,13 @@
+
+---
+
+# 5. Update `.gitignore`
+
+Make sure it includes:
+
+```gitignore
+data/*.csv
+!data/sample_kaeser_blair_products.csv
+!data/supplier_import_template.csv
+!data/README_supplier_import.md
+!data/README_scheduled_sync.md

@@ -1,0 +1,102 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Quote Detail | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Quote Detail</span>
+                <h1>{{ quote.project_name|default:"Quote Request" }}</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    Submitted on {{ quote.created_at }} by {{ quote.customer_name }}.
+                </p>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-4">
+                    <div class="supplier-admin-panel">
+                        <h3>Customer</h3>
+
+                        <div class="supplier-metric-row">
+                            <span>Name</span>
+                            <strong>{{ quote.customer_name }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Company</span>
+                            <strong>{{ quote.company|default:"N/A" }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Email</span>
+                            <strong>{{ quote.email }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Phone</span>
+                            <strong>{{ quote.phone|default:"N/A" }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Deadline</span>
+                            <strong>{{ quote.deadline|default:"N/A" }}</strong>
+                        </div>
+
+                        {% if quote.pdf_file %}
+                            <div class="mt-4">
+                                <a href="{{ quote.pdf_file.url }}" class="btn btn-kb-primary w-100" target="_blank">
+                                    Download PDF
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="supplier-admin-panel">
+                        <h3>Requested Products</h3>
+
+                        {% for item in quote.items.all %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ item.product_name }}</strong>
+                                    <span>
+                                        {{ item.category|default:"Product" }}
+                                        · Qty {{ item.quantity }}
+                                        {% if item.notes %} · {{ item.notes }}{% endif %}
+                                    </span>
+                                </div>
+
+                                {% if item.product_url %}
+                                    <a href="{{ item.product_url }}">View Product</a>
+                                {% endif %}
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No products were attached to this quote.</p>
+                        {% endfor %}
+
+                        {% if quote.notes %}
+                            <div class="mt-4">
+                                <h4>Project Notes</h4>
+                                <p>{{ quote.notes }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'products:quote_history' %}" class="btn btn-kb-outline btn-lg">
+                    Back to Quote History
+                </a>
+
+                <a href="{% url 'products:home' %}" class="btn btn-kb-primary btn-lg">
+                    Browse Products
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

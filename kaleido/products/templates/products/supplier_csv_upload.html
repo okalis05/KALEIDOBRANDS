@@ -1,0 +1,79 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Upload Supplier CSV | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>Supplier Import</span>
+                <h1>Upload Supplier CSV</h1>
+                <p class="mx-auto mt-3" style="max-width:760px;">
+                    Validate or import supplier products into the KaleidoBrands catalog.
+                    Use this page for Kaeser & Blair CSV product files.
+                </p>
+            </div>
+
+            {% if messages %}
+                <div class="supplier-message-wrap reveal">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} rounded-4 shadow-sm">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="supplier-upload-card glass-card reveal">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <label for="csv_file">Supplier CSV File</label>
+                    <input
+                        type="file"
+                        name="csv_file"
+                        id="csv_file"
+                        class="form-control"
+                        accept=".csv"
+                        required
+                    >
+
+                    <div class="supplier-upload-help">
+                        <strong>Required column:</strong> name
+                        <br>
+                        <span>
+                            Optional columns include sku, category, price, min quantity,
+                            image URL, supplier URL, colors, decoration methods, catalog name, and catalog URL.
+                        </span>
+                    </div>
+
+                    <div class="supplier-upload-actions">
+                        <button class="btn btn-kb-outline btn-lg" name="dry_run" value="1" type="submit">
+                            Validate Only
+                        </button>
+
+                        <button class="btn btn-kb-primary btn-lg" type="submit">
+                            Import Products
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'products:supplier_sync_dashboard' %}" class="btn btn-kb-outline btn-lg">
+                    Back to Sync Dashboard
+                </a>
+
+                <a href="/admin/products/suppliersynclog/" class="btn btn-kb-outline btn-lg">
+                    View Sync Logs
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+{% endblock %}

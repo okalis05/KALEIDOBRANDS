@@ -1,28 +1,100 @@
 {% extends "brands/base.html" %}
 
-{% block title %}{{ product.name }} | KaleidoBrands{% endblock %}
-{% block meta_description %}{{ product.short_description|default:product.description|truncatechars:155 }}{% endblock %}
+{% block title %}{{ product.name }} | {{ product.category.name|default:"Promotional Products" }} | KaleidoBrands{% endblock %}
+
+{% block meta_description %}
+{{ product.short_description|default:product.description|truncatechars:155 }}
+{% endblock %}
+
+{% block meta_keywords %}
+{{ product.name }}, {{ product.category.name|default:"promotional products" }}, {{ product.decoration_methods }}, {{ product.industries }}, KaleidoBrands
+{% endblock %}
+
+{% block canonical %}
+{{ request.build_absolute_uri }}
+{% endblock %}
+
+{% block og_title %}
+{{ product.name }} | KaleidoBrands
+{% endblock %}
+
+{% block og_description %}
+{{ product.short_description|default:product.description|truncatechars:155 }}
+{% endblock %}
+
+{% block og_url %}
+{{ request.build_absolute_uri }}
+{% endblock %}
+
+{% block og_type %}
+product
+{% endblock %}
+
+{% block og_image %}
+{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% elif product.external_image_url %}{{ product.external_image_url }}{% else %}https://kaleidobrands.com/static/brands/images/kb.png{% endif %}
+{% endblock %}
+
+{% block twitter_title %}
+{{ product.name }} | KaleidoBrands
+{% endblock %}
+
+{% block twitter_description %}
+{{ product.short_description|default:product.description|truncatechars:155 }}
+{% endblock %}
+
+{% block twitter_image %}
+{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% elif product.external_image_url %}{{ product.external_image_url }}{% else %}https://kaleidobrands.com/static/brands/images/kb.png{% endif %}
+{% endblock %}
+
+{% block head %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{ product.name|escapejs }}",
+    "description": "{{ product.short_description|default:product.description|escapejs }}",
+    "sku": "{{ product.sku|default:product.slug|escapejs }}",
+    "brand": {
+        "@type": "Brand",
+        "name": "{{ product.supplier_record.name|default:'KaleidoBrands'|escapejs }}"
+    },
+    "category": "{{ product.category.name|default:'Promotional Products'|escapejs }}",
+    "image": "{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% elif product.external_image_url %}{{ product.external_image_url }}{% else %}https://kaleidobrands.com/static/brands/images/kb.png{% endif %}",
+    "offers": {
+        "@type": "Offer",
+        "url": "{{ request.build_absolute_uri }}",
+        "priceCurrency": "USD",
+        "price": "{% if product.starting_price %}{{ product.starting_price }}{% else %}0{% endif %}",
+        "availability": "{% if product.is_active %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+    }
+}
+</script>
+{% endblock %}
 
 {% block body %}
 <main class="inner-page">
+
     <div
-    id="recentProductData"
-    data-name="{{ product.name }}"
-    data-url="{{ product.get_absolute_url }}"
-    data-category="{{ product.category.name|default:'Product' }}">
-    </div>              
+        id="recentProductData"
+        data-name="{{ product.name }}"
+        data-url="{{ product.get_absolute_url }}"
+        data-category="{{ product.category.name|default:'Product' }}">
+    </div>
+
     <section class="product-breadcrumb-section">
         <div class="container">
             <div class="product-breadcrumb">
                 <a href="{% url 'brands:home' %}">Home</a>
                 <span>›</span>
                 <a href="{% url 'products:home' %}">Products</a>
+
                 {% if product.category %}
                     <span>›</span>
                     <a href="{% url 'products:category' product.category.slug %}">
                         {{ product.category.name }}
                     </a>
                 {% endif %}
+
                 <span>›</span>
                 <strong>{{ product.name }}</strong>
             </div>
@@ -38,25 +110,36 @@
                         <div class="product-main-image">
                             {% if product.image %}
                                 <img id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
+                            {% elif product.external_image_url %}
+                                <img id="mainProductImage" src="{{ product.external_image_url }}" alt="{{ product.name }}">
                             {% elif product.gallery_images.first %}
-                                <img id="mainProductImage" src="{{ product.gallery_images.first.image.url }}" alt="{{ product.name }}">
+                                <img id="mainProductImage" src="{{ product.gallery_images.first.display_url }}" alt="{{ product.name }}">
                             {% else %}
-                                <div class="product-detail-placeholder">KB</div>
+                                <div class="product-detail-placeholder product-placeholder-themed large">
+                                    <span>{{ product.category.icon|default:"✨" }}</span>
+                                    <strong>{{ product.name|slice:":2"|upper }}</strong>
+                                </div>
                             {% endif %}
                         </div>
 
-                        {% if product.gallery_images.all %}
+                        {% if product.gallery_images.exists %}
                             <div class="product-thumbnails">
                                 {% if product.image %}
                                     <button type="button" class="product-thumb active" data-image="{{ product.image.url }}">
                                         <img src="{{ product.image.url }}" alt="{{ product.name }}">
                                     </button>
+                                {% elif product.external_image_url %}
+                                    <button type="button" class="product-thumb active" data-image="{{ product.external_image_url }}">
+                                        <img src="{{ product.external_image_url }}" alt="{{ product.name }}">
+                                    </button>
                                 {% endif %}
 
                                 {% for item in product.gallery_images.all %}
-                                    <button type="button" class="product-thumb" data-image="{{ item.image.url }}">
-                                        <img src="{{ item.image.url }}" alt="{{ item.alt_text|default:product.name }}">
-                                    </button>
+                                    {% if item.display_url %}
+                                        <button type="button" class="product-thumb" data-image="{{ item.display_url }}">
+                                            <img src="{{ item.display_url }}" alt="{{ item.alt_text|default:product.name }}">
+                                        </button>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         {% endif %}
@@ -130,7 +213,15 @@
                         <div class="product-spec-grid">
                             <div>
                                 <strong>Supplier</strong>
-                                <span>{{ product.supplier|default:"KaleidoBrands" }}</span>
+                                <span>
+                                    {% if product.supplier_record %}
+                                        <a href="{% url 'products:supplier_detail' product.supplier_record.slug %}">
+                                            {{ product.supplier_record.name }}
+                                        </a>
+                                    {% else %}
+                                        {{ product.supplier|default:"KaleidoBrands" }}
+                                    {% endif %}
+                                </span>
                             </div>
 
                             <div>
@@ -168,6 +259,7 @@
                                 data-category="{{ product.category.name|default:'Product' }}">
                                 Save to Quote Cart
                             </button>
+
                             <button
                                 type="button"
                                 class="btn btn-kb-outline btn-lg w-100 share-product-btn"
@@ -205,27 +297,21 @@
                     {% endfor %}
                 </div>
             {% endif %}
+
+            <div class="section-heading text-center mt-5 pt-5 reveal">
+                <span>Recently Viewed</span>
+                <h2>Your recent product ideas.</h2>
+            </div>
+
+            <div id="recentlyViewedProducts" class="recent-products-row reveal"></div>
         </div>
-        <div class="section-heading text-center mt-5 pt-5 reveal">
-            <span>Recently Viewed</span>
-            <h2>Your recent product ideas.</h2>
-        </div>
-
-        <div id="recentlyViewedProducts" class="recent-products-row reveal"></div>
-        <div class="section-heading text-center mt-5 pt-5 reveal">
-            <span>Recently Viewed</span>
-            <h2>Your recent product ideas.</h2>
-        </div>
-
-        <div id="recentlyViewedProducts" class="recent-products-row reveal"></div>
-
-
-
     </section>
 </main>
 {% endblock %}
+
 {% block scripts %}
 {% load static %}
+<script src="{% static 'products/js/gallery.js' %}"></script>
 <script src="{% static 'products/js/product_detail.js' %}"></script>
 <script src="{% static 'products/js/quote_cart.js' %}"></script>
 <script src="{% static 'products/js/recently_viewed.js' %}"></script>
