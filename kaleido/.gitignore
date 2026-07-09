@@ -1,13 +1,37 @@
+# Environment variables
+.env
+*.env
 
----
-
-# 5. Update `.gitignore`
-
-Make sure it includes:
-
-```gitignore
+# Supplier data
 data/*.csv
 !data/sample_kaeser_blair_products.csv
 !data/supplier_import_template.csv
 !data/README_supplier_import.md
 !data/README_scheduled_sync.md
+
+# SQLite database
+db.sqlite3
+
+# Uploaded media
+media/
+
+# Collected static files
+staticfiles/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
