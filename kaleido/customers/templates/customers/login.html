@@ -1,0 +1,33 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Login | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="auth-card glass-card">
+                <div class="section-heading text-center">
+                    <span>Customer Portal</span>
+                    <h1>Welcome Back</h1>
+                    <p>Log in to view your quote history, saved projects, and brand assets.</p>
+                </div>
+
+                <form method="post" class="auth-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
+                        Log In
+                    </button>
+                </form>
+
+                <p class="text-center mt-4">
+                    Need an account?
+                    <a href="{% url 'customers:signup' %}">Create one</a>
+                </p>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

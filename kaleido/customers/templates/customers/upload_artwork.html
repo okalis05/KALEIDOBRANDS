@@ -1,0 +1,34 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Upload Artwork | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="auth-card glass-card">
+                <div class="section-heading text-center">
+                    <span>Artwork Upload</span>
+                    <h1>{{ order.order_number }}</h1>
+                    <p>Upload artwork, proof files, mockups, or production-ready design files for this order.</p>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" class="auth-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
+                        Upload Artwork
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'customers:order_detail' order.id %}" class="btn btn-kb-outline">
+                        Back to Order
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

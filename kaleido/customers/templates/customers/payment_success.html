@@ -1,0 +1,41 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Payment Successful | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="quote-success-card glass-card text-center">
+                <span class="quote-success-icon">✓</span>
+                <h1>Payment Successful</h1>
+                <p>Your payment for order <strong>{{ order.order_number }}</strong> has been received.</p>
+
+                <div class="mt-4">
+                    <a href="{% url 'customers:order_detail' order.id %}" class="btn btn-kb-primary btn-lg">
+                        View Order
+                    </a>
+                </div>
+
+                <h1>Payment Submitted</h1>
+
+                <p>
+                    Stripe is confirming your payment. Once confirmed, your order status will update automatically.
+                </p>
+
+                <h3>{{ order.order_number }}</h3>
+
+                {% if order.payment_status == "paid" %}
+                    <div class="alert alert-success mt-4">
+                        Payment confirmed.
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mt-4">
+                        Payment confirmation is pending.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

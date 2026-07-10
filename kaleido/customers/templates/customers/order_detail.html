@@ -1,0 +1,192 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Order {{ order.order_number }} | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Order Tracking</span>
+                <h1>{{ order.order_number }}</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    Current Status: <strong>{{ order.get_status_display }}</strong>
+                </p>
+            </div>
+
+            <div class="order-timeline mt-5 reveal">
+                {% for key, label in status_steps %}
+                    <div class="order-step {% if forloop.counter0 <= current_index %}active{% endif %}">
+                        <div class="order-step-dot">✓</div>
+                        <span>{{ label }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-4">
+                    <div class="supplier-admin-panel">
+                        <h3>Order Summary</h3>
+
+                        <div class="supplier-metric-row">
+                            <span>Status</span>
+                            <strong>{{ order.get_status_display }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Total</span>
+                            <strong>${{ order.total }}</strong>
+                        </div>
+                        <div class="supplier-metric-row">
+                            <span>Payment</span>
+                            <strong>{{ order.get_payment_status_display }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Estimated Delivery</span>
+                            <strong>{{ order.estimated_delivery|default:"TBD" }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Carrier</span>
+                            <strong>{{ order.carrier|default:"TBD" }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Tracking</span>
+                            <strong>
+                                {% if order.tracking_url %}
+                                    <a href="{{ order.tracking_url }}" target="_blank" rel="noopener noreferrer">
+                                        {{ order.tracking_number }}
+                                    </a>
+                                {% else %}
+                                    {{ order.tracking_number|default:"TBD" }}
+                                {% endif %}
+                            </strong>
+                        </div>
+                            {% if order.payment_status == "paid" %}
+                            <div class="alert alert-success mt-4">
+                                Payment confirmed.
+                            </div>
+                        {% elif order.total > 0 %}
+                            <div class="mt-4">
+                                <a href="{% url 'customers:start_payment' order.id %}" class="btn btn-kb-primary w-100">
+                                    Pay Now
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info mt-4">
+                                No payment is required for this order.
+                            </div>
+                        {% endif %}
+                        {% if order.invoice_pdf %}
+                        <div class="mt-4">
+                            <a href="{{ order.invoice_pdf.url }}" target="_blank" class="btn btn-kb-primary w-100">
+                                Download Invoice
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="supplier-admin-panel">
+                        <h3>Order Items</h3>
+
+                        {% for item in order.items.all %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ item.product_name }}</strong>
+                                    <span>
+                                        SKU {{ item.sku|default:"N/A" }}
+                                        · Qty {{ item.quantity }}
+                                        · ${{ item.line_total }}
+                                    </span>
+
+                                    {% if item.decoration or item.color %}
+                                        <small>
+                                            {{ item.decoration|default:"" }}
+                                            {% if item.color %} · {{ item.color }}{% endif %}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No order items found.</p>
+                        {% endfor %}
+                    </div>
+                    <div class="supplier-admin-panel mt-4">
+                        <h3>Artwork Proofs</h3>
+
+                        {% for proof in order.artwork_proofs.all %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ proof.title }}</strong>
+                                    <span>
+                                        {{ proof.get_status_display }}
+                                        · {{ proof.created_at }}
+                                    </span>
+
+                                    {% if proof.customer_notes %}
+                                        <small>{{ proof.customer_notes }}</small>
+                                    {% endif %}
+                                </div>
+
+                                <a href="{{ proof.file.url }}" target="_blank" rel="noopener noreferrer">
+                                    View File
+                                </a>
+                            </div>
+
+                            {% if proof.status == "pending" %}
+                                <form method="post" action="{% url 'customers:approve_artwork' proof.id %}" class="mt-2">
+                                    {% csrf_token %}
+                                    <textarea
+                                        name="customer_notes"
+                                        class="form-control mb-2"
+                                        placeholder="Optional approval notes"></textarea>
+
+                                    <button class="btn btn-kb-primary" type="submit">
+                                        Approve Artwork
+                                    </button>
+                                </form>
+
+                                <form method="post" action="{% url 'customers:request_artwork_changes' proof.id %}" class="mt-2 mb-4">
+                                    {% csrf_token %}
+                                    <textarea
+                                        name="customer_notes"
+                                        class="form-control mb-2"
+                                        placeholder="Describe requested changes"></textarea>
+
+                                    <button class="btn btn-kb-outline" type="submit">
+                                        Request Changes
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% empty %}
+                            <p class="text-muted">No artwork proofs uploaded yet.</p>
+                        {% endfor %}
+
+                        <div class="mt-4">
+                            <a href="{% url 'customers:upload_artwork' order.id %}" class="btn btn-kb-outline">
+                                Upload Artwork
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'customers:order_list' %}" class="btn btn-kb-outline btn-lg">
+                    Back to Orders
+                </a>
+                <a href="{% url 'customers:reorder_order' order.id %}" class="btn btn-kb-primary btn-lg">
+                    Reorder
+                </a>
+                <a href="{% url 'products:quote_builder' %}" class="btn btn-kb-primary btn-lg">
+                    Start New Quote
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

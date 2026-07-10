@@ -1,0 +1,42 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Profile Settings | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="auth-card glass-card">
+                <div class="section-heading text-center">
+                    <span>Account Settings</span>
+                    <h1>Your Profile</h1>
+                    <p>Keep your company and contact information up to date.</p>
+                </div>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} rounded-4 shadow-sm">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post" class="auth-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
+                        Save Profile
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'customers:dashboard' %}" class="btn btn-kb-outline">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

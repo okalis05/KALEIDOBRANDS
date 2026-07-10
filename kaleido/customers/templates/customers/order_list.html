@@ -1,0 +1,53 @@
+{% extends "brands/base.html" %}
+
+{% block title %}My Orders | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Orders</span>
+                <h1>My Orders</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    Track your KaleidoBrands orders from artwork approval through delivery.
+                </p>
+            </div>
+
+            <div class="supplier-admin-panel mt-5 reveal">
+                <h3>Order History</h3>
+
+                {% for order in orders %}
+                    <div class="supplier-admin-row">
+                        <div>
+                            <strong>{{ order.order_number }}</strong>
+                            <span>
+                                {{ order.get_status_display }}
+                                · Payment: {{ order.get_payment_status_display }}
+                                · {{ order.created_at }}
+                                · ${{ order.total }}
+                            </span>
+                        </div>
+
+                        <a href="{% url 'customers:order_detail' order.id %}">
+                            Track Order
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No orders yet.</p>
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'customers:dashboard' %}" class="btn btn-kb-outline btn-lg">
+                    Back to Dashboard
+                </a>
+
+                <a href="{% url 'products:home' %}" class="btn btn-kb-primary btn-lg">
+                    Browse Products
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

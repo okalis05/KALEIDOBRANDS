@@ -1,0 +1,71 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Saved Addresses | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Saved Addresses</span>
+                <h1>Your Shipping Addresses</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    Save addresses for faster checkout.
+                </p>
+            </div>
+
+            {% if messages %}
+                <div class="supplier-message-wrap">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} rounded-4 shadow-sm">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-5">
+                    <div class="auth-card glass-card">
+                        <h3>Add Address</h3>
+                        <form method="post" class="auth-form">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+
+                            <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
+                                Save Address
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="supplier-admin-panel">
+                        <h3>Saved Addresses</h3>
+
+                        {% for address in addresses %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ address.label }}</strong>
+                                    <span>
+                                        {{ address.name }} · {{ address.city }}, {{ address.state }} {{ address.postal_code }}
+                                        {% if address.is_default %} · Default{% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No saved addresses yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'customers:dashboard' %}" class="btn btn-kb-outline btn-lg">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

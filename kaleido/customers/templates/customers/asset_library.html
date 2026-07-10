@@ -1,0 +1,76 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Brand Asset Library | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Brand Library</span>
+                <h1>Your Brand Assets</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    Upload logos, artwork, brand guides, and files for future quote requests and orders.
+                </p>
+            </div>
+
+            {% if messages %}
+                <div class="supplier-message-wrap">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} rounded-4 shadow-sm">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-5">
+                    <div class="auth-card glass-card">
+                        <h3>Upload Asset</h3>
+
+                        <form method="post" enctype="multipart/form-data" class="auth-form">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+
+                            <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
+                                Upload Asset
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="supplier-admin-panel">
+                        <h3>Saved Assets</h3>
+
+                        {% for asset in assets %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ asset.title }}</strong>
+                                    <span>{{ asset.get_asset_type_display }} · {{ asset.uploaded_at }}</span>
+                                    {% if asset.notes %}
+                                        <small>{{ asset.notes }}</small>
+                                    {% endif %}
+                                </div>
+
+                                <a href="{{ asset.file.url }}" target="_blank" rel="noopener noreferrer">
+                                    View File
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No brand assets uploaded yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'customers:dashboard' %}" class="btn btn-kb-outline btn-lg">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

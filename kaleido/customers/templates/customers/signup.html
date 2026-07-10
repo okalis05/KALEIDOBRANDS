@@ -1,0 +1,33 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Create Account | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="auth-card glass-card">
+                <div class="section-heading text-center">
+                    <span>Customer Account</span>
+                    <h1>Create Your Account</h1>
+                    <p>Save your quote history, brand assets, artwork, and future orders.</p>
+                </div>
+
+                <form method="post" class="auth-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
+                        Create Account
+                    </button>
+                </form>
+
+                <p class="text-center mt-4">
+                    Already have an account?
+                    <a href="{% url 'customers:login' %}">Log in</a>
+                </p>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

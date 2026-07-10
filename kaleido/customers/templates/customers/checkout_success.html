@@ -1,0 +1,38 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Order Received | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="quote-success-card glass-card text-center">
+                <span class="quote-success-icon">✓</span>
+
+                <h1>Order Received</h1>
+
+                <p>
+                    Thank you. Your order has been created successfully.
+                </p>
+
+                <h3>{{ order.order_number }}</h3>
+
+                <p>
+                    A confirmation email has been sent to your account email.
+                    Our team will review your order and contact you if anything else is needed.
+                </p>
+
+                <div class="mt-4">
+                    <a href="{% url 'customers:order_detail' order.id %}" class="btn btn-kb-primary btn-lg">
+                        View Order
+                    </a>
+
+                    <a href="{% url 'products:home' %}" class="btn btn-kb-outline btn-lg">
+                        Continue Shopping
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

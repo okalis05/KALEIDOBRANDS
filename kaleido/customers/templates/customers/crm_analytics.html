@@ -1,0 +1,123 @@
+{% extends "brands/base.html" %}
+
+{% block title %}CRM Analytics | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>CRM Analytics</span>
+                <h1>Sales Pipeline Intelligence</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    Monitor sales pipeline value, lead status, upcoming follow-ups, and top opportunities.
+                </p>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-md-3">
+                    <div class="supplier-stat-card">
+                        <span>Total Leads</span>
+                        <strong>{{ total_leads }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="supplier-stat-card">
+                        <span>Open Pipeline</span>
+                        <strong>${{ open_pipeline_value|floatformat:2 }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="supplier-stat-card">
+                        <span>Won Value</span>
+                        <strong>${{ won_value|floatformat:2 }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="supplier-stat-card">
+                        <span>Lost Value</span>
+                        <strong>${{ lost_value|floatformat:2 }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-4">
+                    <div class="supplier-admin-panel">
+                        <h3>Leads by Status</h3>
+
+                        {% for row in leads_by_status %}
+                            <div class="supplier-metric-row">
+                                <span>{{ row.status|title }}</span>
+                                <strong>{{ row.total }}</strong>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No leads yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="supplier-admin-panel">
+                        <h3>Top Opportunities</h3>
+
+                        {% for lead in top_opportunities %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ lead.company }}</strong>
+                                    <span>
+                                        {{ lead.contact_name }}
+                                        · {{ lead.get_status_display }}
+                                        · ${{ lead.estimated_value }}
+                                    </span>
+                                </div>
+
+                                <a href="{% url 'customers:crm_lead_detail' lead.id %}">
+                                    View
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No open opportunities.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="supplier-admin-panel mt-5">
+                <h3>Upcoming Activities</h3>
+
+                {% for activity in upcoming_activities %}
+                    <div class="supplier-admin-row">
+                        <div>
+                            <strong>{{ activity.title }}</strong>
+                            <span>
+                                {{ activity.lead.company }}
+                                · {{ activity.activity_date }}
+                            </span>
+                        </div>
+
+                        <a href="{% url 'customers:crm_lead_detail' activity.lead.id %}">
+                            Open Lead
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No upcoming activities.</p>
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'customers:crm_dashboard' %}" class="btn btn-kb-outline btn-lg">
+                    Back to CRM
+                </a>
+
+                <a href="/admin/customers/customerlead/add/" class="btn btn-kb-primary btn-lg">
+                    Add Lead
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

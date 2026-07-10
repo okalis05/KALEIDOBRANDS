@@ -9,6 +9,7 @@ from .models import (
     SupplierSyncLog,
     Quote,
     QuoteItem,
+    RecommendationEvent,
 )
 
 
@@ -131,3 +132,10 @@ class QuoteAdmin(admin.ModelAdmin):
     list_filter = ("deadline", "created_at")
     readonly_fields = ("created_at","pdf_file")
     inlines = [QuoteItemInline]
+
+@admin.register(RecommendationEvent)
+class RecommendationEventAdmin(admin.ModelAdmin):
+    list_display = ("product_name", "context", "user", "created_at")
+    list_filter = ("context", "created_at")
+    search_fields = ("product_name", "product_slug", "user__username", "user__email")
+    readonly_fields = ("product_name", "product_slug", "context", "user", "created_at")

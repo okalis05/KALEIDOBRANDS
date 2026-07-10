@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "brands",
     "dashboard",
     "products",
+    "customers",
     "rest_framework",
     "django.contrib.sitemaps",
     "django.contrib.admin",
@@ -200,3 +201,12 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
 }
+
+LOGIN_URL = "customers:login"
+LOGIN_REDIRECT_URL = "customers:dashboard"
+LOGOUT_REDIRECT_URL = "brands:home"
+
+
+STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY", default="")
+STRIPE_PUBLISHABLE_KEY = config("STRIPE_PUBLISHABLE_KEY", default="")
+STRIPE_WEBHOOK_SECRET = config("STRIPE_WEBHOOK_SECRET", default="")

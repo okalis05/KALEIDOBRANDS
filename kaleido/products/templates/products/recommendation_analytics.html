@@ -1,0 +1,76 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Recommendation Analytics | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Recommendation Intelligence</span>
+                <h1>Recommendation Analytics</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    Track which products are being recommended across product pages, dashboards, and quote builder flows.
+                </p>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-6">
+                    <div class="supplier-admin-panel">
+                        <h3>Top Recommended Products</h3>
+
+                        {% for row in top_products %}
+                            <div class="supplier-metric-row">
+                                <span>{{ row.product_name }}</span>
+                                <strong>{{ row.total }}</strong>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No recommendation events yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="supplier-admin-panel">
+                        <h3>Recommendations by Context</h3>
+
+                        {% for row in context_counts %}
+                            <div class="supplier-metric-row">
+                                <span>{{ row.context|title }}</span>
+                                <strong>{{ row.total }}</strong>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No context data yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="supplier-admin-panel mt-5">
+                <h3>Recent Recommendation Events</h3>
+
+                {% for event in recent_events %}
+                    <div class="supplier-admin-row">
+                        <div>
+                            <strong>{{ event.product_name }}</strong>
+                            <span>
+                                {{ event.get_context_display }}
+                                · {{ event.created_at }}
+                                {% if event.user %} · {{ event.user.email }}{% endif %}
+                            </span>
+                        </div>
+
+                        {% if event.product_slug %}
+                            <a href="{% url 'products:detail' event.product_slug %}">
+                                View Product
+                            </a>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No recent events.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

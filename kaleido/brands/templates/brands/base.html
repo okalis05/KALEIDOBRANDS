@@ -100,6 +100,13 @@
                         <span id="quoteCartCount" class="quote-cart-count">0</span>
                     </a>
                 </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:cart_detail' %}">
+                        Cart
+                    </a>
+                </li>
+                {% endif %}
 
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'products:quote_builder' %}">
@@ -132,6 +139,89 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'products:quote_history' %}">
                         Quote History
+                    </a>
+                </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:dashboard' %}">
+                        My Account
+                    </a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:login' %}">
+                        Login
+                    </a>
+                </li>
+                {% endif %}
+                {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:asset_library' %}">
+                        Brand Assets
+                    </a>
+                </li>
+                {% endif %}
+                {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:order_list' %}">
+                        My Orders
+                    </a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:order_analytics' %}">
+                        Order Analytics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:crm_dashboard' %}">
+                        CRM
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:crm_analytics' %}">
+                        CRM Analytics
+                    </a>
+                </li>
+                {% if request.user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'products:supplier_sync_dashboard' %}">
+                        Supplier Sync
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'products:supplier_analytics' %}">
+                        Supplier Analytics
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:order_analytics' %}">
+                        Order Analytics
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:crm_dashboard' %}">
+                        CRM
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:crm_analytics' %}">
+                        CRM Analytics
+                    </a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'customers:executive_dashboard' %}">
+                        Executive
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'products:recommendation_analytics' %}">
+                        Recommendation Analytics
                     </a>
                 </li>
             </ul>
@@ -168,6 +258,9 @@
                 <a href="{% url 'products:quote_builder' %}">Quote Builder</a>
                 <a href="{% url 'products:supplier_detail' 'kaeser-blair' %}">Kaeser & Blair Catalog</a>
                 <a href="{% url 'products:quote_history' %}">Quote History</a>
+                <a href="{% url 'customers:dashboard' %}">Customer Portal</a>
+                <a href="{% url 'customers:asset_library' %}">Brand Assets</a>
+                <a href="{% url 'customers:order_list' %}">My Orders</a>
             </div>
 
             <div class="col-md-3">

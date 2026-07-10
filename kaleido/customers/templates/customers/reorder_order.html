@@ -1,0 +1,46 @@
+{% extends "brands/base.html" %}
+{% load static %}
+
+{% block title %}Reorder {{ order.order_number }} | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="auth-card glass-card text-center">
+                <div class="section-heading">
+                    <span>Reorder</span>
+                    <h1>{{ order.order_number }}</h1>
+                    <p>
+                        We will copy this order's products into your Quote Builder
+                        so you can request updated pricing or reorder similar items.
+                    </p>
+                </div>
+
+                <div id="reorderData">
+                    {% for item in order.items.all %}
+                        <div
+                            class="reorder-item"
+                            data-name="{{ item.product_name }}"
+                            data-category="Reorder"
+                            data-url="{% url 'products:home' %}">
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <a href="{% url 'products:quote_builder' %}" id="continueReorder" class="btn btn-kb-primary btn-lg w-100">
+                    Continue to Quote Builder
+                </a>
+
+                <a href="{% url 'customers:order_detail' order.id %}" class="btn btn-kb-outline btn-lg w-100 mt-3">
+                    Back to Order
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'customers/js/reorder.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends "brands/base.html" %}
+
+{% block title %}{{ lead.company }} | CRM | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>CRM Lead</span>
+                <h1>{{ lead.company }}</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    {{ lead.contact_name }} · {{ lead.email }} · {{ lead.get_status_display }}
+                </p>
+            </div>
+
+            {% if messages %}
+                <div class="supplier-message-wrap">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} rounded-4 shadow-sm">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-4">
+                    <div class="supplier-admin-panel">
+                        <h3>Lead Summary</h3>
+
+                        <div class="supplier-metric-row">
+                            <span>Status</span>
+                            <strong>{{ lead.get_status_display }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Estimated Value</span>
+                            <strong>${{ lead.estimated_value }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Source</span>
+                            <strong>{{ lead.source|default:"N/A" }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Assigned To</span>
+                            <strong>{{ lead.assigned_to|default:"Unassigned" }}</strong>
+                        </div>
+
+                        <div class="mt-4">
+                            <a href="/admin/customers/customerlead/{{ lead.id }}/change/" class="btn btn-kb-primary w-100">
+                                Edit Lead in Admin
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="supplier-admin-panel">
+                        <h3>Lead Notes</h3>
+                        <p>{{ lead.notes|default:"No notes yet." }}</p>
+                    </div>
+
+                    <div class="supplier-admin-panel mt-4">
+                        <h3>Activities</h3>
+
+                        {% for activity in activities %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ activity.title }}</strong>
+                                    <span>
+                                        {{ activity.activity_date }}
+                                        · {% if activity.completed %}Completed{% else %}Open{% endif %}
+                                    </span>
+                                    {% if activity.description %}
+                                        <small>{{ activity.description }}</small>
+                                    {% endif %}
+                                </div>
+
+                                {% if not activity.completed %}
+                                    <form method="post" action="{% url 'customers:complete_crm_activity' activity.id %}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-kb-outline" type="submit">
+                                            Complete
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No activities yet.</p>
+                        {% endfor %}
+
+                        <div class="mt-4">
+                            <a href="/admin/customers/crmactivity/add/" class="btn btn-kb-outline">
+                                Add Activity
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'customers:crm_dashboard' %}" class="btn btn-kb-outline btn-lg">
+                    Back to CRM
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

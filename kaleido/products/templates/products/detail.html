@@ -277,6 +277,15 @@ product
                                     Supplier Details
                                 </a>
                             {% endif %}
+                            {% if request.user.is_authenticated %}
+                                <a href="{% url 'customers:add_to_cart' product.slug %}" class="btn btn-kb-primary btn-lg w-100">
+                                    Add to Cart
+                                </a>
+                            {% else %}
+                                <a href="{% url 'customers:login' %}?next={{ request.path }}" class="btn btn-kb-primary btn-lg w-100">
+                                    Login to Add to Cart
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -305,6 +314,36 @@ product
 
             <div id="recentlyViewedProducts" class="recent-products-row reveal"></div>
         </div>
+    </section>
+    <section class="section-panel mt-5">
+
+        <div class="section-heading text-center">
+            <span>Recommended</span>
+            <h2>You May Also Like</h2>
+        </div>
+
+        <div class="row g-4 mt-4">
+
+            {% for product in recommendations %}
+
+                <div class="col-md-6 col-lg-3">
+
+                    {% include "products/partials/product_card.html" %}
+
+                </div>
+
+            {% empty %}
+
+                <div class="col-12 text-center">
+
+                    <p>No recommendations available.</p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
     </section>
 </main>
 {% endblock %}

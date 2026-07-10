@@ -1,0 +1,149 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Customer Dashboard | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Customer Portal</span>
+                <h1>Welcome, {{ request.user.first_name|default:request.user.username }}</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    Manage your quote requests, brand assets, artwork, and future KaleidoBrands orders.
+                </p>
+            </div>
+
+            {% if messages %}
+                <div class="supplier-message-wrap">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} rounded-4 shadow-sm">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row g-4 mt-5">
+                <div class="col-md-4">
+                    <div class="supplier-stat-card">
+                        <span>Company</span>
+                        <strong style="font-size:1.5rem;">{{ profile.company|default:"Not Set" }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="supplier-stat-card">
+                        <span>Email</span>
+                        <strong style="font-size:1.1rem;">{{ request.user.email }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="supplier-stat-card">
+                        <span>Phone</span>
+                        <strong style="font-size:1.3rem;">{{ profile.phone|default:"Not Set" }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-7">
+                    <div class="supplier-admin-panel">
+                        <h3>Recent Quotes</h3>
+
+                        {% for quote in quotes %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ quote.project_name|default:"Quote Request" }}</strong>
+                                    <span>{{ quote.created_at }} · {{ quote.items.count }} products</span>
+                                </div>
+
+                                <a href="{% url 'products:quote_detail' quote.id %}?email={{ request.user.email }}">
+                                    View
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No quote requests found for your account yet.</p>
+                        {% endfor %}
+
+                        <div class="mt-4">
+                            <a href="{% url 'products:quote_history' %}?email={{ request.user.email }}" class="btn btn-kb-outline">
+                                View Full Quote History
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="supplier-admin-panel">
+                        <h3>Account Actions</h3>
+
+                        <div class="d-grid gap-3">
+                            <a href="{% url 'customers:profile_settings' %}" class="btn btn-kb-primary">
+                                Edit Profile
+                            </a>
+                            <a href="{% url 'customers:asset_library' %}" class="btn btn-kb-outline">
+                                Brand Asset Library
+                            </a>
+
+                            <a href="{% url 'products:home' %}" class="btn btn-kb-outline">
+                                Browse Products
+                            </a>
+
+                            <a href="{% url 'products:quote_builder' %}" class="btn btn-kb-outline">
+                                Build a Quote
+                            </a>
+                            <a href="{% url 'customers:order_list' %}" class="btn btn-kb-outline">
+                                My Orders
+                            </a>
+                            {% if request.user.is_staff %}
+                            <a href="{% url 'customers:crm_dashboard' %}" class="btn btn-kb-outline">
+                                CRM Dashboard
+                            </a>
+
+                            <a href="{% url 'customers:crm_analytics' %}" class="btn btn-kb-outline">
+                                CRM Analytics
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'customers:address_list' %}" class="btn btn-kb-outline">
+                                Saved Addresses
+                            </a>
+
+                            <form method="post" action="{% url 'customers:logout' %}">
+                                {% csrf_token %}
+                                <button class="btn btn-kb-outline w-100" type="submit">
+                                    Log Out
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="section-heading text-center mt-5 pt-5 reveal">
+    <span>Recommended For You</span>
+    <h2>Products based on your quote activity.</h2>
+</div>
+
+<div class="row g-4 mt-4">
+    {% for product in recommended_products %}
+        <div class="col-md-6 col-lg-3 reveal">
+            {% include "products/partials/product_card.html" %}
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="mini-card text-center">
+                <h4>No recommendations yet.</h4>
+                <p>Browse products and submit quotes to unlock personalized recommendations.</p>
+                <a href="{% url 'products:home' %}" class="btn btn-kb-primary">
+                    Browse Products
+                </a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+    </section>
+</main>
+{% endblock %}

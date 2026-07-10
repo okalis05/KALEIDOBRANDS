@@ -1,0 +1,26 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Payment Cancelled | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="quote-success-card glass-card text-center">
+                <h1>Payment Cancelled</h1>
+                <p>Your payment was cancelled. Your order is still saved.</p>
+
+                <div class="mt-4">
+                    <a href="{% url 'customers:start_payment' order.id %}" class="btn btn-kb-primary btn-lg">
+                        Try Again
+                    </a>
+
+                    <a href="{% url 'customers:order_detail' order.id %}" class="btn btn-kb-outline btn-lg">
+                        Back to Order
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

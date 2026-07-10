@@ -1,0 +1,91 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Shopping Cart | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Shopping Cart</span>
+                <h1>Your Cart</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    Review products before checkout or quote request.
+                </p>
+            </div>
+
+            {% if messages %}
+                <div class="supplier-message-wrap">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} rounded-4 shadow-sm">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-8">
+                    <div class="supplier-admin-panel">
+                        <h3>Cart Items</h3>
+
+                        {% for item in cart.items.all %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ item.product_name }}</strong>
+                                    <span>
+                                        ${{ item.unit_price }} each · Line total ${{ item.line_total }}
+                                    </span>
+                                </div>
+
+                                <form method="post" action="{% url 'customers:update_cart_item' item.id %}" class="d-flex gap-2 align-items-center">
+                                    {% csrf_token %}
+                                    <input
+                                        type="number"
+                                        name="quantity"
+                                        value="{{ item.quantity }}"
+                                        min="0"
+                                        class="form-control"
+                                        style="width:90px;"
+                                    >
+                                    <button class="btn btn-kb-outline" type="submit">
+                                        Update
+                                    </button>
+                                </form>
+
+                                <a href="{% url 'customers:remove_cart_item' item.id %}" class="btn btn-kb-outline">
+                                    Remove
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">Your shopping cart is empty.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="supplier-admin-panel">
+                        <h3>Summary</h3>
+
+                        <div class="supplier-metric-row">
+                            <span>Subtotal</span>
+                            <strong>${{ cart.subtotal }}</strong>
+                        </div>
+
+                        <div class="mt-4 d-grid gap-3">
+                            <a href="{% url 'products:home' %}" class="btn btn-kb-outline">
+                                Continue Shopping
+                            </a>
+
+                            <a href="{% url 'customers:checkout' %}" class="btn btn-kb-primary">
+                                Checkout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

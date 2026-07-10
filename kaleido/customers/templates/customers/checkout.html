@@ -1,0 +1,66 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Checkout | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Checkout</span>
+                <h1>Complete Your Order</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    Review your cart and enter shipping details.
+                </p>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-7">
+                    <div class="auth-card glass-card">
+                        <h3>Shipping Details</h3>
+
+                        <form method="post" class="auth-form">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+
+                            <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
+                                Place Order
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="supplier-admin-panel">
+                        <h3>Order Summary</h3>
+
+                        {% for item in cart.items.all %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ item.product_name }}</strong>
+                                    <span>Qty {{ item.quantity }} · ${{ item.line_total }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        <div class="supplier-metric-row mt-4">
+                            <span>Subtotal</span>
+                            <strong>${{ cart.subtotal }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Shipping</span>
+                            <strong>Calculated later</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Tax</span>
+                            <strong>Calculated later</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

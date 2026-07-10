@@ -208,4 +208,4 @@ class SupplierSyncLog(models.Model):
         supplier_name = self.supplier.name if self.supplier else "Unknown Supplier"
         return f"{supplier_name} sync - {self.status}"
     
-
+from .models_recommendations import *

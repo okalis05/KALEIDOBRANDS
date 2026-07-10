@@ -1,0 +1,94 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Order Analytics | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Business Operations</span>
+                <h1>Order Analytics</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    Monitor order volume, revenue, status distribution, and recent customer activity.
+                </p>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-md-4">
+                    <div class="supplier-stat-card">
+                        <span>Total Orders</span>
+                        <strong>{{ total_orders }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="supplier-stat-card">
+                        <span>Total Revenue</span>
+                        <strong>${{ total_revenue|floatformat:2 }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="supplier-stat-card">
+                        <span>Avg. Order Value</span>
+                        <strong>${{ average_order_value|floatformat:2 }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-5">
+                    <div class="supplier-admin-panel">
+                        <h3>Orders by Status</h3>
+
+                        {% for row in status_counts %}
+                            <div class="supplier-metric-row">
+                                <span>{{ row.status|title }}</span>
+                                <strong>{{ row.total }}</strong>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No orders yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="supplier-admin-panel">
+                        <h3>Recent Orders</h3>
+
+                        {% for order in recent_orders %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ order.order_number }}</strong>
+                                    <span>
+                                        {{ order.customer.email }}
+                                        · {{ order.get_status_display }}
+                                        · ${{ order.total }}
+                                    </span>
+                                </div>
+
+                                <a href="/admin/customers/order/{{ order.id }}/change/">
+                                    Admin
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No recent orders.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{% url 'customers:order_list' %}" class="btn btn-kb-outline btn-lg">
+                    My Orders
+                </a>
+
+                <a href="/admin/customers/order/" class="btn btn-kb-primary btn-lg">
+                    Manage Orders
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

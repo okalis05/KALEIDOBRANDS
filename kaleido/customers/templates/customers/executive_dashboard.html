@@ -1,0 +1,199 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Executive Dashboard | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+            <div class="section-heading text-center reveal">
+                <span>Executive Command Center</span>
+                <h1>KaleidoBrands Business Dashboard</h1>
+                <p class="mx-auto mt-3" style="max-width:760px;">
+                    Monitor quotes, orders, revenue, supplier activity, and CRM pipeline performance.
+                </p>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-md-3">
+                    <div class="supplier-stat-card">
+                        <span>Total Quotes</span>
+                        <strong>{{ total_quotes }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="supplier-stat-card">
+                        <span>Total Orders</span>
+                        <strong>{{ total_orders }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="supplier-stat-card">
+                        <span>Total Revenue</span>
+                        <strong>${{ total_revenue|floatformat:2 }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="supplier-stat-card">
+                        <span>Open Pipeline</span>
+                        <strong>${{ open_pipeline_value|floatformat:2 }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4 mt-5">
+                <div class="col-lg-6">
+                    <div class="supplier-admin-panel">
+                        <h3>Orders by Status</h3>
+                        <div class="supplier-chart-box">
+                            <canvas id="executiveOrderStatusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="supplier-admin-panel">
+                        <h3>CRM Pipeline Value</h3>
+                        <div class="supplier-chart-box">
+                            <canvas id="executiveCrmPipelineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="supplier-admin-panel mt-5">
+                <h3>Supplier Sync Activity</h3>
+                <div class="supplier-chart-box">
+                    <canvas id="executiveSupplierSyncChart"></canvas>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-6">
+                    <div class="supplier-admin-panel">
+                        <h3>Recent Quotes</h3>
+
+                        {% for quote in recent_quotes %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ quote.project_name|default:"Quote Request" }}</strong>
+                                    <span>{{ quote.customer_name }} · {{ quote.email }} · {{ quote.created_at }}</span>
+                                </div>
+
+                                <a href="{% url 'products:quote_detail' quote.id %}">
+                                    View
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No quotes yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="supplier-admin-panel">
+                        <h3>Recent Orders</h3>
+
+                        {% for order in recent_orders %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ order.order_number }}</strong>
+                                    <span>{{ order.customer.email }} · {{ order.get_status_display }} · ${{ order.total }}</span>
+                                </div>
+
+                                <a href="/admin/customers/order/{{ order.id }}/change/">
+                                    Admin
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No orders yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-lg-6">
+                    <div class="supplier-admin-panel">
+                        <h3>Recent CRM Leads</h3>
+
+                        {% for lead in recent_leads %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ lead.company }}</strong>
+                                    <span>{{ lead.contact_name }} · {{ lead.get_status_display }} · ${{ lead.estimated_value }}</span>
+                                </div>
+
+                                <a href="{% url 'customers:crm_lead_detail' lead.id %}">
+                                    Open
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No CRM leads yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="supplier-admin-panel">
+                        <h3>Recent Supplier Syncs</h3>
+
+                        {% for log in recent_sync_logs %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ log.supplier.name|default:"Supplier" }}</strong>
+                                    <span>
+                                        {{ log.status|title }}
+                                        · Created {{ log.products_created }}
+                                        · Updated {{ log.products_updated }}
+                                        · Failed {{ log.products_failed }}
+                                    </span>
+                                </div>
+
+                                <a href="{% url 'products:supplier_sync_dashboard' %}">
+                                    View
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">No sync logs yet.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5 executive-actions">
+                <a href="{% url 'customers:order_analytics' %}" class="btn btn-kb-primary btn-lg">
+                    Order Analytics
+                </a>
+
+                <a href="{% url 'customers:crm_analytics' %}" class="btn btn-kb-outline btn-lg">
+                    CRM Analytics
+                </a>
+
+                <a href="{% url 'products:supplier_analytics' %}" class="btn btn-kb-outline btn-lg">
+                    Supplier Analytics
+                </a>
+
+                <a href="/admin/products/quote/" class="btn btn-kb-outline btn-lg">
+                    Manage Quotes
+                </a>
+
+                <a href="/admin/customers/order/" class="btn btn-kb-outline btn-lg">
+                    Manage Orders
+                </a>
+
+                <a href="/admin/customers/customerlead/" class="btn btn-kb-outline btn-lg">
+                    Manage CRM
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}
+{% block scripts %}
+{% load static %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'customers/js/executive_dashboard.js' %}"></script>
+{% endblock %}

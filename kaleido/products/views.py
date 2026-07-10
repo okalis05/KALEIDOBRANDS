@@ -16,6 +16,11 @@ from products.services.quote_pdf import generate_quote_pdf
 from django.core.files.storage import FileSystemStorage
 from products.services.csv_importer import ProductCSVImporter
 from .forms import QuoteBuilderForm
+from customers.models import CustomerLead
+from products.services.recommendations import RecommendationEngine
+
+
+from products.models import RecommendationEvent
 
 def product_home(request):
     categories = Category.objects.filter(is_active=True)
@@ -70,12 +75,20 @@ def product_detail(request, slug):
         id=product.id,
     )[:4]
 
+    recommendations = RecommendationEngine.recommendations(product)
+    RecommendationEngine.log_recommendations(
+    recommendations,
+    context="product_detail",
+    user=request.user,
+)
+
     return render(
         request,
         "products/detail.html",
         {
             "product": product,
             "related_products": related_products,
+            "recommendations": recommendations,
         },
     )
 
@@ -503,6 +516,20 @@ def quote_builder(request):
                 deadline=form.cleaned_data.get("deadline"),
                 notes=form.cleaned_data.get("notes", ""),
             )
+            user = request.user if request.user.is_authenticated else None
+
+            if user:
+                CustomerLead.objects.create(
+                    customer=user,
+                    company=quote.company or "Individual Customer",
+                    contact_name=quote.customer_name,
+                    email=quote.email,
+                    phone=quote.phone,
+                    estimated_value=0,
+                    status="new",
+                    source="Quote Builder",
+                    notes=f"Auto-created from Quote Builder request: {quote.project_name or 'Quote Request'}",
+                )
             pdf_file = generate_quote_pdf(quote)
 
             product_lines = []
@@ -518,36 +545,36 @@ def quote_builder(request):
                 )
 
                 product_lines.append(
-                    f"""
-Product: {quote_item.product_name}
-Category: {quote_item.category}
-Quantity: {quote_item.quantity}
-Notes: {quote_item.notes}
-URL: {quote_item.product_url}
-"""
-                )
+                                    f"""
+                Product: {quote_item.product_name}
+                Category: {quote_item.category}
+                Quantity: {quote_item.quantity}
+                Notes: {quote_item.notes}
+                URL: {quote_item.product_url}
+                """
+                                )
 
-            body = f"""
-New KaleidoBrands Quote Builder Request
+                body = f"""
+                New KaleidoBrands Quote Builder Request
 
-Customer
---------------------
-Name: {quote.customer_name}
-Company: {quote.company}
-Email: {quote.email}
-Phone: {quote.phone}
+                Customer
+                --------------------
+                Name: {quote.customer_name}
+                Company: {quote.company}
+                Email: {quote.email}
+                Phone: {quote.phone}
 
-Project
---------------------
-Project Name: {quote.project_name}
-Deadline: {quote.deadline}
-Notes:
-{quote.notes}
+                Project
+                --------------------
+                Project Name: {quote.project_name}
+                Deadline: {quote.deadline}
+                Notes:
+                {quote.notes}
 
-Products
---------------------
-{''.join(product_lines)}
-"""
+                Products
+                --------------------
+                {''.join(product_lines)}
+                """
 
             email = EmailMessage(
                 subject="New Quote Builder Request - KaleidoBrands",
@@ -567,11 +594,24 @@ Products
     else:
         form = QuoteBuilderForm()
 
+    recommended_products = (
+        RecommendationEngine.customer_recommendations(request.user)
+        if request.user.is_authenticated
+        else Product.objects.filter(is_active=True, is_featured=True)[:8]
+    )
+
+    RecommendationEngine.log_recommendations(
+    recommended_products,
+    context="quote_builder",
+    user=request.user,
+)
+
     return render(
         request,
         "products/quote_builder.html",
         {
             "form": form,
+            "recommended_products": recommended_products,
         },
     )
 
@@ -613,5 +653,31 @@ def quote_detail(request, quote_id):
         "products/quote_detail.html",
         {
             "quote": quote,
+        },
+    )
+
+@staff_member_required
+def recommendation_analytics(request):
+    top_products = (
+        RecommendationEvent.objects.values("product_name", "product_slug")
+        .annotate(total=Count("id"))
+        .order_by("-total")[:20]
+    )
+
+    context_counts = (
+        RecommendationEvent.objects.values("context")
+        .annotate(total=Count("id"))
+        .order_by("-total")
+    )
+
+    recent_events = RecommendationEvent.objects.select_related("user")[:25]
+
+    return render(
+        request,
+        "products/recommendation_analytics.html",
+        {
+            "top_products": top_products,
+            "context_counts": context_counts,
+            "recent_events": recent_events,
         },
     )

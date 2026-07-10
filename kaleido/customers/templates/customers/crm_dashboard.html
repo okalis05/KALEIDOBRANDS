@@ -1,0 +1,98 @@
+{% extends "brands/base.html" %}
+
+{% block title %}CRM Dashboard | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container-fluid px-lg-5">
+            <div class="section-heading text-center reveal">
+                <span>Sales CRM</span>
+                <h1>Customer Pipeline</h1>
+                <p class="mx-auto mt-3" style="max-width:760px;">
+                    Track leads, opportunities, follow-ups, and sales pipeline value.
+                </p>
+            </div>
+
+            <div class="row g-4 mt-5">
+                <div class="col-md-4">
+                    <div class="supplier-stat-card">
+                        <span>Pipeline Value</span>
+                        <strong>${{ total_pipeline_value|floatformat:2 }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="supplier-stat-card">
+                        <span>Won Deals</span>
+                        <strong>{{ won_count }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="supplier-stat-card">
+                        <span>Lost Deals</span>
+                        <strong>{{ lost_count }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="supplier-admin-panel mt-5 reveal">
+                <h3>Upcoming Follow-Ups</h3>
+
+                {% for activity in upcoming_activities %}
+                    <div class="supplier-admin-row">
+                        <div>
+                            <strong>{{ activity.title }}</strong>
+                            <span>
+                                {{ activity.lead.company }}
+                                · {{ activity.activity_date }}
+                            </span>
+                        </div>
+
+                        <a href="/admin/customers/customerlead/{{ activity.lead.id }}/change/">
+                            Open Lead
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No upcoming activities.</p>
+                {% endfor %}
+            </div>
+
+            <div class="crm-pipeline-board mt-5 reveal">
+                {% for status_key, status_label in statuses %}
+                    <div class="crm-pipeline-column">
+                        <div class="crm-pipeline-title">
+                            {{ status_label }}
+                        </div>
+
+                        {% for lead in leads %}
+                            {% if lead.status == status_key %}
+                                <div class="crm-lead-card">
+                                    <strong>{{ lead.company }}</strong>
+                                    <span>{{ lead.contact_name }}</span>
+                                    <small>${{ lead.estimated_value }}</small>
+
+                                    <a href="{% url 'customers:crm_lead_detail' lead.id %}">
+                                       Open
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="/admin/customers/customerlead/add/" class="btn btn-kb-primary btn-lg">
+                    Add Lead
+                </a>
+
+                <a href="/admin/customers/customerlead/" class="btn btn-kb-outline btn-lg">
+                    Manage Leads
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

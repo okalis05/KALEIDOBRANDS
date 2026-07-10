@@ -26,5 +26,7 @@ urlpatterns = [
     path("quote-success/", views.quote_success, name="quote_success"),
     path("category/<slug:slug>/", views.category_detail, name="category"),
     path("quote-builder/",views.quote_builder,name="quote_builder"),
+    path("recommendation-analytics/", views.recommendation_analytics, name="recommendation_analytics"),
     path("<slug:slug>/", views.product_detail, name="detail"),
+    
 ]
