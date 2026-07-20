@@ -68,6 +68,7 @@ class SupplierHTTPClientTests(SimpleTestCase):
             backoff_factor=1,
             max_backoff=10,
             sleep_function=self.sleep,
+            audit_enabled=False,
         )
 
     def test_build_url_joins_base_url_and_path(

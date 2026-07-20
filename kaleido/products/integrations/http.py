@@ -16,7 +16,13 @@ from products.integrations.exceptions import (
     SupplierServerError,
     SupplierTimeoutError,
 )
-
+from products.integrations.audit import (
+    SupplierIntegrationAuditService,
+    sanitize_headers,
+)
+from products.integrations.context import (
+    get_correlation_id,
+)
 
 DEFAULT_TIMEOUT_SECONDS = 30
 DEFAULT_MAX_RETRIES = 3
@@ -74,6 +80,8 @@ class SupplierHTTPClient:
         backoff_factor=DEFAULT_BACKOFF_FACTOR,
         max_backoff=DEFAULT_MAX_BACKOFF_SECONDS,
         sleep_function=None,
+        supplier=None,
+        audit_enabled=True,
     ):
         self.base_url = str(
             base_url or ""
@@ -84,14 +92,17 @@ class SupplierHTTPClient:
         )
 
         self.timeout = timeout
+
         self.max_retries = max(
             int(max_retries),
             0,
         )
+
         self.backoff_factor = max(
             float(backoff_factor),
             0.0,
         )
+
         self.max_backoff = max(
             float(max_backoff),
             0.0,
@@ -99,6 +110,11 @@ class SupplierHTTPClient:
 
         self.sleep_function = (
             sleep_function or time.sleep
+        )
+
+        self.supplier = supplier
+        self.audit_enabled = bool(
+            audit_enabled
         )
 
     def build_url(
@@ -164,6 +180,8 @@ class SupplierHTTPClient:
         params=None,
         headers=None,
         timeout=None,
+        operation=None,
+        correlation_id=None,
     ):
         return self.request(
             "GET",
@@ -171,6 +189,8 @@ class SupplierHTTPClient:
             params=params,
             headers=headers,
             timeout=timeout,
+            operation=operation,
+            correlation_id=correlation_id,
         )
 
     def post(
@@ -181,6 +201,8 @@ class SupplierHTTPClient:
         json_data=None,
         headers=None,
         timeout=None,
+        operation=None,
+        correlation_id=None,
     ):
         return self.request(
             "POST",
@@ -189,6 +211,8 @@ class SupplierHTTPClient:
             json_data=json_data,
             headers=headers,
             timeout=timeout,
+            operation=operation,
+            correlation_id=correlation_id,
         )
 
     def put(
@@ -199,6 +223,8 @@ class SupplierHTTPClient:
         json_data=None,
         headers=None,
         timeout=None,
+        operation=None,
+        correlation_id=None,
     ):
         return self.request(
             "PUT",
@@ -207,6 +233,8 @@ class SupplierHTTPClient:
             json_data=json_data,
             headers=headers,
             timeout=timeout,
+            operation=operation,
+            correlation_id=correlation_id,
         )
 
     def patch(
@@ -217,6 +245,8 @@ class SupplierHTTPClient:
         json_data=None,
         headers=None,
         timeout=None,
+        operation=None,
+        correlation_id=None,
     ):
         return self.request(
             "PATCH",
@@ -225,6 +255,8 @@ class SupplierHTTPClient:
             json_data=json_data,
             headers=headers,
             timeout=timeout,
+            operation=operation,
+            correlation_id=correlation_id,
         )
 
     def delete(
@@ -234,6 +266,8 @@ class SupplierHTTPClient:
         params=None,
         headers=None,
         timeout=None,
+        operation=None,
+        correlation_id=None,
     ):
         return self.request(
             "DELETE",
@@ -241,8 +275,9 @@ class SupplierHTTPClient:
             params=params,
             headers=headers,
             timeout=timeout,
+            operation=operation,
+            correlation_id=correlation_id,
         )
-
     def request(
         self,
         method,
@@ -252,6 +287,8 @@ class SupplierHTTPClient:
         json_data=None,
         headers=None,
         timeout=None,
+        operation=None,
+        correlation_id=None,
     ):
         method = str(
             method or "GET"
@@ -286,6 +323,50 @@ class SupplierHTTPClient:
             else timeout
         )
 
+        operation = (
+            operation
+            or self._default_operation(
+                method,
+                path,
+            )
+        )
+
+        correlation_id = (
+            correlation_id
+            or get_correlation_id()
+        )
+
+        audit_session = None
+
+        if self.audit_enabled:
+            audit_session = (
+                SupplierIntegrationAuditService
+                .start(
+                    supplier=self.supplier,
+                    operation=operation,
+                    method=method,
+                    url=url,
+                    correlation_id=correlation_id,
+                    request_metadata={
+                        "headers": sanitize_headers(
+                            request_headers
+                        ),
+                        "has_json_body": (
+                            json_data is not None
+                        ),
+                        "query_parameter_names": sorted(
+                            str(key)
+                            for key in (
+                                params or {}
+                            ).keys()
+                        ),
+                        "timeout_seconds": (
+                            request_timeout
+                        ),
+                    },
+                )
+            )
+
         attempt = 0
 
         while True:
@@ -302,10 +383,32 @@ class SupplierHTTPClient:
                     timeout=request_timeout,
                 )
 
-                return self._build_response(
-                    response,
-                    url=url,
+                normalized_response = (
+                    self._build_response(
+                        response,
+                        url=url,
+                    )
                 )
+
+                if audit_session:
+                    audit_session.complete(
+                        status_code=(
+                            normalized_response
+                            .status_code
+                        ),
+                        attempt_count=attempt + 1,
+                        response_metadata={
+                            "headers": sanitize_headers(
+                                normalized_response
+                                .headers
+                            ),
+                            "response_type": type(
+                                normalized_response.data
+                            ).__name__,
+                        },
+                    )
+
+                return normalized_response
 
             except HTTPError as error:
                 supplier_error = (
@@ -315,9 +418,12 @@ class SupplierHTTPClient:
                     )
                 )
 
-
                 if (
-                    getattr(supplier_error, "retryable", False)
+                    getattr(
+                        supplier_error,
+                        "retryable",
+                        False,
+                    )
                     and attempt < self.max_retries
                 ):
                     delay = self._retry_delay(
@@ -330,6 +436,24 @@ class SupplierHTTPClient:
                     self.sleep_function(delay)
                     attempt += 1
                     continue
+
+                if audit_session:
+                    audit_session.fail(
+                        supplier_error,
+                        status_code=getattr(
+                            supplier_error,
+                            "status_code",
+                            error.code,
+                        ),
+                        attempt_count=attempt + 1,
+                        response_metadata={
+                            "retryable": getattr(
+                                supplier_error,
+                                "retryable",
+                                False,
+                            ),
+                        },
+                    )
 
                 raise supplier_error from error
 
@@ -346,13 +470,23 @@ class SupplierHTTPClient:
                     attempt += 1
                     continue
 
-                raise SupplierTimeoutError(
-                    (
-                        "Supplier request timed out "
-                        f"after {attempt + 1} attempt(s): "
-                        f"{url}"
+                supplier_error = (
+                    SupplierTimeoutError(
+                        (
+                            "Supplier request timed out "
+                            f"after {attempt + 1} "
+                            f"attempt(s): {url}"
+                        )
                     )
-                ) from error
+                )
+
+                if audit_session:
+                    audit_session.fail(
+                        supplier_error,
+                        attempt_count=attempt + 1,
+                    )
+
+                raise supplier_error from error
 
             except URLError as error:
                 reason = getattr(
@@ -374,30 +508,79 @@ class SupplierHTTPClient:
                         attempt += 1
                         continue
 
-                    raise SupplierTimeoutError(
-                        (
-                            "Supplier request timed out "
-                            f"after {attempt + 1} "
-                            f"attempt(s): {url}"
+                    supplier_error = (
+                        SupplierTimeoutError(
+                            (
+                                "Supplier request timed "
+                                "out after "
+                                f"{attempt + 1} "
+                                "attempt(s): "
+                                f"{url}"
+                            )
                         )
-                    ) from error
-
-                if attempt < self.max_retries:
-                    delay = self._retry_delay(
-                        attempt
                     )
 
-                    self.sleep_function(delay)
-                    attempt += 1
-                    continue
+                else:
+                    if attempt < self.max_retries:
+                        delay = self._retry_delay(
+                            attempt
+                        )
 
-                raise SupplierConnectionError(
-                    (
-                        "Unable to connect to supplier "
-                        f"endpoint: {url}. "
-                        f"Reason: {reason}"
+                        self.sleep_function(delay)
+                        attempt += 1
+                        continue
+
+                    supplier_error = (
+                        SupplierConnectionError(
+                            (
+                                "Unable to connect to "
+                                "supplier endpoint: "
+                                f"{url}. "
+                                f"Reason: {reason}"
+                            )
+                        )
                     )
-                ) from error
+
+                if audit_session:
+                    audit_session.fail(
+                        supplier_error,
+                        attempt_count=attempt + 1,
+                    )
+
+                raise supplier_error from error
+
+            except SupplierResponseError as error:
+                if audit_session:
+                    audit_session.fail(
+                        error,
+                        attempt_count=attempt + 1,
+                    )
+
+                raise
+
+
+    def _default_operation(
+        self,
+        method,
+        path,
+    ):
+        normalized_path = str(
+            path or ""
+        ).strip("/")
+
+        if not normalized_path:
+            normalized_path = "root"
+
+        normalized_path = (
+            normalized_path
+            .replace("/", ".")
+            .replace("?", ".")
+        )
+
+        return (
+            f"{str(method).lower()}."
+            f"{normalized_path}"
+        )[:100]
 
     def _build_response(
         self,

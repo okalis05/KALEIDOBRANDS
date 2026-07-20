@@ -305,3 +305,4 @@ from .models_purchase_orders import *
 from .models_purchase_order_activity import *
 from .models_quote import *
 from .models_marketplace import *
+from .models_integrations import *

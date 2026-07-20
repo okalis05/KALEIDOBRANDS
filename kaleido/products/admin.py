@@ -17,6 +17,9 @@ from .models import (
     SupplierPurchaseOrderActivity,
     SupplierListing,
 )
+from products.models import (
+    SupplierIntegrationAuditLog,
+)
 
 
 class ProductImageInline(admin.TabularInline):
@@ -405,3 +408,77 @@ class SupplierListingAdmin(admin.ModelAdmin):
             },
         ),
     )
+
+@admin.register(
+    SupplierIntegrationAuditLog
+)
+class SupplierIntegrationAuditLogAdmin(
+    admin.ModelAdmin
+):
+    list_display = (
+        "request_id",
+        "supplier",
+        "operation",
+        "method",
+        "status",
+        "status_code",
+        "attempt_count",
+        "duration_ms",
+        "started_at",
+    )
+
+    list_filter = (
+        "status",
+        "success",
+        "method",
+        "supplier",
+        "started_at",
+    )
+
+    search_fields = (
+        "request_id",
+        "correlation_id",
+        "operation",
+        "url",
+        "error_type",
+        "error_message",
+    )
+
+    readonly_fields = (
+        "request_id",
+        "correlation_id",
+        "supplier",
+        "operation",
+        "method",
+        "url",
+        "status",
+        "success",
+        "status_code",
+        "attempt_count",
+        "duration_ms",
+        "request_metadata",
+        "response_metadata",
+        "error_type",
+        "error_message",
+        "started_at",
+        "completed_at",
+    )
+
+    ordering = (
+        "-started_at",
+    )
+
+    date_hierarchy = "started_at"
+
+    def has_add_permission(
+        self,
+        request,
+    ):
+        return False
+
+    def has_change_permission(
+        self,
+        request,
+        obj=None,
+    ):
+        return False

@@ -176,6 +176,10 @@ class BaseSupplierAdapter(ABC):
             )
 
         return SupplierHTTPClient(
-            base_url=self.credentials.api_base_url,
+            base_url=(
+                self.credentials.api_base_url
+            ),
             default_headers=headers,
+            supplier=self.supplier,
+            audit_enabled=True,
         )
