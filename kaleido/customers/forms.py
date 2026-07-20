@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import CustomerProfile, BrandAsset, ArtworkProof, CustomerAddress
+from .models import CustomerProfile, BrandAsset, ArtworkProof, CustomerAddress, ShippingMethod
 
 
 class CustomerRegistrationForm(forms.ModelForm):
@@ -53,49 +53,65 @@ class ArtworkProofForm(forms.ModelForm):
 
 
 class CheckoutForm(forms.Form):
-    company = forms.CharField(max_length=200, required=False)
-    shipping_name = forms.CharField(max_length=200)
-    shipping_address = forms.CharField(widget=forms.Textarea(attrs={"rows": 3}))
-    shipping_city = forms.CharField(max_length=100)
-    shipping_state = forms.CharField(max_length=100)
-    shipping_postal_code = forms.CharField(max_length=20)
-    shipping_notes = forms.CharField(
-        required=False,
-        widget=forms.Textarea(attrs={"rows": 4}),
-    )
-
-class CustomerAddressForm(forms.ModelForm):
-    class Meta:
-        model = CustomerAddress
-        exclude = ("user", "created_at")
-
-
-class CheckoutForm(forms.Form):
     saved_address = forms.ModelChoiceField(
         queryset=CustomerAddress.objects.none(),
         required=False,
         empty_label="Use a new shipping address",
     )
 
+    shipping_method = forms.ModelChoiceField(
+        queryset=ShippingMethod.objects.none(),
+        required=True,
+        empty_label="Choose a shipping method",
+    )
+
     company = forms.CharField(max_length=200, required=False)
     shipping_name = forms.CharField(max_length=200, required=False)
-    shipping_address = forms.CharField(required=False, widget=forms.Textarea(attrs={"rows": 3}))
+    shipping_address = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 3}),
+    )
     shipping_city = forms.CharField(max_length=100, required=False)
     shipping_state = forms.CharField(max_length=100, required=False)
     shipping_postal_code = forms.CharField(max_length=20, required=False)
-    shipping_notes = forms.CharField(required=False, widget=forms.Textarea(attrs={"rows": 4}))
-    save_address = forms.BooleanField(required=False, label="Save this address for future orders")
+
+    shipping_notes = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 4}),
+    )
+
+    save_address = forms.BooleanField(
+        required=False,
+        label="Save this address for future orders",
+    )
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
+        self.fields["shipping_method"].queryset = (
+            ShippingMethod.objects
+            .filter(is_active=True)
+            .order_by("base_price", "name")
+        )
+
         if user:
-            self.fields["saved_address"].queryset = CustomerAddress.objects.filter(user=user)
+            self.fields["saved_address"].queryset = (
+                CustomerAddress.objects
+                .filter(user=user)
+                .order_by("-is_default", "-created_at")
+            )
 
     def clean(self):
         cleaned = super().clean()
         saved_address = cleaned.get("saved_address")
+        shipping_method = cleaned.get("shipping_method")
+
+        if not shipping_method:
+            self.add_error(
+                "shipping_method",
+                "Please choose a shipping method.",
+            )
 
         if saved_address:
             return cleaned
@@ -110,6 +126,170 @@ class CheckoutForm(forms.Form):
 
         for field in required_fields:
             if not cleaned.get(field):
-                self.add_error(field, "This field is required unless using a saved address.")
+                self.add_error(
+                    field,
+                    "This field is required unless using a saved address.",
+                )
 
         return cleaned
+class CustomerAddressForm(forms.ModelForm):
+    class Meta:
+        model = CustomerAddress
+        exclude = ("user", "created_at")
+
+
+from django import forms
+
+from .models import CustomerAddress, ShippingMethod
+
+
+class CheckoutForm(forms.Form):
+    saved_address = forms.ModelChoiceField(
+        queryset=CustomerAddress.objects.none(),
+        required=False,
+        empty_label="Use a new shipping address",
+        widget=forms.Select(
+            attrs={
+                "class": "form-select",
+            }
+        ),
+    )
+
+    shipping_method = forms.ModelChoiceField(
+        queryset=ShippingMethod.objects.none(),
+        required=True,
+        empty_label="Choose a shipping method",
+        widget=forms.Select(
+            attrs={
+                "class": "form-select",
+            }
+        ),
+    )
+
+    company = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+    )
+
+    shipping_name = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+    )
+
+    shipping_address = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 3,
+            }
+        ),
+    )
+
+    shipping_city = forms.CharField(
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+    )
+
+    shipping_state = forms.CharField(
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+    )
+
+    shipping_postal_code = forms.CharField(
+        max_length=20,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+            }
+        ),
+    )
+
+    shipping_notes = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                "class": "form-control",
+                "rows": 4,
+            }
+        ),
+    )
+
+    save_address = forms.BooleanField(
+        required=False,
+        label="Save this address for future orders",
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "form-check-input",
+            }
+        ),
+    )
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+
+        self.fields["shipping_method"].queryset = (
+            ShippingMethod.objects
+            .filter(is_active=True)
+            .order_by("base_price", "name")
+        )
+
+        if user and user.is_authenticated:
+            self.fields["saved_address"].queryset = (
+                CustomerAddress.objects
+                .filter(user=user)
+                .order_by("-is_default", "-created_at")
+            )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        saved_address = cleaned_data.get("saved_address")
+
+        if saved_address:
+            return cleaned_data
+
+        required_fields = [
+            "shipping_name",
+            "shipping_address",
+            "shipping_city",
+            "shipping_state",
+            "shipping_postal_code",
+        ]
+
+        for field_name in required_fields:
+            if not cleaned_data.get(field_name):
+                self.add_error(
+                    field_name,
+                    "This field is required unless using a saved address.",
+                )
+
+        return cleaned_data
+    
+from .forms_shipping import *
+from .forms_tracking import *
+from .forms_support import *
+from .forms_returns import *
+from .forms_refunds import *

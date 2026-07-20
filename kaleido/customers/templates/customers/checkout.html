@@ -21,12 +21,109 @@
 
                         <form method="post" class="auth-form">
                             {% csrf_token %}
-                            {{ form.as_p }}
 
-                            <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="mb-3">
+                                <label for="{{ form.saved_address.id_for_label }}">
+                                    Saved Address
+                                </label>
+                                {{ form.saved_address }}
+                                {{ form.saved_address.errors }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.shipping_method.id_for_label }}">
+                                    Shipping Method
+                                </label>
+                                {{ form.shipping_method }}
+                                {{ form.shipping_method.errors }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.company.id_for_label }}">Company</label>
+                                {{ form.company }}
+                                {{ form.company.errors }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.shipping_name.id_for_label }}">
+                                    Shipping Name
+                                </label>
+                                {{ form.shipping_name }}
+                                {{ form.shipping_name.errors }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.shipping_address.id_for_label }}">
+                                    Address
+                                </label>
+                                {{ form.shipping_address }}
+                                {{ form.shipping_address.errors }}
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-5">
+                                    <label for="{{ form.shipping_city.id_for_label }}">
+                                        City
+                                    </label>
+                                    {{ form.shipping_city }}
+                                    {{ form.shipping_city.errors }}
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="{{ form.shipping_state.id_for_label }}">
+                                        State
+                                    </label>
+                                    {{ form.shipping_state }}
+                                    {{ form.shipping_state.errors }}
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="{{ form.shipping_postal_code.id_for_label }}">
+                                        ZIP Code
+                                    </label>
+                                    {{ form.shipping_postal_code }}
+                                    {{ form.shipping_postal_code.errors }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3 mt-3">
+                                <label for="{{ form.shipping_notes.id_for_label }}">
+                                    Shipping Notes
+                                </label>
+                                {{ form.shipping_notes }}
+                                {{ form.shipping_notes.errors }}
+                            </div>
+
+                            <div class="form-check mb-4">
+                                {{ form.save_address }}
+                                <label
+                                    class="form-check-label"
+                                    for="{{ form.save_address.id_for_label }}"
+                                >
+                                    Save this address for future orders
+                                </label>
+                            </div>
+
+                            <button
+                                class="btn btn-kb-primary w-100 btn-lg"
+                                type="submit"
+                            >
                                 Place Order
                             </button>
-                        </form>
+</form>
+
+
+
+
+
+
+
                     </div>
                 </div>
 
@@ -50,7 +147,9 @@
 
                         <div class="supplier-metric-row">
                             <span>Shipping</span>
-                            <strong>Calculated later</strong>
+                            <strong>
+                                Select a method on the left
+                            </strong>
                         </div>
 
                         <div class="supplier-metric-row">

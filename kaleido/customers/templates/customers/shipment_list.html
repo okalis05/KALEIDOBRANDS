@@ -1,0 +1,268 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Shipments | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center">
+                <span>Shipping Operations</span>
+                <h1>Shipments</h1>
+                <p class="mx-auto mt-3" style="max-width:760px;">
+                    Create, monitor, and track customer shipments.
+                </p>
+            </div>
+
+            <div class="row g-4 mt-5">
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="supplier-stat-card">
+                        <span>Total</span>
+                        <strong>{{ shipment_totals.total }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="supplier-stat-card">
+                        <span>Pending</span>
+                        <strong>{{ shipment_totals.pending }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="supplier-stat-card">
+                        <span>Ready</span>
+                        <strong>{{ shipment_totals.ready }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="supplier-stat-card">
+                        <span>In Transit</span>
+                        <strong>{{ shipment_totals.in_transit }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="supplier-stat-card">
+                        <span>Delivered</span>
+                        <strong>{{ shipment_totals.delivered }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="supplier-stat-card">
+                        <span>Exceptions</span>
+                        <strong>{{ shipment_totals.exceptions }}</strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row g-4 mt-4">
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Created Today</span>
+                        <strong>{{ shipment_totals.today }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-4 mt-4">
+
+            <div class="col-md-4">
+                <div class="supplier-stat-card">
+                    <span>Late Shipments</span>
+                    <strong>{{ late_shipments }}</strong>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="supplier-stat-card">
+                    <span>Missing Tracking</span>
+                    <strong>{{ missing_tracking }}</strong>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="supplier-stat-card">
+                    <span>Paid Orders Awaiting Shipment</span>
+                    <strong>{{ paid_orders_without_shipments }}</strong>
+                </div>
+            </div>
+
+        </div>
+
+            <form method="get" class="product-filter-panel mt-5">
+                <div class="row g-3">
+
+                    <div class="col-lg-10">
+                        <label for="statusFilter">
+                            Shipment Status
+                        </label>
+
+                        <select
+                            id="statusFilter"
+                            name="status"
+                            class="form-control"
+                        >
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            {% for value, label in status_choices %}
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_status == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2 d-flex align-items-end">
+                        <button
+                            type="submit"
+                            class="btn btn-kb-primary w-100"
+                        >
+                            Filter
+                        </button>
+                    </div>
+
+                    <div class="col-12">
+                        <a
+                            href="{% url 'customers:shipment_list' %}"
+                            class="btn btn-kb-outline"
+                        >
+                            Reset Filters
+                        </a>
+                    </div>
+
+                </div>
+            </form>
+
+            <div class="supplier-admin-panel mt-5">
+                <h3>Shipment Records</h3>
+
+                {% for shipment in shipments %}
+                    <div class="supplier-admin-row">
+
+                        <div>
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                <strong>
+                                    {{ shipment.shipment_number }}
+                                </strong>
+
+                                {% if shipment.status == "pending" %}
+                                    <span class="badge bg-secondary">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "label_created" %}
+                                    <span class="badge bg-primary">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "ready" %}
+                                    <span class="badge bg-info text-dark">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "in_transit" %}
+                                    <span class="badge bg-warning text-dark">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "out_for_delivery" %}
+                                    <span class="badge bg-primary">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "delivered" %}
+                                    <span class="badge bg-success">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "exception" %}
+                                    <span class="badge bg-danger">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "cancelled" %}
+                                    <span class="badge bg-dark">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% else %}
+                                    <span class="badge bg-dark">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <span>
+                                Order {{ shipment.order.order_number }}
+                                · {{ shipment.carrier|default:"Carrier TBD" }}
+                                · {{ shipment.service_level|default:"Service TBD" }}
+                                · {{ shipment.created_at }}
+                            </span>
+
+                            {% if shipment.tracking_number %}
+                                <small>
+                                    Tracking:
+
+                                    {% if shipment.tracking_url %}
+                                        <a
+                                            href="{{ shipment.tracking_url }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            {{ shipment.tracking_number }}
+                                        </a>
+                                    {% else %}
+                                        {{ shipment.tracking_number }}
+                                    {% endif %}
+                                </small>
+                            {% endif %}
+                            {% if shipment.packing_slip %}
+                                <small>
+                                    Packing slip:
+                                    <a
+                                        href="{% url 'customers:download_packing_slip' shipment.id %}"
+                                    >
+                                        Download PDF
+                                    </a>
+                                </small>
+                            {% endif %}
+
+                            {% if shipment.estimated_delivery_date %}
+                                <small>
+                                    Estimated delivery:
+                                    {{ shipment.estimated_delivery_date }}
+                                </small>
+                            {% endif %}
+                        </div>
+
+                        <a
+                            href="{% url 'customers:shipment_detail' shipment.id %}"
+                            class="btn btn-kb-outline"
+                        >
+                            Open
+                        </a>
+
+                    </div>
+                {% empty %}
+                    <p class="text-muted">
+                        No shipments found.
+                    </p>
+                {% endfor %}
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

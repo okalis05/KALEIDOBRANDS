@@ -1,0 +1,55 @@
+{% extends "brands/base.html" %}
+
+{% block title %}
+Supplier Dashboard
+{% endblock %}
+
+{% block body %}
+
+<div class="container py-5">
+
+<h1>Supplier Dashboard</h1>
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>Supplier</th>
+
+<th>API</th>
+
+<th>Active</th>
+
+<th>Last Sync</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for supplier in suppliers %}
+
+<tr>
+
+<td>{{ supplier.name }}</td>
+
+<td>{{ supplier.api_enabled }}</td>
+
+<td>{{ supplier.active }}</td>
+
+<td>{{ supplier.last_sync }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,374 @@
+{% extends "brands/base.html" %}
+
+{% block title %}
+{{ return_request.request_number }} | Staff Returns
+{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center">
+                <span>Staff Returns Center</span>
+                <h1>{{ return_request.request_number }}</h1>
+                <p>
+                    Order {{ return_request.order.order_number }}
+                </p>
+            </div>
+
+            {% if messages %}
+                <div class="mt-4">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row g-4 mt-5">
+
+                <div class="col-lg-4">
+
+                    <div class="supplier-admin-panel">
+                        <h3>Request Summary</h3>
+
+                        <div class="supplier-metric-row">
+                            <span>Customer</span>
+                            <strong>
+                                {{ return_request.customer.get_full_name|default:return_request.customer.username }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Status</span>
+                            <strong>
+                                {{ return_request.get_status_display }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Request Type</span>
+                            <strong>
+                                {{ return_request.get_request_type_display }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Reason</span>
+                            <strong>
+                                {{ return_request.get_reason_display }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Resolution</span>
+                            <strong>
+                                {{ return_request.get_resolution_display }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>RMA</span>
+                            <strong>
+                                {{ return_request.rma_number|default:"Not issued" }}
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="supplier-admin-panel mt-4">
+                        <h3>Update Request</h3>
+
+                        <form method="post" class="auth-form">
+                            {% csrf_token %}
+
+                            <input
+                                type="hidden"
+                                name="update_request"
+                                value="1"
+                            >
+
+                            {% for field in update_form %}
+                                <div class="mb-3">
+                                    <label
+                                        class="form-label"
+                                        for="{{ field.id_for_label }}"
+                                    >
+                                        {{ field.label }}
+                                    </label>
+
+                                    {{ field }}
+
+                                    {% for error in field.errors %}
+                                        <div class="text-danger small">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+
+                            <button
+                                type="submit"
+                                class="btn btn-kb-primary w-100"
+                            >
+                                Save Request
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="supplier-admin-panel mt-4">
+                        <h3>Staff Actions</h3>
+
+                        <div class="d-grid gap-2">
+
+                            <form method="post">
+                                {% csrf_token %}
+                                <button
+                                    name="approve_request"
+                                    class="btn btn-success w-100"
+                                    type="submit"
+                                >
+                                    Approve Request
+                                </button>
+                            </form>
+
+                            <form method="post">
+                                {% csrf_token %}
+                                <button
+                                    name="reject_request"
+                                    class="btn btn-danger w-100"
+                                    type="submit"
+                                >
+                                    Reject Request
+                                </button>
+                            </form>
+
+                            <form method="post">
+                                {% csrf_token %}
+                                <button
+                                    name="issue_rma"
+                                    class="btn btn-kb-outline w-100"
+                                    type="submit"
+                                >
+                                    Issue RMA
+                                </button>
+                            </form>
+
+                            <form method="post">
+                                {% csrf_token %}
+                                <button
+                                    name="create_replacement"
+                                    class="btn btn-kb-outline w-100"
+                                    type="submit"
+                                >
+                                    Create Replacement Shipment
+                                </button>
+                            </form>
+
+                            <form method="post">
+                                {% csrf_token %}
+                                <button
+                                    name="complete_request"
+                                    class="btn btn-dark w-100"
+                                    type="submit"
+                                >
+                                    Complete Request
+                                </button>
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-8">
+
+                    <div class="supplier-admin-panel">
+                        <h3>Requested Items</h3>
+
+                        {% for item, item_form in item_forms %}
+                            <div class="border rounded p-3 mb-4">
+                                <h4>{{ item.product_name }}</h4>
+
+                                <p>
+                                    Requested: {{ item.quantity_requested }}
+                                    · Ordered: {{ item.order_item.quantity }}
+                                </p>
+
+                                <form method="post" class="auth-form">
+                                    {% csrf_token %}
+
+                                    <input
+                                        type="hidden"
+                                        name="update_item"
+                                        value="1"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        name="item_id"
+                                        value="{{ item.id }}"
+                                    >
+
+                                    {% for field in item_form %}
+                                        <div class="mb-3">
+                                            <label
+                                                class="form-label"
+                                                for="{{ field.id_for_label }}"
+                                            >
+                                                {{ field.label }}
+                                            </label>
+
+                                            {{ field }}
+
+                                            {% for error in field.errors %}
+                                                <div class="text-danger small">
+                                                    {{ error }}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-kb-primary"
+                                    >
+                                        Save Item Review
+                                    </button>
+                                </form>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="supplier-admin-panel mt-4">
+                        <h3>Conversation</h3>
+
+                        {% for return_message in messages_list %}
+                            <div class="supplier-admin-row">
+                                <div class="w-100">
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <strong>
+                                            {{ return_message.author.get_full_name|default:return_message.author.username }}
+                                        </strong>
+
+                                        {% if return_message.is_internal %}
+                                            <span class="badge bg-danger">
+                                                Internal
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-success">
+                                                Customer Visible
+                                            </span>
+                                        {% endif %}
+                                    </div>
+
+                                    <span>
+                                        {{ return_message.created_at }}
+                                    </span>
+
+                                    <p class="mt-2">
+                                        {{ return_message.message|linebreaksbr }}
+                                    </p>
+
+                                    {% for attachment in return_message.attachments.all %}
+                                        <small>
+                                            <a
+                                                href="{% url 'customers:download_return_attachment' attachment.id %}"
+                                            >
+                                                Download attachment
+                                            </a>
+                                        </small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">
+                                No messages have been added.
+                            </p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="supplier-admin-panel mt-4">
+                        <h3>Add Message or Internal Note</h3>
+
+                        <form
+                            method="post"
+                            enctype="multipart/form-data"
+                            class="auth-form"
+                        >
+                            {% csrf_token %}
+
+                            <input
+                                type="hidden"
+                                name="add_message"
+                                value="1"
+                            >
+
+                            {% for field in message_form %}
+                                <div class="mb-3">
+                                    <label
+                                        class="form-label"
+                                        for="{{ field.id_for_label }}"
+                                    >
+                                        {{ field.label }}
+                                    </label>
+
+                                    {{ field }}
+
+                                    {% for error in field.errors %}
+                                        <div class="text-danger small">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+
+                            <button
+                                type="submit"
+                                class="btn btn-kb-primary"
+                            >
+                                Add Message
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="supplier-admin-panel mt-4">
+                        <h3>Activity History</h3>
+
+                        {% for activity in return_request.activities.all %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>
+                                        {{ activity.get_action_display }}
+                                    </strong>
+
+                                    <span>
+                                        {{ activity.message }}
+                                        · {{ activity.created_at }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">
+                                No activity has been recorded.
+                            </p>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a
+                    href="{% url 'customers:staff_return_list' %}"
+                    class="btn btn-kb-outline"
+                >
+                    Back to Staff Returns
+                </a>
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

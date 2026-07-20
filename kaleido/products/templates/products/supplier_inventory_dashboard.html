@@ -1,0 +1,340 @@
+{% extends "brands/base.html" %}
+
+{% block title %}
+Supplier Inventory Dashboard | KaleidoBrands
+{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>Supplier Operations</span>
+                <h1>Inventory and Pricing Dashboard</h1>
+                <p class="mx-auto mt-3" style="max-width:760px;">
+                    Monitor supplier inventory, pricing changes, stock alerts,
+                    discontinued products, and synchronization activity.
+                </p>
+            </div>
+
+            <form method="get" class="product-filter-panel mt-5 reveal">
+                <div class="row g-3">
+
+                    <div class="col-lg-5">
+                        <label for="supplierFilter">Supplier</label>
+
+                        <select
+                            id="supplierFilter"
+                            name="supplier"
+                            class="form-control"
+                        >
+                            <option value="">All Suppliers</option>
+
+                            {% for supplier in suppliers %}
+                                <option
+                                    value="{{ supplier.slug }}"
+                                    {% if selected_supplier == supplier.slug %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ supplier.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <label for="statusFilter">Inventory Status</label>
+
+                        <select
+                            id="statusFilter"
+                            name="status"
+                            class="form-control"
+                        >
+                            <option value="">All Statuses</option>
+
+                            <option
+                                value="in_stock"
+                                {% if selected_status == "in_stock" %}selected{% endif %}
+                            >
+                                In Stock
+                            </option>
+
+                            <option
+                                value="low_stock"
+                                {% if selected_status == "low_stock" %}selected{% endif %}
+                            >
+                                Low Stock
+                            </option>
+
+                            <option
+                                value="out_of_stock"
+                                {% if selected_status == "out_of_stock" %}selected{% endif %}
+                            >
+                                Out of Stock
+                            </option>
+
+                            <option
+                                value="discontinued"
+                                {% if selected_status == "discontinued" %}selected{% endif %}
+                            >
+                                Discontinued
+                            </option>
+
+                            <option
+                                value="unknown"
+                                {% if selected_status == "unknown" %}selected{% endif %}
+                            >
+                                Unknown
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2 d-flex align-items-end">
+                        <button
+                            type="submit"
+                            class="btn btn-kb-primary w-100"
+                        >
+                            Filter
+                        </button>
+                    </div>
+
+                    <div class="col-12">
+                        <a
+                            href="{% url 'products:supplier_inventory_dashboard' %}"
+                            class="btn btn-kb-outline"
+                        >
+                            Reset
+                        </a>
+                    </div>
+
+                </div>
+            </form>
+
+            <div class="row g-4 mt-4">
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="supplier-stat-card">
+                        <span>Total</span>
+                        <strong>{{ totals.all }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="supplier-stat-card">
+                        <span>In Stock</span>
+                        <strong>{{ totals.in_stock }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="supplier-stat-card">
+                        <span>Low Stock</span>
+                        <strong>{{ totals.low_stock }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="supplier-stat-card">
+                        <span>Out of Stock</span>
+                        <strong>{{ totals.out_of_stock }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="supplier-stat-card">
+                        <span>Discontinued</span>
+                        <strong>{{ totals.discontinued }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-2">
+                    <div class="supplier-stat-card">
+                        <span>Unknown</span>
+                        <strong>{{ totals.unknown }}</strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="supplier-admin-panel mt-5 reveal">
+                <h3>Supplier Products</h3>
+
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Supplier</th>
+                                <th>SKU</th>
+                                <th>Cost</th>
+                                <th>Inventory</th>
+                                <th>Status</th>
+                                <th>Last Sync</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for product in products %}
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="{% url 'products:detail' product.slug %}"
+                                            class="fw-bold"
+                                        >
+                                            {{ product.name }}
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        {{ product.supplier_record.name|default:"—" }}
+                                    </td>
+
+                                    <td>
+                                        {{ product.sku|default:"—" }}
+                                    </td>
+
+                                    <td>
+                                        {% if product.supplier_price is not None %}
+                                            ${{ product.supplier_price }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {{ product.supplier_inventory|default_if_none:"—" }}
+                                    </td>
+
+                                    <td>
+                                        <span class="inventory-badge inventory-{{ product.inventory_status }}">
+                                            {{ product.get_inventory_status_display }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        {{ product.supplier_last_synced_at|default:"Never" }}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted py-4">
+                                        No supplier products match the selected filters.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-5">
+
+                <div class="col-lg-6">
+                    <div class="supplier-admin-panel">
+                        <h3>Recent Price Changes</h3>
+
+                        {% for change in recent_price_changes %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ change.product.name }}</strong>
+
+                                    <span>
+                                        {{ change.previous_price|default:"—" }}
+                                        →
+                                        {{ change.new_price|default:"—" }}
+                                        · {{ change.recorded_at }}
+                                    </span>
+                                </div>
+
+                                <a href="{% url 'products:detail' change.product.slug %}">
+                                    View
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">
+                                No supplier price changes recorded yet.
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="supplier-admin-panel">
+                        <h3>Recent Inventory Changes</h3>
+
+                        {% for change in recent_inventory_changes %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ change.product.name }}</strong>
+
+                                    <span>
+                                        {{ change.previous_quantity|default_if_none:"—" }}
+                                        →
+                                        {{ change.new_quantity|default_if_none:"—" }}
+                                        · {{ change.new_status|title }}
+                                        · {{ change.recorded_at }}
+                                    </span>
+                                </div>
+
+                                <a href="{% url 'products:detail' change.product.slug %}">
+                                    View
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">
+                                No supplier inventory changes recorded yet.
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="supplier-admin-panel mt-5">
+                <h3>Recent Supplier Syncs</h3>
+
+                {% for log in recent_sync_logs %}
+                    <div class="supplier-admin-row">
+                        <div>
+                            <strong>
+                                {{ log.supplier.name|default:"Unknown Supplier" }}
+                            </strong>
+
+                            <span>
+                                {{ log.status|title }}
+                                · Created {{ log.products_created }}
+                                · Updated {{ log.products_updated }}
+                                · Failed {{ log.products_failed }}
+                                · {{ log.started_at }}
+                            </span>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">
+                        No supplier synchronization logs found.
+                    </p>
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-5">
+                <a
+                    href="{% url 'products:supplier_sync_dashboard' %}"
+                    class="btn btn-kb-primary btn-lg"
+                >
+                    Supplier Sync
+                </a>
+
+                <a
+                    href="{% url 'products:supplier_analytics' %}"
+                    class="btn btn-kb-outline btn-lg"
+                >
+                    Supplier Analytics
+                </a>
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

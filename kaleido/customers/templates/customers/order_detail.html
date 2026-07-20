@@ -64,6 +64,17 @@
                                 {% endif %}
                             </strong>
                         </div>
+                        <div class="supplier-metric-row">
+                            <span>Shipping Method</span>
+                            <strong>
+                                {{ order.shipping_method_name|default:"Not selected" }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Shipping Cost</span>
+                            <strong>${{ order.shipping }}</strong>
+                        </div>
                             {% if order.payment_status == "paid" %}
                             <div class="alert alert-success mt-4">
                                 Payment confirmed.
@@ -86,6 +97,42 @@
                             </a>
                         </div>
                         {% endif %}
+                        {% if request.user.is_staff %}
+                        <div class="mt-4">
+                            <a
+                                href="{% url 'customers:create_shipment' order.id %}"
+                                class="btn btn-kb-primary w-100"
+                            >
+                                Create Shipment
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if request.user.is_staff and order.supplier_purchase_orders.exists %}
+                        <div class="supplier-admin-panel mt-4">
+                            <h3>Supplier Purchase Orders</h3>
+
+                            {% for purchase_order in order.supplier_purchase_orders.all %}
+                                <div class="supplier-admin-row">
+                                    <div>
+                                        <strong>{{ purchase_order.po_number }}</strong>
+
+                                        <span>
+                                            {{ purchase_order.supplier.name|default:"Unassigned Supplier" }}
+                                            · {{ purchase_order.get_status_display }}
+                                            · ${{ purchase_order.total_cost|floatformat:2 }}
+                                        </span>
+                                    </div>
+
+                                    <a
+                                        href="{% url 'products:purchase_order_detail' purchase_order.id %}"
+                                        class="btn btn-kb-outline"
+                                    >
+                                        Open PO
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     </div>
                 </div>
 
@@ -119,23 +166,51 @@
                         <h3>Artwork Proofs</h3>
 
                         {% for proof in order.artwork_proofs.all %}
+                        <div class="supplier-admin-row">
+                            <div>
+                                <strong>{{ proof.title }}</strong>
+                                <span>
+                                    {{ proof.get_status_display }}
+                                    · {{ proof.created_at }}
+                                </span>
+
+                                {% if proof.customer_notes %}
+                                    <small>{{ proof.customer_notes }}</small>
+                                {% endif %}
+                            </div>
+
+                            <a href="{{ proof.file.url }}" target="_blank" rel="noopener noreferrer">
+                                View File
+                            </a>
+                        </div>
+                    </div>
+                    {% if order.shipments.exists %}
+                    <div class="supplier-admin-panel mt-4">
+                        <h3>Shipments</h3>
+
+                        {% for shipment in order.shipments.all %}
                             <div class="supplier-admin-row">
                                 <div>
-                                    <strong>{{ proof.title }}</strong>
-                                    <span>
-                                        {{ proof.get_status_display }}
-                                        · {{ proof.created_at }}
-                                    </span>
+                                    <strong>{{ shipment.shipment_number }}</strong>
 
-                                    {% if proof.customer_notes %}
-                                        <small>{{ proof.customer_notes }}</small>
-                                    {% endif %}
+                                    <span>
+                                        {{ shipment.get_status_display }}
+                                        · {{ shipment.carrier|default:"Carrier TBD" }}
+                                        · {{ shipment.tracking_number|default:"No tracking yet" }}
+                                    </span>
                                 </div>
 
-                                <a href="{{ proof.file.url }}" target="_blank" rel="noopener noreferrer">
-                                    View File
+                                <a
+                                    href="{% url 'customers:shipment_detail' shipment.id %}"
+                                    class="btn btn-kb-outline"
+                                >
+                                    View
                                 </a>
                             </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
 
                             {% if proof.status == "pending" %}
                                 <form method="post" action="{% url 'customers:approve_artwork' proof.id %}" class="mt-2">

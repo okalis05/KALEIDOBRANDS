@@ -98,25 +98,27 @@ WSGI_APPLICATION = "kaleido.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-DATABASE_URL = config('DATABASE_URL', default='')
+# Database
+DATABASE_URL = config("DATABASE_URL", default="")
 
 if DATABASE_URL:
     DATABASES = {
-        'default': dj_database_url.parse(
+        "default": dj_database_url.parse(
             DATABASE_URL,
             conn_max_age=600,
-            ssl_require=not DEBUG
+            ssl_require=not DEBUG,
         )
     }
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+            "OPTIONS": {
+                "timeout": 30,
+            },
         }
     }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -210,3 +212,19 @@ LOGOUT_REDIRECT_URL = "brands:home"
 STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY", default="")
 STRIPE_PUBLISHABLE_KEY = config("STRIPE_PUBLISHABLE_KEY", default="")
 STRIPE_WEBHOOK_SECRET = config("STRIPE_WEBHOOK_SECRET", default="")
+DEFAULT_CURRENCY = config("DEFAULT_CURRENCY", default="usd",)
+
+SUPPLIER_SYNC_FILE = config("SUPPLIER_SYNC_FILE", default="data/sample_kaeser_blair_products.csv",)
+SUPPLIER_ALERT_EMAIL = config("SUPPLIER_ALERT_EMAIL", default="sales@kaleidobrands.com",)
+
+SUPPORT_NOTIFICATION_EMAIL = os.getenv(
+    "SUPPORT_NOTIFICATION_EMAIL",
+    "sales@kaleidobrands.com",
+)
+
+
+RETURN_NOTIFICATION_EMAIL = os.getenv(
+    "RETURN_NOTIFICATION_EMAIL",
+    "sales@kaleidobrands.com",
+)
+

@@ -48,4 +48,15 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("quote") === "1") {
+         const quoteTabButton = document.getElementById("quote-tab");
+
+        if (quoteTabButton && window.bootstrap) {
+            const tab = new bootstrap.Tab(quoteTabButton);
+            tab.show();
+        }
+}
 });

@@ -1,0 +1,216 @@
+{% extends "brands/base.html" %}
+
+{% block title %}
+{{ return_request.request_number }} | KaleidoBrands
+{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center">
+                <span>Return Request</span>
+                <h1>{{ return_request.request_number }}</h1>
+                <p>
+                    Order {{ return_request.order.order_number }}
+                </p>
+            </div>
+
+            {% if messages %}
+                <div class="supplier-message-wrap mt-4">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row g-4 mt-5">
+
+                <div class="col-lg-4">
+                    <div class="supplier-admin-panel">
+                        <h3>Request Summary</h3>
+
+                        <div class="supplier-metric-row">
+                            <span>Status</span>
+                            <strong>
+                                {{ return_request.get_status_display }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Request Type</span>
+                            <strong>
+                                {{ return_request.get_request_type_display }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Reason</span>
+                            <strong>
+                                {{ return_request.get_reason_display }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Resolution</span>
+                            <strong>
+                                {{ return_request.get_resolution_display }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>RMA</span>
+                            <strong>
+                                {{ return_request.rma_number|default:"Not issued" }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Submitted</span>
+                            <strong>
+                                {{ return_request.requested_at }}
+                            </strong>
+                        </div>
+
+                        {% if return_request.replacement_shipment %}
+                            <div class="supplier-metric-row">
+                                <span>Replacement Shipment</span>
+                                <strong>
+                                    <a
+                                        href="{% url 'customers:shipment_detail' return_request.replacement_shipment.id %}"
+                                    >
+                                        {{ return_request.replacement_shipment.shipment_number }}
+                                    </a>
+                                </strong>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+
+                    <div class="supplier-admin-panel">
+                        <h3>Requested Items</h3>
+
+                        {% for item in return_request.items.all %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ item.product_name }}</strong>
+
+                                    <span>
+                                        SKU {{ item.sku|default:"N/A" }}
+                                        · Requested {{ item.quantity_requested }}
+                                        · Approved {{ item.quantity_approved }}
+                                        · Received {{ item.quantity_received }}
+                                    </span>
+
+                                    <small>
+                                        Condition: {{ item.get_condition_display }}
+                                        · Resolution: {{ item.get_resolution_display }}
+                                    </small>
+
+                                    {% if item.customer_item_notes %}
+                                        <small>
+                                            {{ item.customer_item_notes }}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="supplier-admin-panel mt-4">
+                        <h3>Conversation</h3>
+
+                        {% for return_message in visible_messages %}
+                            <div class="supplier-admin-row">
+                                <div class="w-100">
+                                    <strong>
+                                        {{ return_message.author.get_full_name|default:return_message.author.username }}
+                                    </strong>
+
+                                    <span>
+                                        {{ return_message.created_at }}
+                                    </span>
+
+                                    <p class="mt-2">
+                                        {{ return_message.message|linebreaksbr }}
+                                    </p>
+
+                                    {% for attachment in return_message.attachments.all %}
+                                        <small>
+                                            <a
+                                                href="{% url 'customers:download_return_attachment' attachment.id %}"
+                                            >
+                                                Download attachment
+                                            </a>
+                                        </small>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">
+                                No messages have been added.
+                            </p>
+                        {% endfor %}
+                    </div>
+
+                    {% if return_request.status != "completed" and return_request.status != "cancelled" and return_request.status != "rejected" %}
+                        <div class="supplier-admin-panel mt-4">
+                            <h3>Add Message or Evidence</h3>
+
+                            <form
+                                method="post"
+                                enctype="multipart/form-data"
+                                class="auth-form"
+                            >
+                                {% csrf_token %}
+
+                                {% for field in message_form %}
+                                    <div class="mb-3">
+                                        <label
+                                            for="{{ field.id_for_label }}"
+                                            class="form-label"
+                                        >
+                                            {{ field.label }}
+                                        </label>
+
+                                        {{ field }}
+
+                                        {% for error in field.errors %}
+                                            <div class="text-danger small">
+                                                {{ error }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-kb-primary"
+                                >
+                                    Add Message
+                                </button>
+                            </form>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a
+                    href="{% url 'customers:return_request_list' %}"
+                    class="btn btn-kb-outline"
+                >
+                    Back to Requests
+                </a>
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -45,7 +45,8 @@ urlpatterns = [
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
     path("dashboard/",include("dashboard.urls")),
     path("products/", include("products.urls")),
-    path("customers/", include("customers.urls"))
+    path("customers/", include("customers.urls")),
+    
 ]
 
 if settings.DEBUG:

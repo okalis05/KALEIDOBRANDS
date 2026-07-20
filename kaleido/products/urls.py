@@ -6,6 +6,8 @@ app_name = "products"
 
 urlpatterns = [
     path("", views.product_home, name="home"),
+
+     path("supplier-inventory/",views.supplier_inventory_dashboard, name="supplier_inventory_dashboard",),
     path("search/", views.product_search, name="search"),
     path("api/search/", views.live_search, name="live-search"),
 
@@ -27,6 +29,12 @@ urlpatterns = [
     path("category/<slug:slug>/", views.category_detail, name="category"),
     path("quote-builder/",views.quote_builder,name="quote_builder"),
     path("recommendation-analytics/", views.recommendation_analytics, name="recommendation_analytics"),
+    path("purchase-orders/",views.purchase_order_list, name="purchase_order_list"),
+    path("purchase-orders/<int:po_id>/", views.purchase_order_detail, name="purchase_order_detail"),
+    path("purchase-orders/<int:po_id>/pdf/",views.generate_purchase_order_pdf_view, name="generate_purchase_order_pdf"),
+    path("purchase-orders/<int:po_id>/send/",views.send_purchase_order, name="send_purchase_order",),
+    path("purchase-orders/<int:po_id>/update/", views.update_purchase_order_status, name="update_purchase_order_status"),
+    path("supplier-operations/", views.supplier_operations_dashboard, name="supplier_operations_dashboard"),
     path("<slug:slug>/", views.product_detail, name="detail"),
     
 ]

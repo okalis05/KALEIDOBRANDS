@@ -1,0 +1,115 @@
+{% extends "brands/base.html" %}
+
+{% block title %}
+My Support Tickets | KaleidoBrands
+{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center">
+                <span>Customer Support</span>
+                <h1>My Support Tickets</h1>
+                <p class="mx-auto mt-3" style="max-width:720px;">
+                    Track questions, order issues, shipping concerns,
+                    returns, and refund requests.
+                </p>
+            </div>
+
+            <div class="text-center mt-4">
+                <a
+                    href="{% url 'customers:support_ticket_create' %}"
+                    class="btn btn-kb-primary btn-lg"
+                >
+                    Create Support Ticket
+                </a>
+            </div>
+
+            <form method="get" class="product-filter-panel mt-5">
+                <div class="row g-3">
+                    <div class="col-lg-10">
+                        <label for="statusFilter">
+                            Ticket Status
+                        </label>
+
+                        <select
+                            id="statusFilter"
+                            name="status"
+                            class="form-select"
+                        >
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            {% for value, label in status_choices %}
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_status == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2 d-flex align-items-end">
+                        <button
+                            type="submit"
+                            class="btn btn-kb-primary w-100"
+                        >
+                            Filter
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="supplier-admin-panel mt-5">
+                <h3>Tickets</h3>
+
+                {% for ticket in tickets %}
+                    <div class="supplier-admin-row">
+                        <div>
+                            <div class="d-flex flex-wrap gap-2 align-items-center">
+                                <strong>{{ ticket.ticket_number }}</strong>
+
+                                {% if ticket.priority == "urgent" %}
+                                    <span class="badge bg-danger">Urgent</span>
+                                {% elif ticket.priority == "high" %}
+                                    <span class="badge bg-warning text-dark">High</span>
+                                {% elif ticket.priority == "normal" %}
+                                    <span class="badge bg-primary">Normal</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Low</span>
+                                {% endif %}
+                            </div>
+
+                            <span>
+                                {{ ticket.subject }}
+                                · {{ ticket.get_category_display }}
+                                · {{ ticket.get_status_display }}
+                                · Updated {{ ticket.updated_at }}
+                            </span>
+                        </div>
+
+                        <a
+                            href="{% url 'customers:support_ticket_detail' ticket.id %}"
+                            class="btn btn-kb-outline"
+                        >
+                            Open
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">
+                        You have not created any support tickets.
+                    </p>
+                {% endfor %}
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -189,6 +189,28 @@
                 </a>
             </div>
         </div>
+        <div class="row g-4 mt-4">
+            <div class="col-md-4">
+                <div class="supplier-stat-card">
+                    <span>Supplier POs</span>
+                    <strong>{{ total_purchase_orders }}</strong>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="supplier-stat-card">
+                    <span>Draft POs</span>
+                    <strong>{{ draft_purchase_orders }}</strong>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="supplier-stat-card">
+                    <span>Sent POs</span>
+                    <strong>{{ sent_purchase_orders }}</strong>
+                </div>
+            </div>
+        </div>
     </section>
 </main>
 {% endblock %}

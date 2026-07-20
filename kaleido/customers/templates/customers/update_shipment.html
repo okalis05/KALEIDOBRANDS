@@ -1,0 +1,157 @@
+{% extends "brands/base.html" %}
+
+{% block title %}
+Update {{ shipment.shipment_number }} | KaleidoBrands
+{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center">
+                <span>Shipping Operations</span>
+                <h1>Update Shipment</h1>
+
+                <p class="mx-auto mt-3" style="max-width:700px;">
+                    Shipment {{ shipment.shipment_number }}
+                    for order {{ shipment.order.order_number }}
+                </p>
+            </div>
+
+            {% if messages %}
+                <div class="supplier-message-wrap mt-4">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-8">
+                    <div class="supplier-admin-panel">
+                        <h3>Tracking and Status</h3>
+
+                        <form
+                            method="post"
+                            class="auth-form"
+                        >
+                            {% csrf_token %}
+
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="mb-3">
+                                <label
+                                    for="{{ form.carrier.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Carrier
+                                </label>
+
+                                {{ form.carrier }}
+
+                                {% for error in form.carrier.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label
+                                    for="{{ form.tracking_number.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Tracking Number
+                                </label>
+
+                                {{ form.tracking_number }}
+
+                                {% for error in form.tracking_number.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label
+                                    for="{{ form.status.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Shipment Status
+                                </label>
+
+                                {{ form.status }}
+
+                                {% for error in form.status.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label
+                                    for="{{ form.estimated_delivery_date.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Estimated Delivery Date
+                                </label>
+
+                                {{ form.estimated_delivery_date }}
+
+                                {% for error in form.estimated_delivery_date.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mb-4">
+                                <label
+                                    for="{{ form.message.id_for_label }}"
+                                    class="form-label"
+                                >
+                                    Update Message
+                                </label>
+
+                                {{ form.message }}
+
+                                {% for error in form.message.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-3">
+                                <button
+                                    class="btn btn-kb-primary"
+                                    type="submit"
+                                >
+                                    Save Shipment Update
+                                </button>
+
+                                <a
+                                    href="{% url 'customers:shipment_detail' shipment.id %}"
+                                    class="btn btn-kb-outline"
+                                >
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

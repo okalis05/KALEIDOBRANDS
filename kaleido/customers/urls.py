@@ -1,6 +1,8 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
-
+from .views_refund_webhooks import (
+    stripe_refund_webhook,
+)
 from . import views
 
 app_name = "customers"
@@ -56,4 +58,142 @@ urlpatterns = [
     path("payments/success/<int:order_id>/", views.payment_success, name="payment_success"),
     path("payments/cancel/<int:order_id>/", views.payment_cancel, name="payment_cancel"),
     path("stripe/webhook/", views.stripe_webhook, name="stripe_webhook"),
-]
+    path("orders/<int:order_id>/shipments/create/", views.create_shipment, name="create_shipment"),
+    path("shipments/", views.shipment_list, name="shipment_list"),
+    path("shipments/<int:shipment_id>/update/", views.update_shipment, name="update_shipment"),
+    path(
+    "shipments/<int:shipment_id>/packing-slip/generate/",
+    views.generate_packing_slip,
+    name="generate_packing_slip",
+),
+
+    path(
+        "shipments/<int:shipment_id>/packing-slip/download/",
+        views.download_packing_slip,
+        name="download_packing_slip",
+    ),
+        path("shipments/<int:shipment_id>/", views.shipment_detail, name="shipment_detail"),
+
+    path(
+        "support/",
+        views.support_ticket_list,
+        name="support_ticket_list",
+    ),
+
+    path(
+        "support/create/",
+        views.support_ticket_create,
+        name="support_ticket_create",
+    ),
+
+    path(
+        "support/<int:ticket_id>/",
+        views.support_ticket_detail,
+        name="support_ticket_detail",
+    ),
+
+    path(
+    "staff/support/",
+    views.staff_ticket_list,
+    name="staff_ticket_list",
+    ),
+
+    path(
+        "staff/support/<int:ticket_id>/",
+        views.staff_ticket_detail,
+        name="staff_ticket_detail",
+    ),
+    path(
+        "returns/",
+        views.return_request_list,
+        name="return_request_list",
+        ),
+
+    path(
+        "returns/create/",
+        views.return_request_create,
+        name="return_request_create",
+    ),
+
+    path(
+        "returns/attachments/<int:attachment_id>/download/",
+        views.download_return_attachment,
+        name="download_return_attachment",
+    ),
+
+    path(
+        "returns/<int:return_id>/",
+        views.return_request_detail,
+        name="return_request_detail",
+    ),
+
+    path(
+        "staff/returns/",
+        views.staff_return_list,
+        name="staff_return_list",
+    ),
+
+    path(
+        "staff/returns/<int:return_id>/",
+        views.staff_return_detail,
+        name="staff_return_detail",
+    ),
+    path(
+        "webhooks/stripe/refunds/",
+        stripe_refund_webhook,
+        name="stripe_refund_webhook",
+    ),
+    path(
+        "admin/refunds/dashboard/",
+        views.refund_dashboard,
+        name="refund_dashboard",
+    ),
+    path(
+        "admin/refunds/export/",
+        views.export_all_refunds,
+        name="export_all_refunds",
+    ),
+    path(
+        "admin/refunds/export/pending/",
+        views.export_pending_refunds,
+        name="export_pending_refunds",
+    ),
+    path(
+        "admin/refunds/export/failed/",
+        views.export_failed_refunds,
+        name="export_failed_refunds",
+    ),
+    path(
+        "admin/refunds/export/completed/",
+        views.export_completed_refunds,
+        name="export_completed_refunds",
+    ),
+    path(
+        "admin/refunds/export/transactions/",
+        views.export_refund_transactions,
+        name="export_refund_transactions",
+    ),
+    path(
+        "admin/refunds/export/webhooks/",
+        views.export_stripe_webhooks,
+        name="export_stripe_webhooks",
+    ),
+    path(
+        "admin/refunds/report/print/",
+        views.printable_refund_report,
+        name="printable_refund_report",
+    ),
+    path(
+        "admin/refunds/dashboard/",
+        views.refund_dashboard,
+        name="refund_dashboard",
+    ),
+    path(
+    "admin/refunds/<int:refund_id>/",
+    views.refund_detail,
+    name="refund_detail",
+),
+
+
+            
+    ]

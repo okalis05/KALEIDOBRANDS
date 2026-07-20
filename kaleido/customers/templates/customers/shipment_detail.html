@@ -1,0 +1,333 @@
+{% extends "brands/base.html" %}
+
+{% block title %}
+{{ shipment.shipment_number }} | KaleidoBrands
+{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center">
+                <span>Shipment Tracking</span>
+                <h1>{{ shipment.shipment_number }}</h1>
+                <p>
+                    Order {{ shipment.order.order_number }}
+                </p>
+            </div>
+
+            {% if messages %}
+                <div class="supplier-message-wrap mt-4">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row g-4 mt-5">
+
+                <div class="col-lg-4">
+                    <div class="supplier-admin-panel">
+                        <h3>Shipment Summary</h3>
+
+                        <div class="supplier-metric-row">
+                            <span>Order</span>
+
+                            <strong>
+                                {{ shipment.order.order_number }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Status</span>
+
+                            <strong>
+                                {% if shipment.status == "pending" %}
+                                    <span class="badge bg-secondary">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "label_created" %}
+                                    <span class="badge bg-primary">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "ready" %}
+                                    <span class="badge bg-info text-dark">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "in_transit" %}
+                                    <span class="badge bg-warning text-dark">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "out_for_delivery" %}
+                                    <span class="badge bg-primary">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "delivered" %}
+                                    <span class="badge bg-success">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "exception" %}
+                                    <span class="badge bg-danger">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% elif shipment.status == "cancelled" %}
+                                    <span class="badge bg-dark">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        {{ shipment.get_status_display }}
+                                    </span>
+                                {% endif %}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Tracking</span>
+
+                            <strong>
+                                {% if shipment.tracking_url %}
+                                    <a
+                                        href="{{ shipment.tracking_url }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {{ shipment.tracking_number|default:"Track Shipment" }}
+                                    </a>
+
+                                {% elif shipment.tracking_number %}
+                                    {{ shipment.tracking_number }}
+
+                                {% else %}
+                                    <span class="text-muted">
+                                        No tracking available
+                                    </span>
+                                {% endif %}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Carrier</span>
+
+                            <strong>
+                                {{ shipment.carrier|default:"Not assigned" }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Service Level</span>
+
+                            <strong>
+                                {{ shipment.service_level|default:"Not assigned" }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Shipping Method</span>
+
+                            <strong>
+                                {% if shipment.shipping_method %}
+                                    {{ shipment.shipping_method.name }}
+                                {% else %}
+                                    Not assigned
+                                {% endif %}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Shipping Cost</span>
+
+                            <strong>
+                                ${{ shipment.shipping_cost|floatformat:2 }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Estimated Ship Date</span>
+
+                            <strong>
+                                {{ shipment.estimated_ship_date|default:"TBD" }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Estimated Delivery</span>
+
+                            <strong>
+                                {{ shipment.estimated_delivery_date|default:"TBD" }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Shipped</span>
+
+                            <strong>
+                                {{ shipment.shipped_at|default:"Not shipped" }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Delivered</span>
+
+                            <strong>
+                                {{ shipment.delivered_at|default:"Not delivered" }}
+                            </strong>
+                        </div>
+
+                        {% if request.user.is_staff %}
+                        <div class="mt-4 d-grid gap-3">
+
+                            <a
+                                href="{% url 'customers:update_shipment' shipment.id %}"
+                                class="btn btn-kb-primary"
+                            >
+                                Update Shipment
+                            </a>
+
+                            <a
+                                href="{% url 'customers:generate_packing_slip' shipment.id %}"
+                                class="btn btn-kb-outline"
+                            >
+                                Generate Packing Slip
+                            </a>
+
+                            {% if shipment.packing_slip %}
+                                <a
+                                    href="{% url 'customers:download_packing_slip' shipment.id %}"
+                                    class="btn btn-kb-outline"
+                                >
+                                    Download Packing Slip
+                                </a>
+                            {% endif %}
+
+                        </div>
+
+                    {% elif shipment.packing_slip %}
+                        <div class="mt-4 d-grid">
+
+                            <a
+                                href="{% url 'customers:download_packing_slip' shipment.id %}"
+                                class="btn btn-kb-outline"
+                            >
+                                Download Packing Slip
+                            </a>
+
+                        </div>
+                    {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+
+                    <div class="supplier-admin-panel">
+                        <h3>Shipment Items</h3>
+
+                        {% for item in shipment.items.all %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>
+                                        {{ item.product_name }}
+                                    </strong>
+
+                                    <span>
+                                        SKU:
+                                        {{ item.sku|default:"N/A" }}
+                                        · Quantity:
+                                        {{ item.quantity }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">
+                                No shipment items found.
+                            </p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="supplier-admin-panel mt-4">
+                        <h3>Status History</h3>
+
+                        {% for history in shipment.status_history.all %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>
+                                        {{ history.new_status|title }}
+                                    </strong>
+
+                                    <span>
+                                        {{ history.created_at }}
+
+                                        {% if history.created_by %}
+                                            · Updated by
+                                            {{ history.created_by.get_full_name|default:history.created_by.username }}
+                                        {% else %}
+                                            · System
+                                        {% endif %}
+                                    </span>
+
+                                    {% if history.previous_status %}
+                                        <small>
+                                            {{ history.previous_status|title }}
+                                            →
+                                            {{ history.new_status|title }}
+                                        </small>
+                                    {% endif %}
+
+                                    {% if history.message %}
+                                        <small>
+                                            {{ history.message }}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">
+                                No shipment updates have been recorded.
+                            </p>
+                        {% endfor %}
+                    </div>
+
+                    {% if shipment.notes %}
+                        <div class="supplier-admin-panel mt-4">
+                            <h3>Shipment Notes</h3>
+                            <p>{{ shipment.notes }}</p>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="text-center mt-5">
+                {% if request.user.is_staff %}
+                    <a
+                        href="{% url 'customers:shipment_list' %}"
+                        class="btn btn-kb-outline btn-lg"
+                    >
+                        Back to Shipments
+                    </a>
+                {% else %}
+                    <a
+                        href="{% url 'customers:order_detail' shipment.order.id %}"
+                        class="btn btn-kb-outline btn-lg"
+                    >
+                        Back to Order
+                    </a>
+                {% endif %}
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

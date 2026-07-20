@@ -1,0 +1,117 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Supplier Purchase Orders | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>Supplier Operations</span>
+                <h1>Purchase Orders</h1>
+                <p class="mx-auto mt-3" style="max-width:760px;">
+                    Create, review, send, and track supplier purchase orders.
+                </p>
+            </div>
+
+            <form method="get" class="product-filter-panel mt-5">
+                <div class="row g-3">
+
+                    <div class="col-lg-5">
+                        <label for="supplierFilter">Supplier</label>
+                        <select
+                            id="supplierFilter"
+                            name="supplier"
+                            class="form-control"
+                        >
+                            <option value="">All Suppliers</option>
+
+                            {% for supplier in suppliers %}
+                                <option
+                                    value="{{ supplier.slug }}"
+                                    {% if selected_supplier == supplier.slug %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ supplier.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <label for="statusFilter">Status</label>
+                        <select
+                            id="statusFilter"
+                            name="status"
+                            class="form-control"
+                        >
+                            <option value="">All Statuses</option>
+
+                            {% for value, label in status_choices %}
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_status == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2 d-flex align-items-end">
+                        <button
+                            type="submit"
+                            class="btn btn-kb-primary w-100"
+                        >
+                            Filter
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+
+            <div class="supplier-admin-panel mt-5">
+                <h3>Supplier Purchase Orders</h3>
+
+                {% for po in purchase_orders %}
+                    <div class="supplier-admin-row">
+                        <div>
+                            <strong>{{ po.po_number }}</strong>
+
+                            <span>
+                                {{ po.supplier.name|default:"Unassigned Supplier" }}
+                                · {{ po.get_status_display }}
+                                · ${{ po.total_cost|floatformat:2 }}
+                                · {{ po.created_at }}
+                            </span>
+
+                            {% if po.customer_order %}
+                                <small>
+                                    Customer Order:
+                                    {{ po.customer_order.order_number }}
+                                </small>
+                            {% endif %}
+                        </div>
+
+                        <a
+                            href="{% url 'products:purchase_order_detail' po.id %}"
+                            class="btn btn-kb-outline"
+                        >
+                            Open
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">
+                        No supplier purchase orders found.
+                    </p>
+                {% endfor %}
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

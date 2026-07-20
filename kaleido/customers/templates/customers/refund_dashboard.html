@@ -1,0 +1,564 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+{% load static %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'customers/css/refund_dashboard.css' %}"
+>
+<h1>Refund Dashboard</h1>
+
+<hr>
+<div class="refund-toolbar">
+
+
+    <form method="get" class="refund-search-form">
+        <div class="refund-field refund-search-field">
+            <label for="q">
+                Search
+            </label>
+
+            <input
+                type="search"
+                id="q"
+                name="q"
+                value="{{ search_query }}"
+                placeholder="Refund, customer, email, order..."
+            >
+        </div>
+
+        <div class="refund-field">
+            <label for="status">
+                Status
+            </label>
+
+            <select
+                id="status"
+                name="status"
+            >
+                <option value="">
+                    All statuses
+                </option>
+
+                {% for value, label in status_choices %}
+                    <option
+                        value="{{ value }}"
+                        {% if selected_status == value %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="refund-field">
+            <label for="reason">
+                Reason
+            </label>
+
+            <select
+                id="reason"
+                name="reason"
+            >
+                <option value="">
+                    All reasons
+                </option>
+
+                {% for value, label in reason_choices %}
+                    <option
+                        value="{{ value }}"
+                        {% if selected_reason == value %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="refund-field">
+            <label for="start_date">
+                Start date
+            </label>
+
+            <input
+                type="date"
+                id="start_date"
+                name="start_date"
+                value="{{ start_date }}"
+            >
+        </div>
+
+        <div class="refund-field">
+            <label for="end_date">
+                End date
+            </label>
+
+            <input
+                type="date"
+                id="end_date"
+                name="end_date"
+                value="{{ end_date }}"
+            >
+        </div>
+
+        <div class="refund-filter-actions">
+            <button
+                type="submit"
+                class="refund-button refund-button-primary"
+            >
+                Apply filters
+            </button>
+
+            <a
+                href="{% url 'customers:refund_dashboard' %}"
+                class="refund-button refund-button-secondary"
+            >
+                Clear
+            </a>
+        </div>
+</form>
+
+<section class="refund-kpi-grid">
+    <article class="refund-kpi-card">
+        <span>
+            Matching refunds
+        </span>
+
+        <strong>
+            {{ filtered_summary.count }}
+        </strong>
+    </article>
+
+    <article class="refund-kpi-card">
+        <span>
+            Requested
+        </span>
+
+        <strong>
+            ${{ filtered_summary.requested|floatformat:2 }}
+        </strong>
+    </article>
+
+    <article class="refund-kpi-card">
+        <span>
+            Approved
+        </span>
+
+        <strong>
+            ${{ filtered_summary.approved|floatformat:2 }}
+        </strong>
+    </article>
+
+    <article class="refund-kpi-card">
+        <span>
+            Refunded
+        </span>
+
+        <strong>
+            ${{ filtered_summary.refunded|floatformat:2 }}
+        </strong>
+    </article>
+
+    <article class="refund-kpi-card">
+        <span>
+            Completed
+        </span>
+
+        <strong>
+            {{ filtered_summary.completed }}
+        </strong>
+    </article>
+
+    <article class="refund-kpi-card">
+        <span>
+            Pending
+        </span>
+
+        <strong>
+            {{ filtered_summary.pending }}
+        </strong>
+    </article>
+
+    <article class="refund-kpi-card">
+        <span>
+            Failed
+        </span>
+
+        <strong>
+            {{ filtered_summary.failed }}
+        </strong>
+    </article>
+</section>
+<section class="refund-results">
+    <div class="refund-results-header">
+        <div>
+            <h2>
+                Refund Requests
+            </h2>
+
+            <p>
+                Showing
+                {{ refund_page.start_index }}
+                through
+                {{ refund_page.end_index }}
+                of
+                {{ refund_page.paginator.count }}
+                results.
+            </p>
+        </div>
+    </div>
+
+    <div class="refund-table-wrapper">
+        <table class="refund-table">
+            <thead>
+                <tr>
+                    <th>
+                        Refund
+                    </th>
+
+                    <th>
+                        Customer
+                    </th>
+
+                    <th>
+                        Order
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                    <th>
+                        Reason
+                    </th>
+
+                    <th>
+                        Requested
+                    </th>
+
+                    <th>
+                        Approved
+                    </th>
+
+                    <th>
+                        Refunded
+                    </th>
+
+                    <th>
+                        Date
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for refund in refund_page %}
+                    <tr>
+                        <td>
+                            <a
+                                href="{% url 'customers:refund_detail' refund.pk %}"
+                            >
+                                {{ refund.refund_number }}
+                            </a>
+                        </td>
+
+                        <td>
+                            {% if refund.customer %}
+                                {{ refund.customer.get_full_name|default:refund.customer.username }}
+
+                                <small>
+                                    {{ refund.customer.email }}
+                                </small>
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if refund.order %}
+                                {{ refund.order.order_number }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <span class="refund-status refund-status-{{ refund.status }}">
+                                {{ refund.get_status_display }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {{ refund.get_reason_display }}
+                        </td>
+
+                        <td>
+                            ${{ refund.amount_requested|floatformat:2 }}
+                        </td>
+
+                        <td>
+                            ${{ refund.amount_approved|floatformat:2 }}
+                        </td>
+
+                        <td>
+                            ${{ refund.amount_refunded|floatformat:2 }}
+                        </td>
+
+                        <td>
+                            {{ refund.requested_at|date:"M j, Y" }}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="9">
+                            No refund requests matched the selected filters.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% if refund_page.paginator.num_pages > 1 %}
+    <nav class="refund-pagination">
+        {% if refund_page.has_previous %}
+            <a
+                href="?page=1&q={{ search_query|urlencode }}&status={{ selected_status|urlencode }}&reason={{ selected_reason|urlencode }}&start_date={{ start_date|urlencode }}&end_date={{ end_date|urlencode }}"
+            >
+                First
+            </a>
+
+            <a
+                href="?page={{ refund_page.previous_page_number }}&q={{ search_query|urlencode }}&status={{ selected_status|urlencode }}&reason={{ selected_reason|urlencode }}&start_date={{ start_date|urlencode }}&end_date={{ end_date|urlencode }}"
+            >
+                Previous
+            </a>
+        {% endif %}
+
+        <span>
+            Page
+            {{ refund_page.number }}
+            of
+            {{ refund_page.paginator.num_pages }}
+        </span>
+
+        {% if refund_page.has_next %}
+            <a
+                href="?page={{ refund_page.next_page_number }}&q={{ search_query|urlencode }}&status={{ selected_status|urlencode }}&reason={{ selected_reason|urlencode }}&start_date={{ start_date|urlencode }}&end_date={{ end_date|urlencode }}"
+            >
+                Next
+            </a>
+
+            <a
+                href="?page={{ refund_page.paginator.num_pages }}&q={{ search_query|urlencode }}&status={{ selected_status|urlencode }}&reason={{ selected_reason|urlencode }}&start_date={{ start_date|urlencode }}&end_date={{ end_date|urlencode }}"
+            >
+                Last
+            </a>
+        {% endif %}
+    </nav>
+{% endif %}
+
+</div>
+<div class="refund-export-grid">
+    <a
+        class="refund-export-button"
+        href="{% url 'customers:export_all_refunds' %}?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}"
+    >
+        Export All Refunds
+    </a>
+
+    <a
+        class="refund-export-button"
+        href="{% url 'customers:export_completed_refunds' %}?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}"
+    >
+        Export Completed
+    </a>
+
+    <a
+        class="refund-export-button"
+        href="{% url 'customers:export_pending_refunds' %}?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}"
+    >
+        Export Pending
+    </a>
+
+    <a
+        class="refund-export-button refund-export-danger"
+        href="{% url 'customers:export_failed_refunds' %}?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}"
+    >
+        Export Failed
+    </a>
+
+    <a
+        class="refund-export-button"
+        href="{% url 'customers:export_refund_transactions' %}?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}"
+    >
+        Export Transactions
+    </a>
+
+    <a
+        class="refund-export-button"
+        href="{% url 'customers:export_stripe_webhooks' %}?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}"
+    >
+        Export Webhooks
+    </a>
+
+    <a
+        class="refund-export-button refund-print-button"
+        href="{% url 'customers:printable_refund_report' %}?start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        Printable Report
+    </a>
+</div>
+<div class="row g-4">
+
+    <div class="col-lg-3">
+
+        <div class="card shadow">
+
+            <div class="card-body">
+
+                <h6>Completed</h6>
+
+                <h2>{{ summary.completed }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card shadow">
+
+            <div class="card-body">
+
+                <h6>Pending</h6>
+
+                <h2>{{ summary.pending }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card shadow">
+
+            <div class="card-body">
+
+                <h5>Failed</h5>
+
+                <h2>{{ summary.failed }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card shadow">
+
+            <div class="card-body">
+
+                <h6>Total Refunded</h6>
+
+                <h2>${{ summary.total_amount }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<hr>
+
+<div class="card mt-4">
+
+    <div class="card-header">
+
+        Stripe Webhook Health
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table">
+
+            <tr>
+                <th>Total</th>
+                <td>{{ summary.webhooks.total }}</td>
+            </tr>
+
+            <tr>
+                <th>Processed</th>
+                <td>{{ summary.webhooks.processed }}</td>
+            </tr>
+
+            <tr>
+                <th>Failed</th>
+                <td>{{ summary.webhooks.failed }}</td>
+            </tr>
+
+            <tr>
+                <th>Permanent Failures</th>
+                <td>{{ summary.webhooks.permanent }}</td>
+            </tr>
+
+            <tr>
+                <th>Success Rate</th>
+                <td>{{ summary.webhooks.success_rate }}%</td>
+            </tr>
+
+        </table>
+
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<canvas
+    id="dailyRefundChart"
+    height="100">
+</canvas>
+
+<hr>
+
+<canvas
+    id="statusChart"
+    height="100">
+</canvas>
+
+<hr>
+
+<canvas
+    id="reasonChart"
+    height="100">
+</canvas>
+<hr>
+<canvas 
+    id="monthlyChart">
+</canvas>
+top_customers
+
+{{ daily|json_script:"daily-data" }}
+{{ status_data|json_script:"status-data" }}
+{{ reasons|json_script:"reason-data" }}
+{{ monthly|json_script:"monthly-data" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="{% static 'customers/js/refund_dashboard.js' %}"></script>
+
+{% endblock %}

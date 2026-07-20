@@ -1,0 +1,412 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+
+<h1>
+    Refund {{ refund.refund_number }}
+</h1>
+
+<hr>
+<div class="row">
+
+<div class="col-md-3">
+
+<div class="card">
+
+<div class="card-body">
+
+<h6>Status</h6>
+
+<h3>
+
+{{ refund.get_status_display }}
+
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card">
+
+<div class="card-body">
+
+<h6>Requested</h6>
+
+<h3>
+
+${{ refund.amount_requested }}
+
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card">
+
+<div class="card-body">
+
+<h6>Approved</h6>
+
+<h3>
+
+${{ refund.amount_approved }}
+
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card">
+
+<div class="card-body">
+
+<h6>Refunded</h6>
+
+<h3>
+
+${{ refund.amount_refunded }}
+
+</h3>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<h2>
+
+Customer
+
+</h2>
+
+<table class="table">
+
+<tr>
+
+<th>Name</th>
+
+<td>
+
+{{ refund.customer.get_full_name }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>Email</th>
+
+<td>
+
+{{ refund.customer.email }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>Order</th>
+
+<td>
+
+{{ refund.order.order_number }}
+
+</td>
+
+</tr>
+
+<tr>
+
+<th>Assigned To</th>
+
+<td>
+
+{{ refund.assigned_to }}
+
+</td>
+
+</tr>
+
+</table>
+<h2>
+
+Timeline
+
+</h2>
+
+<ul class="list-group">
+
+<li class="list-group-item">
+
+Requested
+
+{{ refund.requested_at }}
+
+</li>
+
+{% if refund.reviewed_at %}
+
+<li class="list-group-item">
+
+Reviewed
+
+{{ refund.reviewed_at }}
+
+</li>
+
+{% endif %}
+
+{% if refund.approved_at %}
+
+<li class="list-group-item">
+
+Approved
+
+{{ refund.approved_at }}
+
+</li>
+
+{% endif %}
+
+{% if refund.processed_at %}
+
+<li class="list-group-item">
+
+Processed
+
+{{ refund.processed_at }}
+
+</li>
+
+{% endif %}
+
+{% if refund.completed_at %}
+
+<li class="list-group-item">
+
+Completed
+
+{{ refund.completed_at }}
+
+</li>
+
+{% endif %}
+
+{% if refund.failed_at %}
+
+<li class="list-group-item text-danger">
+
+Failed
+
+{{ refund.failed_at }}
+
+</li>
+
+{% endif %}
+
+</ul>
+<h2>
+
+Transactions
+
+</h2>
+
+<table class="table table-striped">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Status</th>
+
+<th>Amount</th>
+
+<th>Stripe Status</th>
+
+<th>Created</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for transaction in transactions %}
+
+<tr>
+
+<td>
+
+{{ transaction.pk }}
+
+</td>
+
+<td>
+
+{{ transaction.get_status_display }}
+
+</td>
+
+<td>
+
+${{ transaction.amount }}
+
+</td>
+
+<td>
+
+{{ transaction.stripe_status }}
+
+</td>
+
+<td>
+
+{{ transaction.created_at }}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="5">
+
+No transactions.
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+<h2>
+
+Activity
+
+</h2>
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>Date</th>
+
+<th>Action</th>
+
+<th>User</th>
+
+<th>Message</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for activity in activities %}
+
+<tr>
+
+<td>
+
+{{ activity.created_at }}
+
+</td>
+
+<td>
+
+{{ activity.get_action_display }}
+
+</td>
+
+<td>
+
+{{ activity.created_by }}
+
+</td>
+
+<td>
+
+{{ activity.message }}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="4">
+
+No activity.
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+{% if processing_duration %}
+
+<div class="alert alert-success">
+
+Processing Time:
+
+{{ processing_duration }}
+
+</div>
+
+{% endif %}
+{% if processing_duration %}
+
+<div class="alert alert-success">
+
+Processing Time:
+
+{{ processing_duration }}
+
+</div>
+
+{% endif %}
+<a
+class="btn btn-primary"
+href="{% url 'customers:refund_dashboard' %}"
+>
+
+← Back to Dashboard
+
+</a>
+
+{% endblock %}

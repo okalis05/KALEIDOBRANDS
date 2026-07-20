@@ -1,0 +1,308 @@
+{% extends "brands/base.html" %}
+
+{% block title %}
+{{ purchase_order.po_number }} | KaleidoBrands
+{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>Supplier Purchase Order</span>
+                <h1>{{ purchase_order.po_number }}</h1>
+                <p class="mx-auto mt-3">
+                    {{ purchase_order.get_status_display }}
+                </p>
+            </div>
+
+            {% if messages %}
+                <div class="supplier-message-wrap">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row g-4 mt-5">
+
+                <div class="col-lg-4">
+                    <div class="supplier-admin-panel">
+                        <h3>PO Summary</h3>
+
+                        <div class="supplier-metric-row">
+                            <span>Supplier</span>
+                            <strong>
+                                {{ purchase_order.supplier.name|default:"Unassigned" }}
+                            </strong>
+                        </div>
+                        <!------------->
+
+                        <div class="supplier-metric-row">
+                            <span>Status</span>
+                            <strong>
+                                {{ purchase_order.get_status_display }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Total Cost</span>
+                            <strong>
+                                ${{ purchase_order.total_cost|floatformat:2 }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Created</span>
+                            <strong>{{ purchase_order.created_at }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Sent</span>
+                            <strong>
+                                {{ purchase_order.sent_at|default:"Not sent" }}
+                            </strong>
+                        </div>
+
+                        {% if purchase_order.customer_order %}
+                            <div class="supplier-metric-row">
+                                <span>Customer Order</span>
+                                <strong>
+                                    {{ purchase_order.customer_order.order_number }}
+                                </strong>
+                            </div>
+                        {% endif %}
+                        <div class="supplier-metric-row">
+                            <span>Supplier Reference</span>
+                            <strong>
+                                {{ purchase_order.supplier_reference|default:"Not provided" }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Estimated Ship Date</span>
+                            <strong>
+                                {{ purchase_order.estimated_ship_date|default:"TBD" }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Tracking Number</span>
+                            <strong>
+                                {% if purchase_order.tracking_url %}
+                                    <a
+                                        href="{{ purchase_order.tracking_url }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {{ purchase_order.tracking_number|default:"Track Shipment" }}
+                                    </a>
+                                {% else %}
+                                    {{ purchase_order.tracking_number|default:"Not available" }}
+                                {% endif %}
+                            </strong>
+                        </div>
+
+                        <div class="d-grid gap-3 mt-4">
+                            <a
+                                href="{% url 'products:generate_purchase_order_pdf' purchase_order.id %}"
+                                class="btn btn-kb-outline"
+                            >
+                                Generate PDF
+                            </a>
+
+                            {% if purchase_order.pdf_file %}
+                                <a
+                                    href="{{ purchase_order.pdf_file.url }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="btn btn-kb-outline"
+                                >
+                                    View PDF
+                                </a>
+                            {% endif %}
+
+                            <form
+                                method="post"
+                                action="{% url 'products:send_purchase_order' purchase_order.id %}"
+                            >
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-kb-primary w-100"
+                                >
+                                    Send to Supplier
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <!---------------------->
+                    <div class="supplier-admin-panel">
+                        <h3>PO Items</h3>
+
+                        {% for item in purchase_order.items.all %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ item.product_name }}</strong>
+
+                                    <span>
+                                        SKU {{ item.supplier_sku|default:"N/A" }}
+                                        · Qty {{ item.quantity }}
+                                        · Unit Cost ${{ item.unit_cost }}
+                                        · Total ${{ item.line_total }}
+                                    </span>
+
+                                    {% if item.decoration or item.color %}
+                                        <small>
+                                            {{ item.decoration|default:"" }}
+                                            {% if item.color %}
+                                                · {{ item.color }}
+                                            {% endif %}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">
+                                No purchase-order items found.
+                            </p>
+                        {% endfor %}
+                    </div>
+
+                    {% if purchase_order.notes %}
+                        <div class="supplier-admin-panel mt-4">
+                            <h3>Notes</h3>
+                            <p>{{ purchase_order.notes }}</p>
+                        </div>
+                    {% endif %}
+                    <div class="supplier-admin-panel mt-4">
+                        <h3>Update Purchase Order</h3>
+
+                        <form
+                            method="post"
+                            action="{% url 'products:update_purchase_order_status' purchase_order.id %}"
+                            class="auth-form"
+                        >
+                            {% csrf_token %}
+                            {{ status_form.as_p }}
+
+                            <button
+                                type="submit"
+                                class="btn btn-kb-primary"
+                            >
+                                Save PO Update
+                            </button>
+                        </form>
+                    </div>
+                    <div class="supplier-admin-panel mt-4">
+                        <h3>Purchase Order Timeline</h3>
+
+                        <div class="supplier-metric-row">
+                            <span>Created</span>
+                            <strong>{{ purchase_order.created_at }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Sent</span>
+                            <strong>{{ purchase_order.sent_at|default:"Not sent" }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Confirmed</span>
+                            <strong>{{ purchase_order.confirmed_at|default:"Not confirmed" }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Production Started</span>
+                            <strong>
+                                {{ purchase_order.production_started_at|default:"Not started" }}
+                            </strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Shipped</span>
+                            <strong>{{ purchase_order.shipped_at|default:"Not shipped" }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Received</span>
+                            <strong>{{ purchase_order.received_at|default:"Not received" }}</strong>
+                        </div>
+                        {% if purchase_order.customer_order %}
+                        <div class="supplier-metric-row">
+                            <span>Customer Order Status</span>
+                            <strong>
+                                {{ purchase_order.customer_order.get_status_display }}
+                            </strong>
+                        </div>
+
+                        <div class="mt-4">
+                            <a
+                                href="{% url 'customers:order_detail' purchase_order.customer_order.id %}"
+                                class="btn btn-kb-outline w-100"
+                            >
+                                View Customer Order
+                            </a>
+                        </div>
+                    {% endif %}
+                    </div>
+                    <div class="supplier-admin-panel mt-4">
+                        <h3>Activity Log</h3>
+
+                        {% for activity in purchase_order.activities.all %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ activity.get_action_display }}</strong>
+
+                                    <span>
+                                        {{ activity.message|default:"No additional details." }}
+                                        · {{ activity.created_at }}
+                                        {% if activity.created_by %}
+                                            · {{ activity.created_by.get_full_name|default:activity.created_by.username }}
+                                        {% else %}
+                                            · System
+                                        {% endif %}
+                                    </span>
+
+                                    {% if activity.previous_value or activity.new_value %}
+                                        <small>
+                                            {{ activity.previous_value|default:"—" }}
+                                            →
+                                            {{ activity.new_value|default:"—" }}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">
+                                No purchase-order activity has been recorded yet.
+                            </p>
+                        {% endfor %}
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+            <div class="text-center mt-5">
+                <a
+                    href="{% url 'products:purchase_order_list' %}"
+                    class="btn btn-kb-outline btn-lg"
+                >
+                    Back to Purchase Orders
+                </a>
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

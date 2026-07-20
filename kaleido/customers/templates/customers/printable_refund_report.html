@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        KaleidoBrands Refund Report
+    </title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            color: #1f2933;
+            background: #f5f7fa;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+        .report {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px;
+            background: #ffffff;
+            border-radius: 12px;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding-bottom: 18px;
+            border-bottom: 3px solid #0d6efd;
+        }
+
+        .report-header h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+        }
+
+        .report-header p {
+            margin: 4px 0;
+            color: #52606d;
+        }
+
+        .print-button {
+            align-self: flex-start;
+            padding: 10px 18px;
+            border: 0;
+            border-radius: 6px;
+            color: #ffffff;
+            background: #0d6efd;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(4, minmax(150px, 1fr));
+            gap: 14px;
+            margin: 24px 0;
+        }
+
+        .summary-card {
+            padding: 18px;
+            border: 1px solid #d9e2ec;
+            border-radius: 8px;
+        }
+
+        .summary-card span {
+            display: block;
+            color: #627d98;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .summary-card strong {
+            display: block;
+            margin-top: 8px;
+            font-size: 24px;
+        }
+
+        .report-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        th,
+        td {
+            padding: 9px;
+            border: 1px solid #d9e2ec;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            color: #ffffff;
+            background: #263238;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f5f7fa;
+        }
+
+        .status {
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .report-footer {
+            margin-top: 22px;
+            padding-top: 14px;
+            border-top: 1px solid #d9e2ec;
+            color: #627d98;
+            font-size: 12px;
+        }
+
+        @media print {
+            @page {
+                size: landscape;
+                margin: 10mm;
+            }
+
+            body {
+                padding: 0;
+                background: #ffffff;
+            }
+
+            .report {
+                max-width: none;
+                padding: 0;
+                border-radius: 0;
+            }
+
+            .print-button {
+                display: none;
+            }
+
+            .summary-card {
+                break-inside: avoid;
+            }
+
+            table {
+                font-size: 9px;
+            }
+
+            thead {
+                display: table-header-group;
+            }
+
+            tr {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="report">
+        <header class="report-header">
+            <div>
+                <h1>
+                    KaleidoBrands Refund Report
+                </h1>
+
+                <p>
+                    Generated:
+                    {{ generated_at|date:"F j, Y g:i A" }}
+                </p>
+
+                {% if start_date or end_date %}
+                    <p>
+                        Reporting period:
+                        {{ start_date|default:"Beginning" }}
+                        through
+                        {{ end_date|default:"Present" }}
+                    </p>
+                {% endif %}
+
+                {% if selected_status %}
+                    <p>
+                        Status:
+                        {{ selected_status|title }}
+                    </p>
+                {% endif %}
+            </div>
+
+            <button
+                type="button"
+                class="print-button"
+                onclick="window.print()"
+            >
+                Print / Save as PDF
+            </button>
+        </header>
+
+        <section class="summary-grid">
+            <article class="summary-card">
+                <span>
+                    Records
+                </span>
+
+                <strong>
+                    {{ totals.count }}
+                </strong>
+            </article>
+
+            <article class="summary-card">
+                <span>
+                    Amount Requested
+                </span>
+
+                <strong>
+                    ${{ totals.requested|floatformat:2 }}
+                </strong>
+            </article>
+
+            <article class="summary-card">
+                <span>
+                    Amount Approved
+                </span>
+
+                <strong>
+                    ${{ totals.approved|floatformat:2 }}
+                </strong>
+            </article>
+
+            <article class="summary-card">
+                <span>
+                    Amount Refunded
+                </span>
+
+                <strong>
+                    ${{ totals.refunded|floatformat:2 }}
+                </strong>
+            </article>
+        </section>
+
+        <section class="report-table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            Refund
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Customer
+                        </th>
+
+                        <th>
+                            Order
+                        </th>
+
+                        <th>
+                            Reason
+                        </th>
+
+                        <th>
+                            Requested
+                        </th>
+
+                        <th>
+                            Approved
+                        </th>
+
+                        <th>
+                            Refunded
+                        </th>
+
+                        <th>
+                            Requested At
+                        </th>
+
+                        <th>
+                            Completed At
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for refund in refunds %}
+                        <tr>
+                            <td>
+                                {{ refund.refund_number }}
+                            </td>
+
+                            <td class="status">
+                                {{ refund.get_status_display }}
+                            </td>
+
+                            <td>
+                                {{ refund.customer.get_full_name|default:refund.customer.username }}
+
+                                <br>
+
+                                {{ refund.customer.email }}
+                            </td>
+
+                            <td>
+                                {% if refund.order %}
+                                    {{ refund.order.order_number }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {{ refund.get_reason_display }}
+                            </td>
+
+                            <td>
+                                ${{ refund.amount_requested|floatformat:2 }}
+                            </td>
+
+                            <td>
+                                ${{ refund.amount_approved|floatformat:2 }}
+                            </td>
+
+                            <td>
+                                ${{ refund.amount_refunded|floatformat:2 }}
+                            </td>
+
+                            <td>
+                                {{ refund.requested_at|date:"Y-m-d H:i" }}
+                            </td>
+
+                            <td>
+                                {% if refund.completed_at %}
+                                    {{ refund.completed_at|date:"Y-m-d H:i" }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="10">
+                                No refunds matched this report.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <footer class="report-footer">
+            Confidential internal financial report —
+            KaleidoBrands refund operations.
+        </footer>
+    </main>
+</body>
+</html>

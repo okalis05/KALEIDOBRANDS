@@ -10,6 +10,7 @@ from products.models import (
     SupplierCatalog,
     SupplierSyncLog,
 )
+from products.services.supplier_inventory import update_supplier_product
 
 
 class KaeserBlairImporter:
@@ -144,7 +145,39 @@ class KaeserBlairImporter:
                 "source": "kaeser_blair",
                 "last_synced_at": timezone.now(),
                 "is_active": True,
+                
             },
+        )
+
+        supplier_price = (
+            data.get("supplier_price")
+            or data.get("wholesale_price")
+            or data.get("starting_price")
+        )
+
+        supplier_inventory = (
+            data.get("supplier_inventory")
+            or data.get("inventory")
+            or data.get("stock")
+            or data.get("quantity_available")
+        )
+
+        discontinued_value = str(
+            data.get("discontinued", "")
+        ).strip().lower()
+
+        discontinued = discontinued_value in {
+            "true",
+            "1",
+            "yes",
+            "y",
+        }
+
+        update_supplier_product(
+            product,
+            supplier_price=supplier_price,
+            supplier_inventory=supplier_inventory,
+            discontinued=discontinued,
         )
 
         gallery_urls = data.get("gallery_urls", [])

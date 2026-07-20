@@ -69,162 +69,148 @@
 
 <body>
 
-<nav class="navbar navbar-expand-lg fixed-top kb-navbar">
-    <div class="container">
+<nav class="navbar navbar-expand-xl fixed-top kb-navbar" aria-label="Primary navigation">
+    <div class="container-fluid kb-nav-container">
         <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'brands:home' %}#home">
             <img src="{% static 'brands/images/kb-k.png' %}" alt="KaleidoBrands K logo" class="nav-logo">
             <span>Kaleido<span>Brands</span></span>
         </a>
 
-        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-label="Open navigation">
+        <button
+            class="navbar-toggler border-0 shadow-none"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNav"
+            aria-controls="mainNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="mainNav">
-            <ul class="navbar-nav ms-auto align-items-lg-center">
-                <li class="nav-item"><a class="nav-link" href="{% url 'brands:home' %}#home">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'brands:home' %}#about">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'brands:home' %}#services">Services</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'brands:home' %}#catalog">Catalog</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'products:home' %}">Products</a></li>
-
+            <ul class="navbar-nav kb-main-nav mx-xl-auto align-items-xl-center">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'products:supplier_detail' 'kaeser-blair' %}">
-                        Kaeser & Blair
-                    </a>
+                    <a class="nav-link" href="{% url 'brands:home' %}#home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'brands:home' %}#about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'brands:home' %}#services">Services</a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link quote-cart-nav" href="{% url 'products:quote_cart' %}">
-                        Quote Cart
-                        <span id="quoteCartCount" class="quote-cart-count">0</span>
+                <li class="nav-item dropdown">
+                    <a
+                        class="nav-link dropdown-toggle"
+                        href="#"
+                        id="productsDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        Products
                     </a>
-                </li>
-                {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customers:cart_detail' %}">
-                        Cart
-                    </a>
-                </li>
-                {% endif %}
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'products:quote_builder' %}">
-                        Quote Builder
-                    </a>
-                </li>
-
-                <li class="nav-item"><a class="nav-link" href="{% url 'brands:home' %}#process">Process</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'brands:home' %}#contact">Contact</a></li>
-
-                <li class="nav-item ms-lg-3">
-                    <a class="btn btn-kb-primary" href="{% url 'brands:home' %}?quote=1#contact">
-                        Request Quote
-                    </a>
+                    <ul class="dropdown-menu kb-dropdown" aria-labelledby="productsDropdown">
+                        <li><a class="dropdown-item" href="{% url 'products:home' %}">Browse Products</a></li>
+                        <li><a class="dropdown-item" href="{% url 'brands:home' %}#catalog">Catalog Hub</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:supplier_detail' 'kaeser-blair' %}">Kaeser & Blair</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'products:quote_builder' %}">Quote Builder</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:quote_history' %}">Quote History</a></li>
+                    </ul>
                 </li>
 
-                {% if request.user.is_staff %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'products:supplier_sync_dashboard' %}">
-                            Supplier Sync
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'products:supplier_analytics' %}">
-                            Supplier Analytics
-                        </a>
-                    </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'products:quote_history' %}">
-                        Quote History
+                <li class="nav-item dropdown">
+                    <a
+                        class="nav-link dropdown-toggle"
+                        href="#"
+                        id="resourcesDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        Resources
                     </a>
-                </li>
-                {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customers:dashboard' %}">
-                        My Account
-                    </a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customers:login' %}">
-                        Login
-                    </a>
-                </li>
-                {% endif %}
-                {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customers:asset_library' %}">
-                        Brand Assets
-                    </a>
-                </li>
-                {% endif %}
-                {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customers:order_list' %}">
-                        My Orders
-                    </a>
-                </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customers:order_analytics' %}">
-                        Order Analytics
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customers:crm_dashboard' %}">
-                        CRM
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customers:crm_analytics' %}">
-                        CRM Analytics
-                    </a>
-                </li>
-                {% if request.user.is_staff %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'products:supplier_sync_dashboard' %}">
-                        Supplier Sync
-                    </a>
+                    <ul class="dropdown-menu kb-dropdown" aria-labelledby="resourcesDropdown">
+                        <li><a class="dropdown-item" href="{% url 'brands:home' %}#process">Our Process</a></li>
+                        <li><a class="dropdown-item" href="{% url 'brands:home' %}#catalog">Catalogs</a></li>
+                        <li><a class="dropdown-item" href="{% url 'brands:home' %}#contact">Contact Support</a></li>
+                    </ul>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'products:supplier_analytics' %}">
-                        Supplier Analytics
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customers:order_analytics' %}">
-                        Order Analytics
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customers:crm_dashboard' %}">
-                        CRM
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customers:crm_analytics' %}">
-                        CRM Analytics
-                    </a>
-                </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'customers:executive_dashboard' %}">
-                        Executive
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'products:recommendation_analytics' %}">
-                        Recommendation Analytics
-                    </a>
+                    <a class="nav-link" href="{% url 'brands:home' %}#contact">Contact</a>
                 </li>
             </ul>
+
+            <div class="kb-nav-actions d-flex align-items-xl-center gap-2">
+
+                <a class="kb-cart-link" href="{% url 'products:quote_cart' %}" aria-label="Open quote cart">
+                    <span class="kb-cart-label">🛒</span>
+                    <span id="quoteCartCount"   class="quote-cart-count">0</span>
+                </a>
+
+                {% if request.user.is_staff %}
+                <div class="dropdown">
+                    <button
+                        class="btn kb-nav-icon-btn dropdown-toggle"
+                        type="button"
+                        id="adminDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        Admin
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end kb-dropdown kb-admin-dropdown" aria-labelledby="adminDropdown">
+                        <li><h6 class="dropdown-header">Operations</h6></li>
+                        <li><a class="dropdown-item" href="{% url 'customers:executive_dashboard' %}">Executive Dashboard</a></li>
+                        <li><a class="dropdown-item" href="{% url 'customers:crm_dashboard' %}">CRM</a></li>
+                        <li><a class="dropdown-item" href="{% url 'customers:crm_analytics' %}">CRM Analytics</a></li>
+                        <li><a class="dropdown-item" href="{% url 'customers:order_analytics' %}">Order Analytics</a></li>
+                        <li><a class="dropdown-item" href="{% url 'customers:staff_ticket_list' %}">Support Center</a></li>
+                        <li><a class="dropdown-item" href="{% url 'customers:staff_return_list' %}">Returns Center</a></li>
+                        <li><a class="dropdown-item" href="{% url 'customers:shipment_list' %}">Shipments</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><h6 class="dropdown-header">Suppliers</h6></li>
+                        <li><a class="dropdown-item" href="{% url 'products:supplier_sync_dashboard' %}">Supplier Sync</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:supplier_analytics' %}">Supplier Analytics</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:supplier_inventory_dashboard' %}">Inventory</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:purchase_order_list' %}">Purchase Orders</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:supplier_operations_dashboard' %}">Supplier Operations</a></li>
+                        <li><a class="dropdown-item" href="{% url 'products:recommendation_analytics' %}">Recommendation Analytics</a></li>
+                    </ul>
+                </div>
+                {% endif %}
+
+                {% if request.user.is_authenticated %}
+                <div class="dropdown">
+                    <button
+                        class="btn kb-account-btn dropdown-toggle"
+                        type="button"
+                        id="accountDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        My Account
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end kb-dropdown" aria-labelledby="accountDropdown">
+                        <li><a class="dropdown-item" href="{% url 'customers:dashboard' %}">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="{% url 'customers:order_list' %}">My Orders</a></li>
+                        <li><a class="dropdown-item" href="{% url 'customers:cart_detail' %}">Shopping Cart</a></li>
+                        <li><a class="dropdown-item" href="{% url 'customers:asset_library' %}">Brand Assets</a></li>
+                        <li><a class="dropdown-item" href="{% url 'customers:return_request_list' %}">Returns</a></li>
+                        <li><a class="dropdown-item" href="{% url 'customers:support_ticket_list' %}">Support</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <a class="btn kb-account-btn" href="{% url 'customers:login' %}">Sign In</a>
+                {% endif %}
+
+                <a class="btn btn-kb-primary kb-quote-cta" href="{% url 'brands:home' %}?quote=1#contact">
+                    Request Quote
+                </a>
+            </div>
         </div>
     </div>
 </nav>

@@ -1,0 +1,325 @@
+{% extends "brands/base.html" %}
+
+{% block title %}
+Supplier Operations | KaleidoBrands
+{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>Phase 6 Operations Center</span>
+                <h1>Supplier Operations Dashboard</h1>
+                <p class="mx-auto mt-3" style="max-width:760px;">
+                    Monitor suppliers, purchase orders, inventory risks,
+                    synchronization health, and fulfillment performance.
+                </p>
+            </div>
+
+            <div class="row g-4 mt-5">
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Active Suppliers</span>
+                        <strong>{{ total_suppliers }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Open Purchase Orders</span>
+                        <strong>{{ total_open_pos }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Open PO Cost</span>
+                        <strong>${{ total_open_po_cost|floatformat:2 }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Low Stock Products</span>
+                        <strong>{{ low_stock_products }}</strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row g-4 mt-4">
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Draft POs</span>
+                        <strong>{{ draft_pos }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Sent POs</span>
+                        <strong>{{ sent_pos }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>In Production</span>
+                        <strong>{{ production_pos }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Shipped POs</span>
+                        <strong>{{ shipped_pos }}</strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row g-4 mt-4">
+
+                <div class="col-md-4">
+                    <div class="supplier-stat-card">
+                        <span>Out of Stock</span>
+                        <strong>{{ out_of_stock_products }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="supplier-stat-card">
+                        <span>Discontinued</span>
+                        <strong>{{ discontinued_products }}</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="supplier-stat-card">
+                        <span>Suppliers Never Synced</span>
+                        <strong>{{ never_synced_suppliers|length }}</strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row g-4 mt-5">
+
+                <div class="col-lg-6">
+                    <div class="supplier-admin-panel">
+                        <h3>Aging Purchase Orders</h3>
+
+                        {% for po in aging_purchase_orders %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ po.po_number }}</strong>
+
+                                    <span>
+                                        {{ po.supplier.name|default:"Unassigned Supplier" }}
+                                        · {{ po.get_status_display }}
+                                        · Created {{ po.created_at }}
+                                    </span>
+
+                                    {% if po.customer_order %}
+                                        <small>
+                                            Customer Order:
+                                            {{ po.customer_order.order_number }}
+                                        </small>
+                                    {% endif %}
+                                </div>
+
+                                <a
+                                    href="{% url 'products:purchase_order_detail' po.id %}"
+                                    class="btn btn-kb-outline"
+                                >
+                                    Review
+                                </a>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">
+                                No purchase orders older than seven days.
+                            </p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="supplier-admin-panel">
+                        <h3>Supplier Sync Warnings</h3>
+
+                        {% for supplier in never_synced_suppliers %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ supplier.name }}</strong>
+                                    <span>Supplier has never been synchronized.</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        {% for supplier in stale_suppliers %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>{{ supplier.name }}</strong>
+
+                                    <span>
+                                        Last synchronized:
+                                        {{ supplier.last_synced_at }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% empty %}
+                            {% if not never_synced_suppliers %}
+                                <p class="text-muted">
+                                    All active suppliers are synchronized.
+                                </p>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="supplier-admin-panel mt-5">
+                <h3>Open Purchase Orders</h3>
+
+                {% for po in open_purchase_orders %}
+                    <div class="supplier-admin-row">
+                        <div>
+                            <strong>{{ po.po_number }}</strong>
+
+                            <span>
+                                {{ po.supplier.name|default:"Unassigned Supplier" }}
+                                · {{ po.get_status_display }}
+                                · ${{ po.total_cost|floatformat:2 }}
+                                · {{ po.created_at }}
+                            </span>
+                        </div>
+
+                        <a
+                            href="{% url 'products:purchase_order_detail' po.id %}"
+                            class="btn btn-kb-outline"
+                        >
+                            Open
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">
+                        There are no open supplier purchase orders.
+                    </p>
+                {% endfor %}
+            </div>
+
+            <div class="supplier-admin-panel mt-5">
+                <h3>Supplier Summary</h3>
+
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Supplier</th>
+                                <th>Products</th>
+                                <th>Purchase Orders</th>
+                                <th>Last Sync</th>
+                                <th>API</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for supplier in supplier_summary %}
+                                <tr>
+                                    <td>{{ supplier.name }}</td>
+                                    <td>{{ supplier.product_count }}</td>
+                                    <td>{{ supplier.purchase_order_count }}</td>
+                                    <td>
+                                        {{ supplier.last_synced_at|default:"Never" }}
+                                    </td>
+                                    <td>
+                                        {% if supplier.api_enabled %}
+                                            Enabled
+                                        {% else %}
+                                            Disabled
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted">
+                                        No active suppliers found.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="supplier-admin-panel mt-5">
+                <h3>Recent Supplier Syncs</h3>
+
+                {% for log in recent_sync_logs %}
+                    <div class="supplier-admin-row">
+                        <div>
+                            <strong>
+                                {{ log.supplier.name|default:"Unknown Supplier" }}
+                            </strong>
+
+                            <span>
+                                {{ log.get_status_display }}
+                                · Created {{ log.products_created }}
+                                · Updated {{ log.products_updated }}
+                                · Failed {{ log.products_failed }}
+                                · {{ log.started_at }}
+                            </span>
+
+                            {% if log.message %}
+                                <small>{{ log.message }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">
+                        No supplier synchronization records found.
+                    </p>
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-5 d-flex flex-wrap gap-3 justify-content-center">
+
+                <a
+                    href="{% url 'products:supplier_inventory_dashboard' %}"
+                    class="btn btn-kb-primary btn-lg"
+                >
+                    Inventory Dashboard
+                </a>
+
+                <a
+                    href="{% url 'products:purchase_order_list' %}"
+                    class="btn btn-kb-outline btn-lg"
+                >
+                    Purchase Orders
+                </a>
+
+                <a
+                    href="{% url 'products:supplier_sync_dashboard' %}"
+                    class="btn btn-kb-outline btn-lg"
+                >
+                    Supplier Sync
+                </a>
+
+                <a
+                    href="{% url 'products:supplier_analytics' %}"
+                    class="btn btn-kb-outline btn-lg"
+                >
+                    Supplier Analytics
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

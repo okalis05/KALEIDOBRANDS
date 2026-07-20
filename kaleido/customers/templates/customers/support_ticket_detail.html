@@ -1,0 +1,177 @@
+{% extends "brands/base.html" %}
+
+{% block title %}
+{{ ticket.ticket_number }} | KaleidoBrands
+{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center">
+                <span>Support Ticket</span>
+                <h1>{{ ticket.ticket_number }}</h1>
+                <p>{{ ticket.subject }}</p>
+            </div>
+
+            {% if messages %}
+                <div class="supplier-message-wrap mt-4">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row g-4 mt-5">
+
+                <div class="col-lg-4">
+                    <div class="supplier-admin-panel">
+                        <h3>Ticket Summary</h3>
+
+                        <div class="supplier-metric-row">
+                            <span>Status</span>
+                            <strong>{{ ticket.get_status_display }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Priority</span>
+                            <strong>{{ ticket.get_priority_display }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Category</span>
+                            <strong>{{ ticket.get_category_display }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Created</span>
+                            <strong>{{ ticket.created_at }}</strong>
+                        </div>
+
+                        <div class="supplier-metric-row">
+                            <span>Assigned To</span>
+                            <strong>
+                                {% if ticket.assigned_to %}
+                                    {{ ticket.assigned_to.get_full_name|default:ticket.assigned_to.username }}
+                                {% else %}
+                                    Support Team
+                                {% endif %}
+                            </strong>
+                        </div>
+
+                        {% if ticket.order %}
+                            <div class="supplier-metric-row">
+                                <span>Order</span>
+                                <strong>{{ ticket.order.order_number }}</strong>
+                            </div>
+                        {% endif %}
+
+                        {% if ticket.shipment %}
+                            <div class="supplier-metric-row">
+                                <span>Shipment</span>
+                                <strong>{{ ticket.shipment.shipment_number }}</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+
+                    <div class="supplier-admin-panel">
+                        <h3>Conversation</h3>
+
+                        {% for ticket_message in visible_messages %}
+                            <div class="supplier-admin-row">
+                                <div>
+                                    <strong>
+                                        {{ ticket_message.author.get_full_name|default:ticket_message.author.username }}
+                                    </strong>
+
+                                    <span>
+                                        {{ ticket_message.created_at }}
+                                    </span>
+
+                                    <p class="mt-2 mb-2">
+                                        {{ ticket_message.message|linebreaksbr }}
+                                    </p>
+
+                                    {% if ticket_message.attachment %}
+                                        <small>
+                                            <a
+                                                href="{{ ticket_message.attachment.url }}"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                View attachment
+                                            </a>
+                                        </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">
+                                No messages found.
+                            </p>
+                        {% endfor %}
+                    </div>
+
+                    {% if ticket.status != "closed" %}
+                        <div class="supplier-admin-panel mt-4">
+                            <h3>Reply</h3>
+
+                            <form
+                                method="post"
+                                enctype="multipart/form-data"
+                                class="auth-form"
+                            >
+                                {% csrf_token %}
+
+                                {% for field in reply_form %}
+                                    <div class="mb-3">
+                                        <label
+                                            for="{{ field.id_for_label }}"
+                                            class="form-label"
+                                        >
+                                            {{ field.label }}
+                                        </label>
+
+                                        {{ field }}
+
+                                        {% for error in field.errors %}
+                                            <div class="text-danger small mt-1">
+                                                {{ error }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endfor %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-kb-primary"
+                                >
+                                    Send Reply
+                                </button>
+                            </form>
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="text-center mt-5">
+                <a
+                    href="{% url 'customers:support_ticket_list' %}"
+                    class="btn btn-kb-outline"
+                >
+                    Back to My Tickets
+                </a>
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from .models_quote import *
+
 
 
 
@@ -27,6 +27,16 @@ class Supplier(models.Model):
     website = models.URLField(blank=True)
     api_base_url = models.URLField(blank=True)
     is_active = models.BooleanField(default=True)
+    api_enabled = models.BooleanField(default=False)
+    api_key_name = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Environment variable name containing the supplier API key.",
+    )
+    last_synced_at = models.DateTimeField(null=True, blank=True)
+    sync_frequency_hours = models.PositiveIntegerField(default=24)
+    email = models.EmailField(blank=True, help_text="Supplier email address used for purchase orders.",
+    )
 
     class Meta:
         ordering = ["name"]
@@ -53,7 +63,6 @@ class SupplierCatalog(models.Model):
     def __str__(self):
         return f"{self.supplier.name} - {self.name}"
 
-
 class Product(models.Model):
     category = models.ForeignKey(
         Category,
@@ -64,10 +73,10 @@ class Product(models.Model):
     )
 
     supplier = models.CharField(
-    max_length=120,
-    blank=True,
-    default="Kaeser & Blair",
-)
+        max_length=120,
+        blank=True,
+        default="Kaeser & Blair",
+    )
 
     supplier_record = models.ForeignKey(
         Supplier,
@@ -75,7 +84,7 @@ class Product(models.Model):
         null=True,
         blank=True,
         related_name="products",
-)
+    )
 
     catalog = models.ForeignKey(
         SupplierCatalog,
@@ -83,6 +92,40 @@ class Product(models.Model):
         null=True,
         blank=True,
         related_name="products",
+    )
+
+    supplier_sku = models.CharField(
+        max_length=120,
+        blank=True,
+    )
+
+    supplier_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+    )
+
+    supplier_inventory = models.IntegerField(
+        null=True,
+        blank=True,
+    )
+
+    inventory_status = models.CharField(
+        max_length=30,
+        choices=[
+            ("unknown", "Unknown"),
+            ("in_stock", "In Stock"),
+            ("low_stock", "Low Stock"),
+            ("out_of_stock", "Out of Stock"),
+            ("discontinued", "Discontinued"),
+        ],
+        default="unknown",
+    )
+
+    supplier_last_synced_at = models.DateTimeField(
+        null=True,
+        blank=True,
     )
 
     name = models.CharField(max_length=180)
@@ -95,22 +138,50 @@ class Product(models.Model):
     supplier_url = models.URLField(blank=True)
     external_image_url = models.URLField(blank=True)
 
-    image = models.ImageField(upload_to="products/", blank=True, null=True)
+    image = models.ImageField(
+        upload_to="products/",
+        blank=True,
+        null=True,
+    )
 
     min_quantity = models.PositiveIntegerField(default=1)
-    starting_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+
+    starting_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+    )
 
     colors = models.CharField(max_length=255, blank=True)
     decoration_methods = models.CharField(max_length=255, blank=True)
     industries = models.CharField(max_length=255, blank=True)
 
-    lead_time = models.CharField(max_length=80, blank=True, default="Varies by product")
-    setup_fee = models.CharField(max_length=80, blank=True, default="Varies")
+    lead_time = models.CharField(
+        max_length=80,
+        blank=True,
+        default="Varies by product",
+    )
+
+    setup_fee = models.CharField(
+        max_length=80,
+        blank=True,
+        default="Varies",
+    )
+
     material = models.CharField(max_length=120, blank=True)
     dimensions = models.CharField(max_length=120, blank=True)
 
-    source = models.CharField(max_length=80, blank=True, default="manual")
-    last_synced_at = models.DateTimeField(null=True, blank=True)
+    source = models.CharField(
+        max_length=80,
+        blank=True,
+        default="manual",
+    )
+
+    last_synced_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
 
     is_featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -130,28 +201,48 @@ class Product(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("products:detail", kwargs={"slug": self.slug})
+        return reverse(
+            "products:detail",
+            kwargs={"slug": self.slug},
+        )
 
     def color_list(self):
         if not self.colors:
             return []
-        return [color.strip() for color in self.colors.split(",") if color.strip()]
+
+        return [
+            color.strip()
+            for color in self.colors.split(",")
+            if color.strip()
+        ]
 
     def decoration_list(self):
         if not self.decoration_methods:
             return []
-        return [method.strip() for method in self.decoration_methods.split(",") if method.strip()]
+
+        return [
+            method.strip()
+            for method in self.decoration_methods.split(",")
+            if method.strip()
+        ]
 
     def industry_list(self):
         if not self.industries:
             return []
-        return [industry.strip() for industry in self.industries.split(",") if industry.strip()]
+
+        return [
+            industry.strip()
+            for industry in self.industries.split(",")
+            if industry.strip()
+        ]
 
     def display_image_url(self):
         if self.image:
             return self.image.url
+
         if self.external_image_url:
             return self.external_image_url
+
         return ""
 
 
@@ -209,3 +300,8 @@ class SupplierSyncLog(models.Model):
         return f"{supplier_name} sync - {self.status}"
     
 from .models_recommendations import *
+from .models_supplier_history import *
+from .models_purchase_orders import *
+from .models_purchase_order_activity import *
+from .models_quote import *
+from .models_marketplace import *

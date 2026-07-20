@@ -1,0 +1,400 @@
+{% extends "brands/base.html" %}
+
+{% block title %}
+Staff Support Center | KaleidoBrands
+{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center">
+                <span>Customer Service Operations</span>
+                <h1>Staff Support Center</h1>
+
+                <p
+                    class="mx-auto mt-3"
+                    style="max-width:760px;"
+                >
+                    Review, assign, prioritize, and resolve customer
+                    support requests across orders, payments, shipping,
+                    returns, replacements, and refunds.
+                </p>
+            </div>
+
+            {% if messages %}
+                <div class="supplier-message-wrap mt-4">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="row g-4 mt-5">
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Total Tickets</span>
+                        <strong>
+                            {{ ticket_totals.total }}
+                        </strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Open</span>
+                        <strong>
+                            {{ ticket_totals.open }}
+                        </strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Waiting for Staff</span>
+                        <strong>
+                            {{ ticket_totals.waiting_staff }}
+                        </strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Waiting for Customer</span>
+                        <strong>
+                            {{ ticket_totals.waiting_customer }}
+                        </strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row g-4 mt-4">
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>In Progress</span>
+                        <strong>
+                            {{ ticket_totals.in_progress }}
+                        </strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Urgent</span>
+                        <strong>
+                            {{ ticket_totals.urgent }}
+                        </strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>High Priority</span>
+                        <strong>
+                            {{ ticket_totals.high }}
+                        </strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-3">
+                    <div class="supplier-stat-card">
+                        <span>Unassigned</span>
+                        <strong>
+                            {{ ticket_totals.unassigned }}
+                        </strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row g-4 mt-4">
+
+                <div class="col-md-6">
+                    <div class="supplier-stat-card">
+                        <span>Resolved</span>
+                        <strong>
+                            {{ ticket_totals.resolved }}
+                        </strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="supplier-stat-card">
+                        <span>Closed</span>
+                        <strong>
+                            {{ ticket_totals.closed }}
+                        </strong>
+                    </div>
+                </div>
+
+            </div>
+
+            <form
+                method="get"
+                class="product-filter-panel mt-5"
+            >
+                <div class="row g-3">
+
+                    <div class="col-lg-3">
+                        <label
+                            for="statusFilter"
+                            class="form-label"
+                        >
+                            Status
+                        </label>
+
+                        <select
+                            id="statusFilter"
+                            name="status"
+                            class="form-select"
+                        >
+                            <option value="">
+                                All Statuses
+                            </option>
+
+                            {% for value, label in status_choices %}
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_status == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <label
+                            for="priorityFilter"
+                            class="form-label"
+                        >
+                            Priority
+                        </label>
+
+                        <select
+                            id="priorityFilter"
+                            name="priority"
+                            class="form-select"
+                        >
+                            <option value="">
+                                All Priorities
+                            </option>
+
+                            {% for value, label in priority_choices %}
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_priority == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <label
+                            for="categoryFilter"
+                            class="form-label"
+                        >
+                            Category
+                        </label>
+
+                        <select
+                            id="categoryFilter"
+                            name="category"
+                            class="form-select"
+                        >
+                            <option value="">
+                                All Categories
+                            </option>
+
+                            {% for value, label in category_choices %}
+                                <option
+                                    value="{{ value }}"
+                                    {% if selected_category == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-lg-3 d-flex align-items-end">
+                        <button
+                            type="submit"
+                            class="btn btn-kb-primary w-100"
+                        >
+                            Apply Filters
+                        </button>
+                    </div>
+
+                    <div class="col-12">
+                        <a
+                            href="{% url 'customers:staff_ticket_list' %}"
+                            class="btn btn-kb-outline"
+                        >
+                            Reset Filters
+                        </a>
+                    </div>
+
+                </div>
+            </form>
+
+            <div class="supplier-admin-panel mt-5">
+                <div
+                    class="d-flex flex-wrap justify-content-between
+                           align-items-center gap-3 mb-4"
+                >
+                    <h3 class="mb-0">
+                        Support Tickets
+                    </h3>
+
+                    <span class="text-muted">
+                        Showing {{ tickets|length }} ticket{{ tickets|length|pluralize }}
+                    </span>
+                </div>
+
+                {% for ticket in tickets %}
+                    <div class="supplier-admin-row">
+
+                        <div>
+                            <div
+                                class="d-flex flex-wrap
+                                       align-items-center gap-2 mb-2"
+                            >
+                                <strong>
+                                    {{ ticket.ticket_number }}
+                                </strong>
+
+                                {% if ticket.priority == "urgent" %}
+                                    <span class="badge bg-danger">
+                                        Urgent
+                                    </span>
+
+                                {% elif ticket.priority == "high" %}
+                                    <span class="badge bg-warning text-dark">
+                                        High
+                                    </span>
+
+                                {% elif ticket.priority == "normal" %}
+                                    <span class="badge bg-primary">
+                                        Normal
+                                    </span>
+
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        Low
+                                    </span>
+                                {% endif %}
+
+                                {% if ticket.status == "open" %}
+                                    <span class="badge bg-primary">
+                                        Open
+                                    </span>
+
+                                {% elif ticket.status == "waiting_staff" %}
+                                    <span class="badge bg-danger">
+                                        Waiting for Staff
+                                    </span>
+
+                                {% elif ticket.status == "waiting_customer" %}
+                                    <span class="badge bg-warning text-dark">
+                                        Waiting for Customer
+                                    </span>
+
+                                {% elif ticket.status == "in_progress" %}
+                                    <span class="badge bg-info text-dark">
+                                        In Progress
+                                    </span>
+
+                                {% elif ticket.status == "resolved" %}
+                                    <span class="badge bg-success">
+                                        Resolved
+                                    </span>
+
+                                {% elif ticket.status == "closed" %}
+                                    <span class="badge bg-dark">
+                                        Closed
+                                    </span>
+
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        {{ ticket.get_status_display }}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <span>
+                                {{ ticket.subject }}
+                            </span>
+
+                            <small>
+                                Customer:
+                                {{ ticket.customer.get_full_name|default:ticket.customer.username }}
+
+                                {% if ticket.customer.email %}
+                                    · {{ ticket.customer.email }}
+                                {% endif %}
+                            </small>
+
+                            <small>
+                                Category:
+                                {{ ticket.get_category_display }}
+
+                                · Assigned:
+                                {% if ticket.assigned_to %}
+                                    {{ ticket.assigned_to.get_full_name|default:ticket.assigned_to.username }}
+                                {% else %}
+                                    Unassigned
+                                {% endif %}
+
+                                · Updated:
+                                {{ ticket.updated_at }}
+                            </small>
+
+                            {% if ticket.order %}
+                                <small>
+                                    Order:
+                                    {{ ticket.order.order_number }}
+                                </small>
+                            {% endif %}
+
+                            {% if ticket.shipment %}
+                                <small>
+                                    Shipment:
+                                    {{ ticket.shipment.shipment_number }}
+                                </small>
+                            {% endif %}
+                        </div>
+
+                        <a
+                            href="{% url 'customers:staff_ticket_detail' ticket.id %}"
+                            class="btn btn-kb-outline"
+                        >
+                            Open Ticket
+                        </a>
+
+                    </div>
+                {% empty %}
+                    <p class="text-muted">
+                        No support tickets match the selected filters.
+                    </p>
+                {% endfor %}
+            </div>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

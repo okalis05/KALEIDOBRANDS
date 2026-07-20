@@ -6,21 +6,49 @@ from django.http import JsonResponse
 from django.contrib import messages 
 from django.core.mail import send_mail, EmailMessage
 from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Count, Avg, Min, Max, Q
+from django.db.models import Count, Avg, Min, Max, Q, Sum
 from .models import Category, Product, Supplier, SupplierSyncLog, Quote, QuoteItem
 
 import csv
 import tempfile
-
+from datetime import timedelta
 from products.services.quote_pdf import generate_quote_pdf
 from django.core.files.storage import FileSystemStorage
 from products.services.csv_importer import ProductCSVImporter
 from .forms import QuoteBuilderForm
 from customers.models import CustomerLead
 from products.services.recommendations import RecommendationEngine
+from products.models import (
+    RecommendationEvent, 
+    Product, 
+    Supplier, 
+    SupplierInventoryHistory, 
+    SupplierPriceHistory,
+    SupplierSyncLog, 
+    SupplierPurchaseOrder,
+    SupplierSyncLog,
+    )
+from django.utils import timezone
+from products.services.purchase_order_pdf import (generate_purchase_order_pdf,)
+from products.services.purchase_order_delivery import (
+    deliver_purchase_order,
+)
+from products.forms import SupplierPurchaseOrderStatusForm
+from products.services.order_fulfillment import (
+    synchronize_customer_order_from_purchase_orders,
+)
+from products.services.purchase_order_activity import (
+    log_purchase_order_activity,
+)
+
+from django.core.exceptions import ValidationError
+
+from products.services.purchase_order_status import (
+    update_purchase_order_status as apply_purchase_order_status,
+)
 
 
-from products.models import RecommendationEvent
+
 
 def product_home(request):
     categories = Category.objects.filter(is_active=True)
@@ -679,5 +707,497 @@ def recommendation_analytics(request):
             "top_products": top_products,
             "context_counts": context_counts,
             "recent_events": recent_events,
+        },
+    )
+
+@staff_member_required
+def supplier_inventory_dashboard(request):
+    products = Product.objects.select_related(
+        "supplier_record",
+        "category",
+    ).filter(
+        supplier_record__isnull=False,
+    )
+
+    suppliers = Supplier.objects.filter(
+        is_active=True,
+    ).order_by("name")
+
+    selected_supplier = request.GET.get("supplier", "").strip()
+    selected_status = request.GET.get("status", "").strip()
+
+    if selected_supplier:
+        products = products.filter(
+            supplier_record__slug=selected_supplier,
+        )
+
+    if selected_status:
+        products = products.filter(
+            inventory_status=selected_status,
+        )
+
+    totals = {
+        "all": products.count(),
+        "in_stock": products.filter(
+            inventory_status="in_stock",
+        ).count(),
+        "low_stock": products.filter(
+            inventory_status="low_stock",
+        ).count(),
+        "out_of_stock": products.filter(
+            inventory_status="out_of_stock",
+        ).count(),
+        "discontinued": products.filter(
+            inventory_status="discontinued",
+        ).count(),
+        "unknown": products.filter(
+            inventory_status="unknown",
+        ).count(),
+    }
+
+    recent_price_changes = (
+        SupplierPriceHistory.objects
+        .select_related("product", "supplier")
+        .order_by("-recorded_at")[:15]
+    )
+
+    recent_inventory_changes = (
+        SupplierInventoryHistory.objects
+        .select_related("product", "supplier")
+        .order_by("-recorded_at")[:15]
+    )
+
+    recent_sync_logs = (
+        SupplierSyncLog.objects
+        .select_related("supplier")
+        .order_by("-started_at")[:10]
+    )
+
+    products = products.order_by(
+        "inventory_status",
+        "name",
+    )[:100]
+
+    return render(
+        request,
+        "products/supplier_inventory_dashboard.html",
+        {
+            "products": products,
+            "suppliers": suppliers,
+            "selected_supplier": selected_supplier,
+            "selected_status": selected_status,
+            "totals": totals,
+            "recent_price_changes": recent_price_changes,
+            "recent_inventory_changes": recent_inventory_changes,
+            "recent_sync_logs": recent_sync_logs,
+        },
+    )
+
+
+@staff_member_required
+def purchase_order_list(request):
+    purchase_orders = (
+        SupplierPurchaseOrder.objects
+        .select_related(
+            "supplier",
+            "customer_order",
+            "created_by",
+        )
+        .prefetch_related("items")
+        .order_by("-created_at")
+    )
+
+    selected_status = request.GET.get("status", "").strip()
+    selected_supplier = request.GET.get("supplier", "").strip()
+
+    if selected_status:
+        purchase_orders = purchase_orders.filter(
+            status=selected_status,
+        )
+
+    if selected_supplier:
+        purchase_orders = purchase_orders.filter(
+            supplier__slug=selected_supplier,
+        )
+
+    suppliers = (
+        Supplier.objects
+        .filter(is_active=True)
+        .order_by("name")
+    )
+
+    return render(
+        request,
+        "products/purchase_order_list.html",
+        {
+            "purchase_orders": purchase_orders,
+            "suppliers": suppliers,
+            "status_choices": SupplierPurchaseOrder.STATUS_CHOICES,
+            "selected_status": selected_status,
+            "selected_supplier": selected_supplier,
+        },
+    )
+
+
+@staff_member_required
+def purchase_order_detail(request, po_id):
+    purchase_order = get_object_or_404(
+        SupplierPurchaseOrder.objects
+        .select_related(
+            "supplier",
+            "customer_order",
+            "created_by",
+        )
+        .prefetch_related(
+            "items",
+            "activities__created_by",
+        ),
+        id=po_id,
+    )
+    status_form = SupplierPurchaseOrderStatusForm(
+        instance=purchase_order
+    )
+
+    return render(
+        request,
+        "products/purchase_order_detail.html",
+        {
+            "purchase_order": purchase_order,
+            "status_form": status_form,
+        },
+    )
+
+
+@staff_member_required
+def generate_purchase_order_pdf_view(request, po_id):
+    purchase_order = get_object_or_404(
+        SupplierPurchaseOrder,
+        id=po_id,
+    )
+
+    generate_purchase_order_pdf(purchase_order)
+
+    messages.success(
+        request,
+        f"PDF generated for {purchase_order.po_number}.",
+    )
+
+    return redirect(
+        "products:purchase_order_detail",
+        po_id=purchase_order.id,
+    )
+
+@staff_member_required
+def send_purchase_order(request, po_id):
+    purchase_order = get_object_or_404(
+        SupplierPurchaseOrder.objects.select_related(
+            "supplier",
+            "customer_order",
+        ),
+        id=po_id,
+    )
+
+    if request.method != "POST":
+        return redirect(
+            "products:purchase_order_detail",
+            po_id=purchase_order.id,
+        )
+
+    success, result_message = deliver_purchase_order(
+        purchase_order,
+        user=request.user,
+    )
+
+    if success:
+        messages.success(
+            request,
+            result_message,
+        )
+    else:
+        messages.error(
+            request,
+            f"Purchase order was not sent: {result_message}",
+        )
+
+    return redirect(
+        "products:purchase_order_detail",
+        po_id=purchase_order.id,
+    )
+
+@staff_member_required
+def update_purchase_order_status(request, po_id):
+    purchase_order = get_object_or_404(
+        SupplierPurchaseOrder,
+        id=po_id,
+    )
+
+    if request.method != "POST":
+        return redirect(
+            "products:purchase_order_detail",
+            po_id=purchase_order.id,
+        )
+
+    previous_tracking_number = (
+        purchase_order.tracking_number
+    )
+    previous_tracking_url = (
+        purchase_order.tracking_url
+    )
+    previous_supplier_reference = (
+        purchase_order.supplier_reference
+    )
+    previous_notes = purchase_order.notes
+
+    form = SupplierPurchaseOrderStatusForm(
+        request.POST,
+        instance=purchase_order,
+    )
+
+    if not form.is_valid():
+        messages.error(
+            request,
+            "Purchase order could not be updated.",
+        )
+
+        return redirect(
+            "products:purchase_order_detail",
+            po_id=purchase_order.id,
+        )
+
+    updated_purchase_order = form.save(
+        commit=False
+    )
+
+    new_status = updated_purchase_order.status
+
+    # Restore the persisted status so the service can
+    # validate the real transition.
+    purchase_order.refresh_from_db()
+
+    purchase_order.tracking_number = (
+        updated_purchase_order.tracking_number
+    )
+    purchase_order.tracking_url = (
+        updated_purchase_order.tracking_url
+    )
+    purchase_order.supplier_reference = (
+        updated_purchase_order.supplier_reference
+    )
+    purchase_order.notes = updated_purchase_order.notes
+    purchase_order.estimated_ship_date = (
+        updated_purchase_order.estimated_ship_date
+    )
+
+    try:
+        apply_purchase_order_status(
+            purchase_order,
+            new_status,
+            user=request.user,
+        )
+
+    except ValidationError as error:
+        messages.error(
+            request,
+            error.messages[0],
+        )
+
+        return redirect(
+            "products:purchase_order_detail",
+            po_id=purchase_order.id,
+        )
+
+    purchase_order.save(
+        update_fields=[
+            "tracking_number",
+            "tracking_url",
+            "supplier_reference",
+            "notes",
+            "estimated_ship_date",
+            "updated_at",
+        ]
+    )
+
+    if (
+        previous_tracking_number
+        != purchase_order.tracking_number
+        or previous_tracking_url
+        != purchase_order.tracking_url
+    ):
+        log_purchase_order_activity(
+            purchase_order,
+            action="tracking_updated",
+            message="Tracking information updated.",
+            previous_value=previous_tracking_number,
+            new_value=purchase_order.tracking_number,
+            user=request.user,
+        )
+
+    if (
+        previous_supplier_reference
+        != purchase_order.supplier_reference
+    ):
+        log_purchase_order_activity(
+            purchase_order,
+            action="supplier_reference_updated",
+            message="Supplier reference updated.",
+            previous_value=previous_supplier_reference,
+            new_value=purchase_order.supplier_reference,
+            user=request.user,
+        )
+
+    if previous_notes != purchase_order.notes:
+        log_purchase_order_activity(
+            purchase_order,
+            action="notes_updated",
+            message="Purchase order notes updated.",
+            previous_value=previous_notes,
+            new_value=purchase_order.notes,
+            user=request.user,
+        )
+
+    messages.success(
+        request,
+        (
+            f"{purchase_order.po_number} was updated "
+            "successfully."
+        ),
+    )
+
+    return redirect(
+        "products:purchase_order_detail",
+        po_id=purchase_order.id,
+    )
+
+
+@staff_member_required
+def supplier_operations_dashboard(request):
+    now = timezone.now()
+
+    open_statuses = [
+        "draft",
+        "ready",
+        "sent",
+        "confirmed",
+        "in_production",
+        "shipped",
+    ]
+
+    open_purchase_orders = (
+        SupplierPurchaseOrder.objects
+        .filter(status__in=open_statuses)
+        .select_related(
+            "supplier",
+            "customer_order",
+        )
+        .prefetch_related("items")
+        .order_by("created_at")
+    )
+
+    total_suppliers = Supplier.objects.filter(
+        is_active=True
+    ).count()
+
+    total_open_pos = open_purchase_orders.count()
+
+    total_open_po_cost = (
+        sum(
+            purchase_order.total_cost()
+            for purchase_order in open_purchase_orders
+        )
+    )
+
+    draft_pos = open_purchase_orders.filter(
+        status="draft"
+    ).count()
+
+    sent_pos = open_purchase_orders.filter(
+        status="sent"
+    ).count()
+
+    production_pos = open_purchase_orders.filter(
+        status="in_production"
+    ).count()
+
+    shipped_pos = open_purchase_orders.filter(
+        status="shipped"
+    ).count()
+
+    low_stock_products = Product.objects.filter(
+        is_active=True,
+        inventory_status="low_stock",
+    ).count()
+
+    out_of_stock_products = Product.objects.filter(
+        is_active=True,
+        inventory_status="out_of_stock",
+    ).count()
+
+    discontinued_products = Product.objects.filter(
+        inventory_status="discontinued",
+    ).count()
+
+    stale_sync_cutoff = now - timedelta(hours=48)
+
+    stale_suppliers = Supplier.objects.filter(
+        is_active=True,
+    ).filter(
+        last_synced_at__lt=stale_sync_cutoff
+    ).order_by("last_synced_at")
+
+    never_synced_suppliers = Supplier.objects.filter(
+        is_active=True,
+        last_synced_at__isnull=True,
+    ).order_by("name")
+
+    aging_cutoff = now - timedelta(days=7)
+
+    aging_purchase_orders = (
+        open_purchase_orders
+        .filter(created_at__lt=aging_cutoff)
+        .order_by("created_at")[:20]
+    )
+
+    recent_sync_logs = (
+        SupplierSyncLog.objects
+        .select_related("supplier")
+        .order_by("-started_at")[:10]
+    )
+
+    supplier_summary = (
+        Supplier.objects
+        .filter(is_active=True)
+        .annotate(
+            product_count=Count(
+                "products",
+                distinct=True,
+            ),
+            purchase_order_count=Count(
+                "purchase_orders",
+                distinct=True,
+            ),
+        )
+        .order_by("name")
+    )
+
+    return render(
+        request,
+        "products/supplier_operations_dashboard.html",
+        {
+            "total_suppliers": total_suppliers,
+            "total_open_pos": total_open_pos,
+            "total_open_po_cost": total_open_po_cost,
+            "draft_pos": draft_pos,
+            "sent_pos": sent_pos,
+            "production_pos": production_pos,
+            "shipped_pos": shipped_pos,
+            "low_stock_products": low_stock_products,
+            "out_of_stock_products": out_of_stock_products,
+            "discontinued_products": discontinued_products,
+            "stale_suppliers": stale_suppliers,
+            "never_synced_suppliers": never_synced_suppliers,
+            "aging_purchase_orders": aging_purchase_orders,
+            "recent_sync_logs": recent_sync_logs,
+            "supplier_summary": supplier_summary,
+            "open_purchase_orders": open_purchase_orders[:20],
         },
     )
