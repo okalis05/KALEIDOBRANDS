@@ -4,21 +4,27 @@ class SupplierIntegrationError(Exception):
     """
 
 
-class SupplierAdapterNotFoundError(SupplierIntegrationError):
+class SupplierAdapterNotFoundError(
+    SupplierIntegrationError
+):
     """
     Raised when no adapter is registered for a supplier.
     """
 
 
-class SupplierAuthenticationError(SupplierIntegrationError):
+class SupplierAuthenticationError(
+    SupplierIntegrationError
+):
     """
     Raised when supplier credentials are missing or invalid.
     """
 
 
-class SupplierConnectionError(SupplierIntegrationError):
+class SupplierConnectionError(
+    SupplierIntegrationError
+):
     """
-    Raised when the supplier integration cannot connect.
+    Raised when a supplier integration cannot connect.
     """
 
 
@@ -30,13 +36,55 @@ class SupplierOperationNotSupportedError(
     """
 
 
-class SupplierRequestError(SupplierIntegrationError):
+class SupplierRequestError(
+    SupplierIntegrationError
+):
     """
     Raised when a supplier request fails.
     """
 
+    def __init__(
+        self,
+        message,
+        *,
+        status_code=None,
+        response_body=None,
+        retryable=False,
+    ):
+        super().__init__(message)
 
-class SupplierResponseError(SupplierIntegrationError):
+        self.status_code = status_code
+        self.response_body = response_body
+        self.retryable = retryable
+
+
+class SupplierResponseError(
+    SupplierIntegrationError
+):
     """
     Raised when a supplier returns malformed data.
+    """
+
+
+class SupplierTimeoutError(
+    SupplierConnectionError
+):
+    """
+    Raised when a supplier request times out.
+    """
+
+
+class SupplierRateLimitError(
+    SupplierRequestError
+):
+    """
+    Raised when a supplier API rate limit is exhausted.
+    """
+
+
+class SupplierServerError(
+    SupplierRequestError
+):
+    """
+    Raised when a supplier API returns a server error.
     """

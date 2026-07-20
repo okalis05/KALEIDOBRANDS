@@ -8,7 +8,9 @@ from products.integrations.auth import (
 from products.integrations.exceptions import (
     SupplierOperationNotSupportedError,
 )
-
+from products.integrations.http import (
+    SupplierHTTPClient,
+)
 
 @dataclass
 class SupplierOperationResult:
@@ -79,12 +81,15 @@ class BaseSupplierAdapter(ABC):
 
     def __init__(self, supplier):
         self.supplier = supplier
+
         self.credentials = (
             SupplierCredentials.from_supplier(
                 supplier,
                 required=False,
             )
         )
+
+        self.http = self.build_http_client()
 
     def test_connection(self):
         """
@@ -153,4 +158,24 @@ class BaseSupplierAdapter(ABC):
                 f"{self.__class__.__name__} does not support "
                 f"the '{operation}' operation."
             )
+        )
+    
+    def build_http_client(self):
+        """
+        Build the supplier HTTP client.
+
+        Individual supplier adapters may override this method when they need
+        custom authentication headers or retry settings.
+        """
+
+        headers = {}
+
+        if self.credentials.api_key:
+            headers.update(
+                self.credentials.authorization_headers()
+            )
+
+        return SupplierHTTPClient(
+            base_url=self.credentials.api_base_url,
+            default_headers=headers,
         )
