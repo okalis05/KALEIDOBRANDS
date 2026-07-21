@@ -1,58 +1,113 @@
-from pathlib import Path
+from django.core.management.base import (
+    BaseCommand,
+    CommandError,
+)
 
-from django.core.management.base import BaseCommand, CommandError
-
-from products.services.csv_importer import ProductCSVImporter
+from products.services.supplier_sync import (
+    KaeserBlairCSVSyncService,
+)
 
 
 class Command(BaseCommand):
-    help = "Scheduled supplier sync command for KaleidoBrands."
+    help = (
+        "Synchronize Kaeser & Blair supplier "
+        "products from a CSV file."
+    )
 
-    def add_arguments(self, parser):
+    def add_arguments(
+        self,
+        parser,
+    ):
         parser.add_argument(
             "--file",
             type=str,
-            default="data/sample_kaeser_blair_products.csv",
-            help="Supplier CSV file path.",
+            default=None,
+            help=(
+                "Supplier CSV path. Defaults to "
+                "KAESER_BLAIR_CSV_PATH or "
+                "data/sample_kaeser_blair_products.csv."
+            ),
         )
 
         parser.add_argument(
             "--dry-run",
             action="store_true",
-            help="Validate without importing.",
+            help=(
+                "Validate the CSV file without "
+                "importing or updating products."
+            ),
         )
 
-    def handle(self, *args, **options):
-        file_path = Path(options["file"])
-        dry_run = options["dry_run"]
+        parser.add_argument(
+            "--inventory-only",
+            action="store_true",
+            help=(
+                "Update inventory and supplier "
+                "pricing without importing new products."
+            ),
+        )
 
-        if not file_path.exists():
-            raise CommandError(f"Supplier file not found: {file_path}")
+    def handle(
+        self,
+        *args,
+        **options,
+    ):
+        service = KaeserBlairCSVSyncService(
+            file_path=options["file"],
+        )
 
-        importer = ProductCSVImporter()
+        try:
+            if options["dry_run"]:
+                path = service.validate()
 
-        if dry_run:
-            importer.validate_file_exists(file_path)
-
-            import csv
-            with file_path.open(newline="", encoding="utf-8-sig") as csvfile:
-                reader = csv.DictReader(csvfile)
-                importer.validate_columns(reader.fieldnames)
-
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"Supplier sync dry-run passed: {file_path}"
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        "Supplier sync dry-run passed: "
+                        f"{path}"
+                    )
                 )
-            )
-            return
 
-        sync_log = importer.import_csv(file_path)
+                return
+
+            if options["inventory_only"]:
+                result = (
+                    service.sync_inventory()
+                )
+
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        "Supplier inventory sync complete. "
+                        f"Processed: {result.processed}, "
+                        f"Updated: {result.updated}, "
+                        f"Skipped: {result.skipped}, "
+                        f"Failed: {result.failed}"
+                    )
+                )
+
+                return
+
+            result = service.sync_catalog()
+
+        except (
+            FileNotFoundError,
+            ValueError,
+        ) as error:
+            raise CommandError(
+                str(error)
+            ) from error
+
+        except Exception as error:
+            raise CommandError(
+                "Supplier sync failed: "
+                f"{error}"
+            ) from error
 
         self.stdout.write(
             self.style.SUCCESS(
                 "Supplier sync complete. "
-                f"Created: {sync_log.products_created}, "
-                f"Updated: {sync_log.products_updated}, "
-                f"Failed: {sync_log.products_failed}"
+                f"Processed: {result.processed}, "
+                f"Created: {result.created}, "
+                f"Updated: {result.updated}, "
+                f"Failed: {result.failed}"
             )
         )

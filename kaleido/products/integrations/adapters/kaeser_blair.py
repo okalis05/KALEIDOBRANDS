@@ -1,4 +1,8 @@
+
+from datetime import date, datetime
+from decimal import Decimal
 from pathlib import Path
+from uuid import UUID
 
 from products.integrations.base import (
     BaseSupplierAdapter,
@@ -10,11 +14,14 @@ from products.integrations.registry import (
 from products.services.csv_importer import (
     ProductCSVImporter,
 )
-from products.services.kaeser_blair import (
+from products.integrations.kaeser_blair import (
     KaeserBlairImporter,
 )
 from products.services.purchase_order_delivery import (
     deliver_purchase_order,
+)
+from products.services.supplier_sync import (
+    KaeserBlairCSVSyncService,
 )
 
 
@@ -164,6 +171,210 @@ class KaeserBlairAdapter(BaseSupplierAdapter):
                 ),
             },
         )
+    def sync_catalog(
+        self,
+        *,
+        context=None,
+        checkpoint=None,
+        correlation_id="",
+        file_path=None,
+        **kwargs,
+    ):
+        """
+        Synchronize Kaeser & Blair catalog data from the configured CSV
+        source.
+        """
+
+        file_path = self._resolve_sync_file_path(
+            context=context,
+            file_path=file_path,
+        )
+
+        service = KaeserBlairCSVSyncService(
+            file_path=file_path
+        )
+
+        result = service.sync_catalog(
+            checkpoint=checkpoint,
+            progress_callback=(
+                self._build_progress_callback(
+                    context
+                )
+            ),
+        )
+
+        return {
+            "processed": int(result.processed),
+            "succeeded": int(result.succeeded),
+            "failed": int(result.failed),
+            "skipped": int(result.skipped),
+            "checkpoint": _json_safe(
+                result.checkpoint or {}
+            ),
+            "metadata": _json_safe(
+                {
+                **dict(result.metadata or {}),
+                "created": int(result.created),
+                "updated": int(result.updated),
+                "supplier_slug": str(
+                    self.supplier.slug
+                ),
+                "correlation_id": str(
+                    correlation_id or ""
+                ),
+            },
+            )
+        }
+
+
+    def sync_inventory(
+        self,
+        *,
+        context=None,
+        checkpoint=None,
+        correlation_id="",
+        file_path=None,
+        **kwargs,
+    ):
+        """
+        Synchronize inventory, price and discontinued state from CSV.
+        """
+
+        file_path = self._resolve_sync_file_path(
+            context=context,
+            file_path=file_path,
+        )
+
+        service = KaeserBlairCSVSyncService(
+            file_path=file_path
+        )
+
+        result = service.sync_inventory(
+            checkpoint=checkpoint,
+            progress_callback=(
+                self._build_progress_callback(
+                    context
+                )
+            ),
+        )
+
+        return {
+            "processed": int(result.processed),
+            "succeeded": int(result.succeeded),
+            "failed": int(result.failed),
+            "skipped": int(result.skipped),
+            "checkpoint": dict(
+                result.checkpoint or {}
+            ),
+            "metadata": {
+                **dict(result.metadata or {}
+                ),
+                "updated": int(result.updated),
+                "supplier_slug": str(
+                    self.supplier.slug
+                ),
+                "correlation_id": str(
+                    correlation_id or ""
+                ),
+            },
+        }
+
+
+    def fetch_catalog(
+        self,
+        **kwargs,
+    ):
+        """
+        Backward-compatible alias.
+        """
+
+        return self.sync_catalog(
+            **kwargs
+        )
+
+
+    def fetch_inventory(
+        self,
+        **kwargs,
+    ):
+        """
+        Backward-compatible alias.
+        """
+
+        return self.sync_inventory(
+            **kwargs
+        )
+
+
+    def _resolve_sync_file_path(
+        self,
+        *,
+        context=None,
+        file_path=None,
+    ):
+        if file_path:
+            return file_path
+
+        if context is None:
+            return None
+
+        job = getattr(
+            context,
+            "job",
+            None,
+        )
+
+        batch = getattr(
+            job,
+            "batch",
+            None,
+        )
+
+        metadata = getattr(
+            batch,
+            "metadata",
+            None,
+        ) or {}
+
+        return metadata.get(
+            "file_path"
+        )
+
+
+    def _build_progress_callback(
+        self,
+        context,
+    ):
+        """
+        Save resumable checkpoints during execution.
+
+        Final job counters should be written from the returned operation
+        result by the orchestrator. This prevents double-counting.
+        """
+
+        if context is None:
+            return None
+
+        def callback(
+            *,
+            checkpoint=None,
+            **kwargs,
+        ):
+            if not checkpoint:
+                return
+
+            save_checkpoint = getattr(
+                context,
+                "save_checkpoint",
+                None,
+            )
+
+            if callable(save_checkpoint):
+                save_checkpoint(
+                    **checkpoint
+                )
+
+        return callback
 
     def submit_purchase_order(
         self,
@@ -341,3 +552,118 @@ class KaeserBlairAdapter(BaseSupplierAdapter):
                 )
             ).strip(),
         }
+    def test_kaeser_blair_reports_catalog_sync_support(
+        self,
+    ):
+        adapter = KaeserBlairAdapter(
+            self.supplier
+        )
+
+        self.assertIn(
+            "sync_catalog",
+            adapter.supported_sync_operations(),
+        )
+
+
+    def test_kaeser_blair_reports_inventory_sync_support(
+        self,
+    ):
+        adapter = KaeserBlairAdapter(
+            self.supplier
+        )
+
+        self.assertIn(
+            "sync_inventory",
+            adapter.supported_sync_operations(),
+        )
+
+
+    def test_kaeser_blair_does_not_report_unimplemented_sync_support(
+        self,
+    ):
+        adapter = KaeserBlairAdapter(
+            self.supplier
+        )
+
+        supported = (
+            adapter.supported_sync_operations()
+        )
+
+        self.assertNotIn(
+            "sync_pricing",
+            supported,
+        )
+
+        self.assertNotIn(
+            "sync_images",
+            supported,
+        )
+
+        self.assertNotIn(
+            "sync_discontinued",
+            supported,
+        )
+
+
+def _json_safe(value):
+    if value is None:
+        return None
+
+    if isinstance(
+        value,
+        (
+            str,
+            int,
+            float,
+            bool,
+        ),
+    ):
+        return value
+
+    if isinstance(
+        value,
+        Decimal,
+    ):
+        return str(value)
+
+    if isinstance(
+        value,
+        (
+            Path,
+            UUID,
+        ),
+    ):
+        return str(value)
+
+    if isinstance(
+        value,
+        (
+            datetime,
+            date,
+        ),
+    ):
+        return value.isoformat()
+
+    if isinstance(
+        value,
+        dict,
+    ):
+        return {
+            str(key): _json_safe(item)
+            for key, item in value.items()
+        }
+
+    if isinstance(
+        value,
+        (
+            list,
+            tuple,
+            set,
+        ),
+    ):
+        return [
+            _json_safe(item)
+            for item in value
+        ]
+
+    return str(value)

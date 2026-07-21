@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from products.services.kaeser_blair import KaeserBlairImporter
+from products.integrations.kaeser_blair import KaeserBlairImporter
 
 
 class Command(BaseCommand):

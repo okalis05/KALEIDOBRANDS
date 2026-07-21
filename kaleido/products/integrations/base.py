@@ -183,3 +183,90 @@ class BaseSupplierAdapter(ABC):
             supplier=self.supplier,
             audit_enabled=True,
         )
+    
+    def supported_sync_operations(self):
+        """
+        Return synchronization operations actually implemented by this
+        supplier adapter.
+
+        BaseSupplierAdapter placeholder methods must not be reported as
+        supported operations merely because they are callable.
+        """
+
+        operation_methods = {
+            "sync_catalog": (
+                "sync_catalog",
+                "fetch_catalog",
+                "import_catalog",
+                "list_products",
+                "get_products",
+                "fetch_products",
+            ),
+            "sync_inventory": (
+                "sync_inventory",
+                "fetch_inventory",
+                "get_inventory",
+                "list_inventory",
+                "fetch_inventory_levels",
+            ),
+            "sync_pricing": (
+                "sync_pricing",
+                "fetch_pricing",
+                "get_pricing",
+                "list_prices",
+                "fetch_prices",
+            ),
+            "sync_images": (
+                "sync_images",
+                "fetch_images",
+                "get_images",
+                "list_images",
+                "fetch_product_images",
+            ),
+            "sync_discontinued": (
+                "sync_discontinued",
+                "fetch_discontinued",
+                "get_discontinued",
+                "list_discontinued",
+                "fetch_discontinued_products",
+            ),
+        }
+
+        supported = []
+
+        for operation, method_names in operation_methods.items():
+            for method_name in method_names:
+                adapter_method = getattr(
+                    self.__class__,
+                    method_name,
+                    None,
+                )
+
+                if not callable(adapter_method):
+                    continue
+
+                base_method = getattr(
+                    BaseSupplierAdapter,
+                    method_name,
+                    None,
+                )
+
+                if (
+                    base_method is not None
+                    and adapter_method is base_method
+                ):
+                    continue
+
+                supported.append(operation)
+                break
+
+        return supported
+
+    def supports_sync_operation(
+        self,
+        operation,
+    ):
+        return (
+            str(operation or "").strip()
+            in self.supported_sync_operations()
+        )

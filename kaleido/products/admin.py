@@ -19,8 +19,10 @@ from .models import (
 )
 from products.models import (
     SupplierIntegrationAuditLog,
+    SupplierSyncBatch,
+    SupplierSyncCheckpoint,
+    SupplierSyncJob,
 )
-
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
@@ -469,6 +471,239 @@ class SupplierIntegrationAuditLogAdmin(
     )
 
     date_hierarchy = "started_at"
+
+    def has_add_permission(
+        self,
+        request,
+    ):
+        return False
+
+    def has_change_permission(
+        self,
+        request,
+        obj=None,
+    ):
+        return False
+    
+
+class SupplierSyncJobInline(
+    admin.TabularInline
+):
+    model = SupplierSyncJob
+    extra = 0
+
+    fields = (
+        "supplier",
+        "operation",
+        "sequence",
+        "status",
+        "attempt_count",
+        "records_processed",
+        "records_succeeded",
+        "records_failed",
+        "started_at",
+        "completed_at",
+    )
+
+    readonly_fields = fields
+    ordering = (
+        "sequence",
+        "created_at",
+    )
+
+    def has_add_permission(
+        self,
+        request,
+        obj=None,
+    ):
+        return False
+
+    def has_delete_permission(
+        self,
+        request,
+        obj=None,
+    ):
+        return False
+
+
+@admin.register(SupplierSyncBatch)
+class SupplierSyncBatchAdmin(
+    admin.ModelAdmin
+):
+    list_display = (
+        "id",
+        "status",
+        "progress_percentage",
+        "total_jobs",
+        "successful_jobs",
+        "failed_jobs",
+        "skipped_jobs",
+        "created_at",
+        "completed_at",
+    )
+
+    list_filter = (
+        "status",
+        "created_at",
+        "completed_at",
+    )
+
+    search_fields = (
+        "id",
+        "correlation_id",
+    )
+
+    readonly_fields = (
+        "id",
+        "correlation_id",
+        "status",
+        "requested_operations",
+        "metadata",
+        "total_jobs",
+        "completed_jobs",
+        "successful_jobs",
+        "failed_jobs",
+        "skipped_jobs",
+        "created_by",
+        "created_at",
+        "started_at",
+        "completed_at",
+    )
+
+    inlines = [
+        SupplierSyncJobInline,
+    ]
+
+    ordering = (
+        "-created_at",
+    )
+
+    date_hierarchy = "created_at"
+
+    def has_add_permission(
+        self,
+        request,
+    ):
+        return False
+
+    def has_change_permission(
+        self,
+        request,
+        obj=None,
+    ):
+        return False
+
+
+@admin.register(SupplierSyncJob)
+class SupplierSyncJobAdmin(
+    admin.ModelAdmin
+):
+    list_display = (
+        "id",
+        "batch",
+        "supplier",
+        "operation",
+        "sequence",
+        "status",
+        "attempt_count",
+        "records_processed",
+        "records_succeeded",
+        "records_failed",
+        "started_at",
+        "completed_at",
+    )
+
+    list_filter = (
+        "status",
+        "operation",
+        "supplier",
+        "created_at",
+    )
+
+    search_fields = (
+        "id",
+        "batch__id",
+        "supplier__name",
+        "supplier__slug",
+        "operation",
+        "error_type",
+        "error_message",
+    )
+
+    readonly_fields = (
+        "id",
+        "batch",
+        "supplier",
+        "operation",
+        "sequence",
+        "depends_on",
+        "status",
+        "attempt_count",
+        "max_attempts",
+        "records_processed",
+        "records_succeeded",
+        "records_failed",
+        "metadata",
+        "result_metadata",
+        "error_type",
+        "error_message",
+        "created_at",
+        "started_at",
+        "completed_at",
+    )
+
+    ordering = (
+        "-created_at",
+    )
+
+    def has_add_permission(
+        self,
+        request,
+    ):
+        return False
+
+    def has_change_permission(
+        self,
+        request,
+        obj=None,
+    ):
+        return False
+
+
+@admin.register(SupplierSyncCheckpoint)
+class SupplierSyncCheckpointAdmin(
+    admin.ModelAdmin
+):
+    list_display = (
+        "job",
+        "cursor",
+        "page",
+        "offset",
+        "last_external_id",
+        "updated_at",
+    )
+
+    search_fields = (
+        "job__id",
+        "job__operation",
+        "job__supplier__name",
+        "cursor",
+        "last_external_id",
+    )
+
+    readonly_fields = (
+        "job",
+        "cursor",
+        "page",
+        "offset",
+        "last_external_id",
+        "state",
+        "updated_at",
+    )
+
+    ordering = (
+        "-updated_at",
+    )
 
     def has_add_permission(
         self,

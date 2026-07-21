@@ -108,7 +108,14 @@ class KaeserBlairImporter:
                 sync_log.save(update_fields=["products_failed"])
             return None, False
 
-        sku = str(data.get("sku", "")).strip()
+        sku = str(
+            data.get("sku", "")
+        ).strip()
+
+        supplier_sku = str(
+            data.get("supplier_sku")
+            or sku
+        ).strip()
         category_name = str(data.get("category", "Promotional Products")).strip()
 
         category = self.get_or_create_category(category_name)
@@ -128,27 +135,79 @@ class KaeserBlairImporter:
                 "supplier_record": self.supplier,
                 "catalog": catalog,
                 "sku": sku,
-                "supplier_product_id": str(data.get("supplier_product_id", "")).strip(),
-                "supplier_url": str(data.get("supplier_url", "")).strip(),
-                "external_image_url": str(data.get("image_url", "")).strip(),
-                "short_description": str(data.get("short_description", "")).strip(),
-                "description": str(data.get("description", "")).strip(),
-                "min_quantity": self.clean_int(data.get("min_quantity"), default=1),
-                "starting_price": self.clean_price(data.get("starting_price")),
-                "colors": str(data.get("colors", "")).strip(),
-                "decoration_methods": str(data.get("decoration_methods", "")).strip(),
-                "industries": str(data.get("industries", "")).strip(),
-                "lead_time": str(data.get("lead_time", "Varies by product")).strip(),
-                "setup_fee": str(data.get("setup_fee", "Varies")).strip(),
-                "material": str(data.get("material", "")).strip(),
-                "dimensions": str(data.get("dimensions", "")).strip(),
+                "supplier_sku": supplier_sku,
+                "supplier_product_id": str(
+                    data.get(
+                        "supplier_product_id",
+                        "",
+                    )
+                ).strip(),
+                "supplier_url": str(
+                    data.get(
+                        "supplier_url",
+                        "",
+                    )
+                ).strip(),
+                "external_image_url": str(
+                    data.get(
+                        "image_url",
+                        "",
+                    )
+                ).strip(),
+                "short_description": str(
+                    data.get(
+                        "short_description",
+                        "",
+                    )
+                ).strip(),
+                "description": str(
+                    data.get(
+                        "description",
+                        "",
+                    )
+                ).strip(),
+                "min_quantity": self.clean_int(
+                    data.get("min_quantity"),
+                    default=1,
+                ),
+                "starting_price": self.clean_price(
+                    data.get("starting_price")
+                ),
+                "colors": str(
+                    data.get("colors", "")
+                ).strip(),
+                "decoration_methods": str(
+                    data.get(
+                        "decoration_methods",
+                        "",
+                    )
+                ).strip(),
+                "industries": str(
+                    data.get("industries", "")
+                ).strip(),
+                "lead_time": str(
+                    data.get(
+                        "lead_time",
+                        "Varies by product",
+                    )
+                ).strip(),
+                "setup_fee": str(
+                    data.get(
+                        "setup_fee",
+                        "Varies",
+                    )
+                ).strip(),
+                "material": str(
+                    data.get("material", "")
+                ).strip(),
+                "dimensions": str(
+                    data.get("dimensions", "")
+                ).strip(),
                 "source": "kaeser_blair",
                 "last_synced_at": timezone.now(),
                 "is_active": True,
-                
             },
         )
-
         supplier_price = (
             data.get("supplier_price")
             or data.get("wholesale_price")
@@ -180,26 +239,48 @@ class KaeserBlairImporter:
             discontinued=discontinued,
         )
 
-        gallery_urls = data.get("gallery_urls", [])
+        gallery_urls = data.get(
+            "gallery_urls",
+            [],
+        )
+
         if isinstance(gallery_urls, str):
             gallery_urls = [
                 url.strip()
                 for url in gallery_urls.split("|")
                 if url.strip()
             ]
+        elif not isinstance(
+            gallery_urls,
+            (list, tuple),
+        ):
+            gallery_urls = []
 
-        if product.external_image_url and product.external_image_url not in gallery_urls:
-            gallery_urls.insert(0, product.external_image_url)
+        gallery_urls = list(
+            dict.fromkeys(
+                str(url).strip()
+                for url in gallery_urls
+                if str(url).strip()
+            )
+        )
 
-        if isinstance(gallery_urls, str):
-            gallery_urls = [
-                item.strip()
-                for item in gallery_urls.split("|")
-                if item.strip()
-            ]
+        if (
+            product.external_image_url
+            and product.external_image_url
+            not in gallery_urls
+        ):
+            gallery_urls.insert(
+                0,
+                product.external_image_url,
+            )
+
+
         product.gallery_images.all().delete()
-        for index, image_url in enumerate(gallery_urls):
+        for index, image_url in enumerate(gallery_urls
+                                          
+        ):
             ProductImage.objects.update_or_create(
+                
                 product=product,
                 external_image_url=image_url,
                 defaults={
