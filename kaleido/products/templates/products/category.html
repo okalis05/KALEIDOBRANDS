@@ -1,24 +1,144 @@
 {% extends "brands/base.html" %}
+{% load static %}
 
 {% block title %}{{ category.name }} Products | KaleidoBrands{% endblock %}
 
+{% block meta_description %}
+{{ category.description|default:"Browse custom promotional products from KaleidoBrands."|truncatechars:155 }}
+{% endblock %}
+
 {% block body %}
-<main class="inner-page">
+<main class="inner-page marketplace-page">
+
+    <section class="product-breadcrumb-section">
+        <div class="container">
+            <div class="product-breadcrumb">
+                <a href="{% url 'brands:home' %}">Home</a>
+                <span>›</span>
+                <a href="{% url 'products:home' %}">Products</a>
+
+                {% if category.parent %}
+                    <span>›</span>
+                    <a href="{% url 'products:category' category.parent.slug %}">
+                        {{ category.parent.name }}
+                    </a>
+                {% endif %}
+
+                <span>›</span>
+                <strong>{{ category.name }}</strong>
+            </div>
+        </div>
+    </section>
+
+
     <section class="section-panel">
         <div class="container">
+
             <div class="section-heading text-center reveal">
-                <span>{{ category.icon }} Category</span>
+                <span>
+                    {{ category.icon|default:"✦" }} Product Category
+                </span>
+
                 <h1>{{ category.name }}</h1>
-                <p class="mx-auto mt-3" style="max-width:760px;">
-                    {{ category.description }}
-                </p>
+
+                {% if category.description %}
+                    <p class="mx-auto mt-3" style="max-width: 760px;">
+                        {{ category.description }}
+                    </p>
+                {% endif %}
             </div>
 
-            <form action="{% url 'products:search' %}" method="get" class="catalog-search-wrap reveal">
-                <input type="search" name="q" class="catalog-search-input" placeholder="Search within all products...">
+
+            {% if child_categories %}
+                <div class="row g-3 mt-4 justify-content-center">
+                    {% for child in child_categories %}
+                        <div class="col-md-6 col-lg-3 reveal">
+                            <a
+                                href="{% url 'products:category' child.slug %}"
+                                class="product-category-card h-100"
+                            >
+                                <div class="product-category-icon">
+                                    {{ child.icon|default:"•" }}
+                                </div>
+
+                                <h3>{{ child.name }}</h3>
+
+                                <p>
+                                    {{ child.description|default:"Browse this product group."|truncatechars:100 }}
+                                </p>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+
+            <form
+                method="get"
+                action="{% url 'products:category' category.slug %}"
+                class="product-filter-panel reveal mt-5"
+            >
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-lg-9">
+                        <label for="categorySearch">
+                            Search this category
+                        </label>
+
+                        <input
+                            id="categorySearch"
+                            type="search"
+                            name="q"
+                            value="{{ query }}"
+                            class="form-control"
+                            placeholder="Search by product, material, color, or imprint method..."
+                        >
+                    </div>
+
+                    <div class="col-lg-3 d-grid">
+                        <button
+                            class="btn btn-kb-primary"
+                            type="submit"
+                        >
+                            Search Category
+                        </button>
+                    </div>
+
+                    {% if query %}
+                        <div class="col-12">
+                            <a
+                                href="{% url 'products:category' category.slug %}"
+                                class="btn btn-kb-outline"
+                            >
+                                Clear Search
+                            </a>
+                        </div>
+                    {% endif %}
+
+                </div>
             </form>
 
-            <div class="row g-4 mt-5">
+
+            <div class="marketplace-results-heading mt-5">
+                <div>
+                    <span>Products</span>
+
+                    <h2>
+                        {{ paginator.count }}
+                        result{{ paginator.count|pluralize }}
+                    </h2>
+                </div>
+
+                {% if query %}
+                    <p>
+                        Search results for
+                        <strong>“{{ query }}”</strong>
+                    </p>
+                {% endif %}
+            </div>
+
+
+            <div class="row g-4 mt-2">
                 {% for product in products %}
                     <div class="col-md-6 col-lg-3 reveal">
                         {% include "products/partials/product_card.html" %}
@@ -26,24 +146,45 @@
                 {% empty %}
                     <div class="col-12">
                         <div class="mini-card text-center">
-                            <h4>No products in this category yet.</h4>
-                            <p>Add products in Django Admin.</p>
+                            <h3>No matching products found.</h3>
+
+                            <p>
+                                Try another search or explore a different
+                                product category.
+                            </p>
                         </div>
                     </div>
                 {% endfor %}
             </div>
 
+
+            {% include "products/partials/pagination.html" %}
+
+
             <div class="text-center mt-5">
-                <a href="{% url 'products:home' %}" class="btn btn-kb-outline btn-lg">Back to Products</a>
-                <a href="{% url 'brands:home' %}?quote=1#contact" class="btn btn-kb-primary btn-lg">Request Quote</a>
+                <a
+                    href="{% url 'products:home' %}"
+                    class="btn btn-kb-outline btn-lg"
+                >
+                    Back to Products
+                </a>
+
+                <a
+                    href="{% url 'products:quote_builder' %}"
+                    class="btn btn-kb-primary btn-lg"
+                >
+                    Build a Quote
+                </a>
             </div>
+
         </div>
     </section>
-</main>
 
+</main>
 {% endblock %}
+
+
 {% block scripts %}
-{% load static %}
 <script src="{% static 'products/js/search.js' %}"></script>
 <script src="{% static 'products/js/quote_cart.js' %}"></script>
 {% endblock %}

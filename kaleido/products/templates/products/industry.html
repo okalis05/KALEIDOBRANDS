@@ -1,0 +1,157 @@
+{% extends "brands/base.html" %}
+{% load static %}
+
+{% block title %}{{ industry.name }} Promotional Products | KaleidoBrands{% endblock %}
+
+{% block meta_description %}
+{{ industry.description|default:"Explore promotional products selected for your industry."|truncatechars:155 }}
+{% endblock %}
+
+{% block body %}
+<main class="inner-page marketplace-page">
+
+    <section class="product-breadcrumb-section">
+        <div class="container">
+            <div class="product-breadcrumb">
+                <a href="{% url 'brands:home' %}">Home</a>
+                <span>›</span>
+                <a href="{% url 'products:home' %}">Products</a>
+                <span>›</span>
+                <strong>{{ industry.name }}</strong>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>
+                    {{ industry.icon|default:"◆" }} Industry Collection
+                </span>
+
+                <h1>{{ industry.name }}</h1>
+
+                {% if industry.description %}
+                    <p class="mx-auto mt-3" style="max-width: 760px;">
+                        {{ industry.description }}
+                    </p>
+                {% endif %}
+            </div>
+
+
+            <form
+                method="get"
+                action="{% url 'products:industry' industry.slug %}"
+                class="product-filter-panel reveal mt-5"
+            >
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-lg-7">
+                        <label for="industrySearch">
+                            Search products
+                        </label>
+
+                        <input
+                            id="industrySearch"
+                            type="search"
+                            name="q"
+                            value="{{ query }}"
+                            class="form-control"
+                            placeholder="Search within {{ industry.name }} products..."
+                        >
+                    </div>
+
+                    <div class="col-lg-3">
+                        <label for="industryCategory">
+                            Category
+                        </label>
+
+                        <select
+                            id="industryCategory"
+                            name="category"
+                            class="form-control"
+                        >
+                            <option value="">All Categories</option>
+
+                            {% for category in categories %}
+                                <option
+                                    value="{{ category.slug }}"
+                                    {% if category_slug == category.slug %}selected{% endif %}
+                                >
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2 d-grid">
+                        <button
+                            class="btn btn-kb-primary"
+                            type="submit"
+                        >
+                            Apply
+                        </button>
+                    </div>
+
+                    {% if query or category_slug %}
+                        <div class="col-12">
+                            <a
+                                href="{% url 'products:industry' industry.slug %}"
+                                class="btn btn-kb-outline"
+                            >
+                                Reset Filters
+                            </a>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </form>
+
+
+            <div class="marketplace-results-heading mt-5">
+                <div>
+                    <span>Marketplace Results</span>
+
+                    <h2>
+                        {{ paginator.count }}
+                        product{{ paginator.count|pluralize }}
+                    </h2>
+                </div>
+            </div>
+
+
+            <div class="row g-4 mt-2">
+                {% for product in products %}
+                    <div class="col-md-6 col-lg-3 reveal">
+                        {% include "products/partials/product_card.html" %}
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="mini-card text-center">
+                            <h3>No products found.</h3>
+
+                            <p>
+                                Try removing a filter or browse the complete
+                                marketplace.
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+            {% include "products/partials/pagination.html" %}
+
+        </div>
+    </section>
+
+</main>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'products/js/search.js' %}"></script>
+<script src="{% static 'products/js/quote_cart.js' %}"></script>
+{% endblock %}

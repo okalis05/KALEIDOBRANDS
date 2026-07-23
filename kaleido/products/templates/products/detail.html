@@ -1,13 +1,20 @@
 {% extends "brands/base.html" %}
+{% load static %}
 
-{% block title %}{{ product.name }} | {{ product.category.name|default:"Promotional Products" }} | KaleidoBrands{% endblock %}
+{% block title %}
+{{ product.name }} | {{ product.category.name|default:"Promotional Products" }} | KaleidoBrands
+{% endblock %}
 
 {% block meta_description %}
 {{ product.short_description|default:product.description|truncatechars:155 }}
 {% endblock %}
 
 {% block meta_keywords %}
-{{ product.name }}, {{ product.category.name|default:"promotional products" }}, {{ product.decoration_methods }}, {{ product.industries }}, KaleidoBrands
+{{ product.name }},
+{{ product.category.name|default:"promotional products" }},
+{{ product.decoration_methods }},
+{{ product.industries }},
+KaleidoBrands
 {% endblock %}
 
 {% block canonical %}
@@ -26,12 +33,16 @@
 {{ request.build_absolute_uri }}
 {% endblock %}
 
-{% block og_type %}
-product
-{% endblock %}
+{% block og_type %}product{% endblock %}
 
 {% block og_image %}
-{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% elif product.external_image_url %}{{ product.external_image_url }}{% else %}https://kaleidobrands.com/static/brands/images/kb.png{% endif %}
+{% if product.image %}
+{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}
+{% elif product.external_image_url %}
+{{ product.external_image_url }}
+{% else %}
+https://kaleidobrands.com/static/brands/images/kb.png
+{% endif %}
 {% endblock %}
 
 {% block twitter_title %}
@@ -43,8 +54,15 @@ product
 {% endblock %}
 
 {% block twitter_image %}
-{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% elif product.external_image_url %}{{ product.external_image_url }}{% else %}https://kaleidobrands.com/static/brands/images/kb.png{% endif %}
+{% if product.image %}
+{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}
+{% elif product.external_image_url %}
+{{ product.external_image_url }}
+{% else %}
+https://kaleidobrands.com/static/brands/images/kb.png
+{% endif %}
 {% endblock %}
+
 
 {% block head %}
 <script type="application/ld+json">
@@ -56,40 +74,46 @@ product
     "sku": "{{ product.sku|default:product.slug|escapejs }}",
     "brand": {
         "@type": "Brand",
-        "name": "{{ product.supplier_record.name|default:'KaleidoBrands'|escapejs }}"
+        "name": "{% if product.supplier_record %}{{ product.supplier_record.name|escapejs }}{% else %}KaleidoBrands{% endif %}"
     },
-    "category": "{{ product.category.name|default:'Promotional Products'|escapejs }}",
+    "category": "{% if product.category %}{{ product.category.name|escapejs }}{% else %}Promotional Products{% endif %}",
     "image": "{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% elif product.external_image_url %}{{ product.external_image_url }}{% else %}https://kaleidobrands.com/static/brands/images/kb.png{% endif %}",
     "offers": {
         "@type": "Offer",
         "url": "{{ request.build_absolute_uri }}",
         "priceCurrency": "USD",
-        "price": "{% if product.starting_price %}{{ product.starting_price }}{% else %}0{% endif %}",
-        "availability": "{% if product.is_active %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+        "price": "{% if product.starting_price is not None %}{{ product.starting_price }}{% else %}0{% endif %}",
+        "availability": "{% if product.inventory_status == 'out_of_stock' %}https://schema.org/OutOfStock{% else %}https://schema.org/InStock{% endif %}"
     }
 }
 </script>
 {% endblock %}
 
+
 {% block body %}
-<main class="inner-page">
+<main class="inner-page marketplace-page">
 
     <div
         id="recentProductData"
         data-name="{{ product.name }}"
         data-url="{{ product.get_absolute_url }}"
-        data-category="{{ product.category.name|default:'Product' }}">
-    </div>
+        data-category="{{ product.category.name|default:'Product' }}"
+    ></div>
+
 
     <section class="product-breadcrumb-section">
         <div class="container">
             <div class="product-breadcrumb">
                 <a href="{% url 'brands:home' %}">Home</a>
                 <span>›</span>
-                <a href="{% url 'products:home' %}">Products</a>
+
+                <a href="{% url 'products:home' %}">
+                    Products
+                </a>
 
                 {% if product.category %}
                     <span>›</span>
+
                     <a href="{% url 'products:category' product.category.slug %}">
                         {{ product.category.name }}
                     </a>
@@ -101,67 +125,116 @@ product
         </div>
     </section>
 
+
     <section class="section-panel product-detail-page">
         <div class="container">
+
             <div class="row g-5 align-items-start">
 
                 <div class="col-lg-6 reveal">
                     <div class="product-gallery glass-card">
+
                         <div class="product-main-image">
                             {% if product.image %}
-                                <img id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.name }}">
+                                <img
+                                    id="mainProductImage"
+                                    src="{{ product.image.url }}"
+                                    alt="{{ product.name }}"
+                                >
                             {% elif product.external_image_url %}
-                                <img id="mainProductImage" src="{{ product.external_image_url }}" alt="{{ product.name }}">
-                            {% elif product.gallery_images.first %}
-                                <img id="mainProductImage" src="{{ product.gallery_images.first.display_url }}" alt="{{ product.name }}">
+                                <img
+                                    id="mainProductImage"
+                                    src="{{ product.external_image_url }}"
+                                    alt="{{ product.name }}"
+                                >
                             {% else %}
                                 <div class="product-detail-placeholder product-placeholder-themed large">
-                                    <span>{{ product.category.icon|default:"✨" }}</span>
-                                    <strong>{{ product.name|slice:":2"|upper }}</strong>
+                                    <span>
+                                        {{ product.category.icon|default:"✨" }}
+                                    </span>
+
+                                    <strong>
+                                        {{ product.name|slice:":2"|upper }}
+                                    </strong>
                                 </div>
                             {% endif %}
                         </div>
-
-                        {% if product.gallery_images.exists %}
+                        {% if product.gallery_images.all %}
                             <div class="product-thumbnails">
+
                                 {% if product.image %}
-                                    <button type="button" class="product-thumb active" data-image="{{ product.image.url }}">
-                                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                    <button
+                                        type="button"
+                                        class="product-thumb active"
+                                        data-image="{{ product.image.url }}"
+                                        aria-label="View primary product image"
+                                    >
+                                        <img
+                                            src="{{ product.image.url }}"
+                                            alt="{{ product.name }}"
+                                        >
                                     </button>
                                 {% elif product.external_image_url %}
-                                    <button type="button" class="product-thumb active" data-image="{{ product.external_image_url }}">
-                                        <img src="{{ product.external_image_url }}" alt="{{ product.name }}">
+                                    <button
+                                        type="button"
+                                        class="product-thumb active"
+                                        data-image="{{ product.external_image_url }}"
+                                        aria-label="View primary product image"
+                                    >
+                                        <img
+                                            src="{{ product.external_image_url }}"
+                                            alt="{{ product.name }}"
+                                        >
                                     </button>
                                 {% endif %}
 
                                 {% for item in product.gallery_images.all %}
                                     {% if item.display_url %}
-                                        <button type="button" class="product-thumb" data-image="{{ item.display_url }}">
-                                            <img src="{{ item.display_url }}" alt="{{ item.alt_text|default:product.name }}">
+                                        <button
+                                            type="button"
+                                            class="product-thumb"
+                                            data-image="{{ item.display_url }}"
+                                            aria-label="View {{ item.alt_text|default:product.name }}"
+                                        >
+                                            <img
+                                                src="{{ item.display_url }}"
+                                                alt="{{ item.alt_text|default:product.name }}"
+                                            >
                                         </button>
                                     {% endif %}
                                 {% endfor %}
+
                             </div>
-                        {% endif %}
+                    {% endif %}
+
                     </div>
                 </div>
 
+
                 <div class="col-lg-6 reveal delay-1">
                     <div class="product-info-panel">
+
                         <div class="section-heading">
-                            <span>{{ product.category.name|default:"Product" }}</span>
+                            <span>
+                                {{ product.category.name|default:"Promotional Product" }}
+                            </span>
+
                             <h1>{{ product.name }}</h1>
                         </div>
+
 
                         <p class="product-detail-copy">
                             {{ product.description|default:product.short_description }}
                         </p>
 
+
                         <div class="product-price-strip">
+
                             <div>
                                 <small>Starting Price</small>
+
                                 <strong>
-                                    {% if product.starting_price %}
+                                    {% if product.starting_price is not None %}
                                         From ${{ product.starting_price }}
                                     {% else %}
                                         Request Quote
@@ -173,36 +246,148 @@ product
                                 <small>Minimum Quantity</small>
                                 <strong>{{ product.min_quantity }}</strong>
                             </div>
+
+                            <div>
+                                <small>Availability</small>
+                                <strong>
+                                    {{ product.get_inventory_status_display|default:"Contact us" }}
+                                </strong>
+                            </div>
+
                         </div>
+
+
+                        {% if variants %}
+                            <div class="product-detail-block">
+                                <h3>Product Options</h3>
+
+                                <div class="product-variant-grid">
+                                    {% for variant in variants %}
+                                        <div
+                                            class="product-variant-card {% if variant.is_default %}is-default{% endif %}"
+                                        >
+                                            <div>
+                                                <strong>{{ variant.name }}</strong>
+
+                                                {% if variant.is_default %}
+                                                    <span class="product-tag">
+                                                        Default
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+
+                                            <ul>
+                                                {% if variant.color %}
+                                                    <li>
+                                                        Color:
+                                                        {{ variant.color }}
+                                                    </li>
+                                                {% endif %}
+
+                                                {% if variant.size %}
+                                                    <li>
+                                                        Size:
+                                                        {{ variant.size }}
+                                                    </li>
+                                                {% endif %}
+
+                                                {% if variant.material %}
+                                                    <li>
+                                                        Material:
+                                                        {{ variant.material }}
+                                                    </li>
+                                                {% endif %}
+
+                                                {% if variant.sku %}
+                                                    <li>
+                                                        SKU:
+                                                        {{ variant.sku }}
+                                                    </li>
+                                                {% endif %}
+
+                                                {% if variant.price_adjustment %}
+                                                    <li>
+                                                        Price adjustment:
+                                                        ${{ variant.price_adjustment }}
+                                                    </li>
+                                                {% endif %}
+                                            </ul>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
 
                         {% if product.color_list %}
                             <div class="product-detail-block">
-                                <h4>Available Colors</h4>
+                                <h3>Available Colors</h3>
+
                                 <div class="product-tags">
                                     {% for color in product.color_list %}
-                                        <span class="product-tag color-tag">{{ color }}</span>
+                                        <span class="product-tag color-tag">
+                                            {{ color }}
+                                        </span>
                                     {% endfor %}
                                 </div>
                             </div>
                         {% endif %}
 
-                        {% if product.decoration_list %}
+
+                        {% if product.imprint_methods.all %}
                             <div class="product-detail-block">
-                                <h4>Decoration Methods</h4>
+                                <h3>Imprint Methods</h3>
+
+                                <div class="product-tags">
+                                    {% for method in product.imprint_methods.all %}
+                                        <span class="product-tag">
+                                            {{ method.name }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                        {% elif product.decoration_list %}
+                            <div class="product-detail-block">
+                                <h3>Decoration Methods</h3>
+
                                 <div class="product-tags">
                                     {% for method in product.decoration_list %}
-                                        <span class="product-tag">{{ method }}</span>
+                                        <span class="product-tag">
+                                            {{ method }}
+                                        </span>
                                     {% endfor %}
                                 </div>
                             </div>
                         {% endif %}
 
-                        {% if product.industry_list %}
+
+                        {% if product.industry_groups.all %}
                             <div class="product-detail-block">
-                                <h4>Best For</h4>
+                                <h3>Recommended Industries</h3>
+
+                                <div class="product-tags">
+                                    {% for industry in product.industry_groups.all %}
+                                        <a
+                                            href="{% url 'products:industry' industry.slug %}"
+                                            class="product-tag industry-tag"
+                                        >
+                                            {{ industry.name }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                        {% elif product.industry_list %}
+                            <div class="product-detail-block">
+                                <h3>Best For</h3>
+
                                 <div class="product-tags">
                                     {% for industry in product.industry_list %}
-                                        <a href="{% url 'products:search' %}?q={{ industry }}" class="product-tag industry-tag">
+                                        <a
+                                            href="{% url 'products:search' %}?q={{ industry|urlencode }}"
+                                            class="product-tag industry-tag"
+                                        >
                                             {{ industry }}
                                         </a>
                                     {% endfor %}
@@ -210,9 +395,12 @@ product
                             </div>
                         {% endif %}
 
+
                         <div class="product-spec-grid">
+
                             <div>
                                 <strong>Supplier</strong>
+
                                 <span>
                                     {% if product.supplier_record %}
                                         <a href="{% url 'products:supplier_detail' product.supplier_record.slug %}">
@@ -226,12 +414,17 @@ product
 
                             <div>
                                 <strong>Lead Time</strong>
-                                <span>{{ product.lead_time|default:"Varies by product" }}</span>
+                                <span>
+                                    {{ product.lead_time|default:"Varies by product" }}
+                                </span>
                             </div>
 
                             <div>
                                 <strong>Setup Fee</strong>
-                                <span>{{ product.setup_fee|default:"Varies" }}</span>
+
+                                <span>
+                                    {{ product.setup_fee|default:"Varies" }}
+                                </span>
                             </div>
 
                             <div>
@@ -246,17 +439,24 @@ product
 
                             <div>
                                 <strong>SKU</strong>
-                                <span>{{ product.sku|default:"Available upon request" }}</span>
+
+                                <span>
+                                    {{ product.sku|default:"Available upon request" }}
+                                </span>
                             </div>
+
                         </div>
 
+
                         <div class="product-quote-panel">
+
                             <button
                                 type="button"
                                 class="save-product-btn"
                                 data-name="{{ product.name }}"
                                 data-url="{{ product.get_absolute_url }}"
-                                data-category="{{ product.category.name|default:'Product' }}">
+                                data-category="{{ product.category.name|default:'Product' }}"
+                            >
                                 Save to Quote Cart
                             </button>
 
@@ -264,33 +464,125 @@ product
                                 type="button"
                                 class="btn btn-kb-outline btn-lg w-100 share-product-btn"
                                 data-title="{{ product.name }}"
-                                data-url="{{ request.build_absolute_uri }}">
+                                data-url="{{ request.build_absolute_uri }}"
+                            >
                                 Share Product
                             </button>
 
-                            <a href="{% url 'brands:home' %}?quote=1#contact" class="btn btn-kb-primary btn-lg w-100">
-                                Request Quote
+                            <a
+                                href="{% url 'products:quote_builder' %}"
+                                class="btn btn-kb-primary btn-lg w-100"
+                            >
+                                Build a Quote
                             </a>
 
                             {% if product.supplier_url %}
-                                <a href="{{ product.supplier_url }}" target="_blank" class="btn btn-kb-outline btn-lg w-100">
+                                <a
+                                    href="{{ product.supplier_url }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="btn btn-kb-outline btn-lg w-100"
+                                >
                                     Supplier Details
                                 </a>
                             {% endif %}
+
                             {% if request.user.is_authenticated %}
-                                <a href="{% url 'customers:add_to_cart' product.slug %}" class="btn btn-kb-primary btn-lg w-100">
+                                <a
+                                    href="{% url 'customers:add_to_cart' product.slug %}"
+                                    class="btn btn-kb-primary btn-lg w-100"
+                                >
                                     Add to Cart
                                 </a>
                             {% else %}
-                                <a href="{% url 'customers:login' %}?next={{ request.path }}" class="btn btn-kb-primary btn-lg w-100">
+                                <a
+                                    href="{% url 'customers:login' %}?next={{ request.path|urlencode }}"
+                                    class="btn btn-kb-primary btn-lg w-100"
+                                >
                                     Login to Add to Cart
                                 </a>
                             {% endif %}
+
                         </div>
+
                     </div>
                 </div>
 
             </div>
+
+
+            {% if specifications %}
+                <div class="section-heading text-center mt-5 pt-5 reveal">
+                    <span>Product Details</span>
+                    <h2>Specifications</h2>
+                </div>
+
+                <div class="product-specification-table reveal">
+                    {% for specification in specifications %}
+                        <div class="{% if specification.is_highlighted %}is-highlighted{% endif %}">
+                            <strong>{{ specification.name }}</strong>
+
+                            <span>
+                                {{ specification.value }}
+                                {% if specification.unit %}
+                                    {{ specification.unit }}
+                                {% endif %}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+
+            {% if supplier_listings %}
+                <div class="section-heading text-center mt-5 pt-5 reveal">
+                    <span>Supplier Availability</span>
+                    <h2>Available supplier listings.</h2>
+                </div>
+
+                <div class="table-responsive reveal">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>Supplier</th>
+                                <th>Supplier SKU</th>
+                                <th>Minimum</th>
+                                <th>Availability</th>
+                                <th>Preferred</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for listing in supplier_listings %}
+                                <tr>
+                                    <td>{{ listing.supplier.name }}</td>
+
+                                    <td>
+                                        {{ listing.supplier_sku|default:"—" }}
+                                    </td>
+
+                                    <td>
+                                        {{ listing.minimum_order_quantity }}
+                                    </td>
+
+                                    <td>
+                                        {{ listing.get_inventory_status_display }}
+                                    </td>
+
+                                    <td>
+                                        {% if listing.is_preferred %}
+                                            Yes
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+
 
             {% if related_products %}
                 <div class="section-heading text-center mt-5 pt-5 reveal">
@@ -307,49 +599,41 @@ product
                 </div>
             {% endif %}
 
+
+            {% if recommendations %}
+                <div class="section-heading text-center mt-5 pt-5 reveal">
+                    <span>Recommended</span>
+                    <h2>More ideas selected for you.</h2>
+                </div>
+
+                <div class="row g-4 mt-4">
+                    {% for product in recommendations %}
+                        <div class="col-md-6 col-lg-3 reveal">
+                            {% include "products/partials/product_card.html" %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+
             <div class="section-heading text-center mt-5 pt-5 reveal">
                 <span>Recently Viewed</span>
                 <h2>Your recent product ideas.</h2>
             </div>
 
-            <div id="recentlyViewedProducts" class="recent-products-row reveal"></div>
+            <div
+                id="recentlyViewedProducts"
+                class="recent-products-row reveal"
+            ></div>
+
         </div>
     </section>
-    <section class="section-panel mt-5">
 
-        <div class="section-heading text-center">
-            <span>Recommended</span>
-            <h2>You May Also Like</h2>
-        </div>
-
-        <div class="row g-4 mt-4">
-
-            {% for product in recommendations %}
-
-                <div class="col-md-6 col-lg-3">
-
-                    {% include "products/partials/product_card.html" %}
-
-                </div>
-
-            {% empty %}
-
-                <div class="col-12 text-center">
-
-                    <p>No recommendations available.</p>
-
-                </div>
-
-            {% endfor %}
-
-        </div>
-
-    </section>
 </main>
 {% endblock %}
 
+
 {% block scripts %}
-{% load static %}
 <script src="{% static 'products/js/gallery.js' %}"></script>
 <script src="{% static 'products/js/product_detail.js' %}"></script>
 <script src="{% static 'products/js/quote_cart.js' %}"></script>

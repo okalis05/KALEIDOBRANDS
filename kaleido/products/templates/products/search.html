@@ -1,82 +1,506 @@
 {% extends "brands/base.html" %}
+{% load static %}
 
-{% block title %}Search Products | KaleidoBrands{% endblock %}
+{% block title %}
+Search Promotional Products | KaleidoBrands
+{% endblock %}
+
+
+{% block meta_description %}
+Search KaleidoBrands products by keyword, category, industry, collection,
+imprint method, color, material, supplier, availability, price, and quantity.
+{% endblock %}
+
+
+{% block head %}
+<link
+    rel="stylesheet"
+    href="{% static 'products/css/marketplace.css' %}"
+>
+{% endblock %}
+
 
 {% block body %}
-<main class="inner-page">
+
+<main class="inner-page marketplace-page">
+    <form id="comparisonCsrfForm" hidden>
+    {% csrf_token %}
+    </form>
     <section class="section-panel">
         <div class="container">
+
             <div class="section-heading text-center reveal">
-                <span>Search</span>
-                <h1>Product Search</h1>
-                <p class="mx-auto mt-3" style="max-width:760px;">
-                    Search promotional products by name, industry, decoration method, color, or use case.
+                <span>Marketplace Search</span>
+
+                <h1>
+                    Find the right promotional product.
+                </h1>
+
+                <p
+                    class="mx-auto mt-3"
+                    style="max-width: 760px;"
+                >
+                    Combine filters to narrow the marketplace by
+                    product type, industry, decoration, supplier,
+                    availability, pricing, and minimum order.
                 </p>
             </div>
 
-            <form action="{% url 'products:search' %}" method="get" class="product-filter-panel reveal">
-                <div class="row g-3">
-                    <div class="col-lg-5">
-                        <label>Search</label>
-                        <input type="search" name="q" value="{{ query }}" class="form-control" placeholder="scrubs, polos, tumblers, gifts...">
-                        <div id="liveResults" class="live-results"></div>
+
+            <form
+                action="{% url 'products:search' %}"
+                method="get"
+                class="product-filter-panel reveal"
+                id="marketplaceFilterForm"
+            >
+                <div class="row g-4">
+
+                    <div class="col-lg-9">
+                        <label for="{{ form.q.id_for_label }}">
+                            Search
+                        </label>
+
+                        {{ form.q }}
+
+                        <div
+                            id="liveResults"
+                            class="live-results"
+                            aria-live="polite"
+                        ></div>
                     </div>
+
 
                     <div class="col-lg-3">
-                        <label>Category</label>
-                        <select name="category" class="form-control">
-                            <option value="">All Categories</option>
-                            {% for category in categories %}
-                                <option value="{{ category.slug }}" {% if category_slug == category.slug %}selected{% endif %}>
-                                    {{ category.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
+                        <label for="{{ form.sort.id_for_label }}">
+                            Sort
+                        </label>
+
+                        {{ form.sort }}
                     </div>
 
-                    <div class="col-lg-2">
-                        <label>Max Price</label>
-                        <input type="number" step="0.01" name="max_price" value="{{ max_price }}" class="form-control" placeholder="25">
-                    </div>
-
-                    <div class="col-lg-2">
-                        <label>Min Qty ≤</label>
-                        <input type="number" name="min_quantity" value="{{ min_quantity }}" class="form-control" placeholder="100">
-                    </div>
 
                     <div class="col-12">
-                        <button class="btn btn-kb-primary" type="submit">Apply Filters</button>
-                        <a href="{% url 'products:search' %}" class="btn btn-kb-outline">Reset</a>
+                        <div class="marketplace-filter-groups">
+
+                            <details
+                                class="marketplace-filter-group"
+                                {% if form.categories.value %}open{% endif %}
+                            >
+                                <summary>
+                                    Categories
+                                    {% if form.categories.value %}
+                                        <span>
+                                            {{ form.categories.value|length }}
+                                        </span>
+                                    {% endif %}
+                                </summary>
+
+                                <div class="filter-checkbox-list">
+                                    {{ form.categories }}
+                                </div>
+                            </details>
+
+
+                            <details
+                                class="marketplace-filter-group"
+                                {% if form.industries.value %}open{% endif %}
+                            >
+                                <summary>
+                                    Industries
+                                    {% if form.industries.value %}
+                                        <span>
+                                            {{ form.industries.value|length }}
+                                        </span>
+                                    {% endif %}
+                                </summary>
+
+                                <div class="filter-checkbox-list">
+                                    {{ form.industries }}
+                                </div>
+                            </details>
+
+
+                            <details
+                                class="marketplace-filter-group"
+                                {% if form.collections.value %}open{% endif %}
+                            >
+                                <summary>
+                                    Collections
+                                    {% if form.collections.value %}
+                                        <span>
+                                            {{ form.collections.value|length }}
+                                        </span>
+                                    {% endif %}
+                                </summary>
+
+                                <div class="filter-checkbox-list">
+                                    {{ form.collections }}
+                                </div>
+                            </details>
+
+
+                            <details
+                                class="marketplace-filter-group"
+                                {% if form.imprints.value %}open{% endif %}
+                            >
+                                <summary>
+                                    Imprint Methods
+                                    {% if form.imprints.value %}
+                                        <span>
+                                            {{ form.imprints.value|length }}
+                                        </span>
+                                    {% endif %}
+                                </summary>
+
+                                <div class="filter-checkbox-list">
+                                    {{ form.imprints }}
+                                </div>
+                            </details>
+
+
+                            <details
+                                class="marketplace-filter-group"
+                                {% if form.suppliers.value %}open{% endif %}
+                            >
+                                <summary>
+                                    Suppliers
+                                    {% if form.suppliers.value %}
+                                        <span>
+                                            {{ form.suppliers.value|length }}
+                                        </span>
+                                    {% endif %}
+                                </summary>
+
+                                <div class="filter-checkbox-list">
+                                    {{ form.suppliers }}
+                                </div>
+                            </details>
+
+
+                            <details
+                                class="marketplace-filter-group"
+                                {% if form.colors.value %}open{% endif %}
+                            >
+                                <summary>
+                                    Colors
+                                    {% if form.colors.value %}
+                                        <span>
+                                            {{ form.colors.value|length }}
+                                        </span>
+                                    {% endif %}
+                                </summary>
+
+                                <div class="filter-checkbox-list">
+                                    {{ form.colors }}
+                                </div>
+                            </details>
+
+
+                            <details
+                                class="marketplace-filter-group"
+                                {% if form.materials.value %}open{% endif %}
+                            >
+                                <summary>
+                                    Materials
+                                    {% if form.materials.value %}
+                                        <span>
+                                            {{ form.materials.value|length }}
+                                        </span>
+                                    {% endif %}
+                                </summary>
+
+                                <div class="filter-checkbox-list">
+                                    {{ form.materials }}
+                                </div>
+                            </details>
+
+
+                            <details
+                                class="marketplace-filter-group"
+                                {% if form.inventory.value %}open{% endif %}
+                            >
+                                <summary>
+                                    Availability
+                                    {% if form.inventory.value %}
+                                        <span>
+                                            {{ form.inventory.value|length }}
+                                        </span>
+                                    {% endif %}
+                                </summary>
+
+                                <div class="filter-checkbox-list">
+                                    {{ form.inventory }}
+                                </div>
+                            </details>
+
+                        </div>
                     </div>
+
+
+                    <div class="col-md-6">
+                        <label for="{{ form.max_price.id_for_label }}">
+                            Maximum starting price
+                        </label>
+
+                        {{ form.max_price }}
+
+                        {% for error in form.max_price.errors %}
+                            <small class="text-danger">
+                                {{ error }}
+                            </small>
+                        {% endfor %}
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <label for="{{ form.min_quantity.id_for_label }}">
+                            Minimum order no greater than
+                        </label>
+
+                        {{ form.min_quantity }}
+
+                        {% for error in form.min_quantity.errors %}
+                            <small class="text-danger">
+                                {{ error }}
+                            </small>
+                        {% endfor %}
+                    </div>
+
+
+                    <div class="col-12 d-flex flex-wrap gap-2">
+                        <button
+                            class="btn btn-kb-primary"
+                            type="submit"
+                        >
+                            Apply Filters
+                        </button>
+
+                        <a
+                            href="{% url 'products:search' %}"
+                            class="btn btn-kb-outline"
+                        >
+                            Clear All
+                        </a>
+                    </div>
+
                 </div>
             </form>
 
-            {% if query %}
-                <p class="text-center mt-4 text-muted">
-                    Showing results for <strong>{{ query }}</strong>
-                </p>
+
+            {% if active_filter_chips %}
+                <div class="active-filter-section mt-4">
+                    <div class="active-filter-heading">
+                        <strong>Active filters</strong>
+
+                        <a href="{% url 'products:search' %}">
+                            Clear all
+                        </a>
+                    </div>
+
+                    <div class="active-filter-chips">
+                        {% for chip in active_filter_chips %}
+                            <a
+                                href="{{ chip.url }}"
+                                class="active-filter-chip"
+                                aria-label="Remove {{ chip.label }} filter {{ chip.value }}"
+                            >
+                                <span>
+                                    {{ chip.label }}:
+                                    {{ chip.value }}
+                                </span>
+
+                                <strong aria-hidden="true">
+                                    ×
+                                </strong>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
             {% endif %}
 
-            <div class="row g-4 mt-5">
+                <div class="marketplace-results-toolbar mt-5">
+
+                    <div class="marketplace-results-summary">
+
+                        {% if total_results %}
+                            <strong>
+                                {{ result_start }}–{{ result_end }}
+                            </strong>
+
+                            <span>
+                                of {{ total_results }}
+                                product{{ total_results|pluralize }}
+                            </span>
+
+                        {% else %}
+                            <strong>No products found</strong>
+
+                        {% endif %}
+
+                    </div>
+
+                    <div class="marketplace-results-controls">
+                        <a
+                            href="{% url 'products:compare' %}"
+                            class="btn btn-kb-outline marketplace-compare-link"
+                            data-compare-link
+                            {% if not compare_ids %}hidden{% endif %}
+                        >
+                            <span aria-hidden="true">⇄</span>
+
+                            <span>Compare Products</span>
+
+                            <span class="marketplace-count-badge">
+                                <span data-compare-count>
+                                    {{ compare_ids|length }}
+                                </span>
+                            </span>
+                        </a>
+
+        {% if active_filter_count %}
+
+            <span class="active-filter-count">
+                {{ active_filter_count }}
+                active filter{{ active_filter_count|pluralize }}
+            </span>
+
+        {% endif %}
+
+        {% if form.q.value %}
+
+            <span class="search-keyword">
+
+                Searching:
+
+                <strong>
+                    "{{ form.q.value }}"
+                </strong>
+
+            </span>
+
+        {% endif %}
+
+    </div>
+
+</div>
+            <div class="row g-4 mt-2">
                 {% for product in products %}
                     <div class="col-md-6 col-lg-3 reveal">
                         {% include "products/partials/product_card.html" %}
                     </div>
                 {% empty %}
                     <div class="col-12">
-                        <div class="mini-card text-center">
-                            <h4>No matching products found.</h4>
-                            <p>Try searching for apparel, drinkware, healthcare, gifts, bags, or trade shows.</p>
-                        </div>
+
+                            <div class="marketplace-empty-state">
+
+    <div class="marketplace-empty-icon">
+        ⌕
+    </div>
+
+    <h2>
+        No matching products
+    </h2>
+
+    <p>
+        Try broadening your search, removing one or more filters,
+        or request a custom quote from KaleidoBrands.
+    </p>
+
+    <div class="marketplace-empty-actions">
+
+        <a
+            href="{% url 'products:search' %}"
+            class="btn btn-kb-outline"
+        >
+            Clear Filters
+        </a>
+
+        <a
+            href="{% url 'products:quote_builder' %}"
+            class="btn btn-kb-primary"
+        >
+            Request Quote
+        </a>
+
+    </div>
+
+</div>
+
+
+                       
+
+
+
                     </div>
                 {% endfor %}
             </div>
+
+
+            {% if page_obj.has_other_pages %}
+                <nav
+                    class="marketplace-pagination mt-5"
+                    aria-label="Marketplace search results"
+                >
+                    {% if page_obj.has_previous %}
+                        <a
+                            href="?{% if pagination_query %}{{ pagination_query }}&amp;{% endif %}page={{ page_obj.previous_page_number }}"
+                            class="btn btn-kb-outline"
+                        >
+                            Previous
+                        </a>
+                    {% endif %}
+
+                    <div class="pagination-status">
+
+                        Showing
+
+                        <strong>
+
+                            {{ result_start }}
+
+                        </strong>
+
+                        –
+
+                        <strong>
+
+                            {{ result_end }}
+
+                        </strong>
+
+                        of
+
+                        <strong>
+
+                            {{ total_results }}
+
+                        </strong>
+
+                        products
+
+                    </div>
+
+                    {% if page_obj.has_next %}
+                        <a
+                            href="?{% if pagination_query %}{{ pagination_query }}&amp;{% endif %}page={{ page_obj.next_page_number }}"
+                            class="btn btn-kb-outline"
+                        >
+                            Next
+                        </a>
+                    {% endif %}
+                </nav>
+            {% endif %}
+
         </div>
     </section>
+
 </main>
 {% endblock %}
+
+
 {% block scripts %}
-{% load static %}
+    {{ block.super }}
 <script src="{% static 'products/js/search.js' %}"></script>
 <script src="{% static 'products/js/quote_cart.js' %}"></script>
+<script src="{% static 'products/js/compare.js' %}"></script>
 {% endblock %}

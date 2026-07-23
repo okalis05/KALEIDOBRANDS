@@ -1,65 +1,282 @@
 {% extends "brands/base.html" %}
 {% load static %}
 
-{% block title %}Products | KaleidoBrands{% endblock %}
+{% block title %}Promotional Products | KaleidoBrands{% endblock %}
+
+{% block meta_description %}
+Explore promotional apparel, drinkware, healthcare products, technology accessories, corporate gifts, bags, office products, and custom branded merchandise.
+{% endblock %}
 
 {% block body %}
-<main class="inner-page">
-    <section class="section-panel">
+<main class="inner-page marketplace-page">
+
+    <section class="section-panel marketplace-hero">
         <div class="container">
+
             <div class="section-heading text-center reveal">
-                <span>Product Explorer</span>
-                <h1>Browse Promotional Products</h1>
-                <p class="mx-auto mt-3" style="max-width:760px;">
-                    Explore apparel, drinkware, healthcare products, corporate gifts, trade show items, bags, office products, and technology accessories.
+                <span>Product Marketplace</span>
+
+                <h1>
+                    Promotional products built around your brand.
+                </h1>
+
+                <p class="mx-auto mt-3" style="max-width: 780px;">
+                    Explore custom apparel, drinkware, healthcare products,
+                    corporate gifts, trade-show merchandise, bags, technology
+                    accessories, and workplace essentials.
                 </p>
             </div>
 
-            <form action="{% url 'products:search' %}" method="get" class="catalog-search-wrap reveal">
-                <input type="search" name="q" class="catalog-search-input" placeholder="Search products: polos, hats, scrubs, tumblers, gifts...">
+            <form
+                action="{% url 'products:search' %}"
+                method="get"
+                class="catalog-search-wrap reveal"
+                role="search"
+            >
+                <label for="marketplaceSearch" class="visually-hidden">
+                    Search products
+                </label>
+
+                <input
+                    id="marketplaceSearch"
+                    type="search"
+                    name="q"
+                    class="catalog-search-input"
+                    placeholder="Search polos, hats, scrubs, tumblers, gifts..."
+                    autocomplete="off"
+                >
+
+                <button
+                    type="submit"
+                    class="btn btn-kb-primary"
+                >
+                    Search
+                </button>
+
+                <div
+                    id="liveResults"
+                    class="live-results"
+                    aria-live="polite"
+                ></div>
             </form>
 
-            <div class="row g-4 mt-5">
-                {% for category in categories %}
-                    <div class="col-md-6 col-lg-3 reveal">
-                        <a href="{% url 'products:category' category.slug %}" class="product-category-card">
-                            <div class="product-category-icon">{{ category.icon }}</div>
-                            <h3>{{ category.name }}</h3>
-                            <p>{{ category.description }}</p>
-                        </a>
-                    </div>
-                {% endfor %}
-            </div>
-
-            <div class="section-heading text-center mt-5 pt-5 reveal">
-                <span>Featured Products</span>
-                <h2>Popular branded product ideas.</h2>
-            </div>
-
-            <div class="row g-4 mt-4">
-                {% for product in featured %}
-                    <div class="col-md-6 col-lg-3 reveal">
-                        {% include "products/partials/product_card.html" %}
-                    </div>
-                {% empty %}
-                    <div class="col-12">
-                        <div class="mini-card text-center">
-                            <h4>No featured products yet.</h4>
-                            <p>Add products in Django Admin or run the seed command.</p>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
         </div>
     </section>
 
-    <div id="liveResults" class="live-results"></div>
+
+    {% if categories %}
+        <section class="section-panel">
+            <div class="container">
+
+                <div class="section-heading text-center reveal">
+                    <span>Browse by Category</span>
+                    <h2>Find the right product type.</h2>
+                </div>
+
+                <div class="row g-4 mt-4">
+                    {% for category in categories %}
+                        <div class="col-md-6 col-lg-3 reveal">
+                            <a
+                                href="{% url 'products:category' category.slug %}"
+                                class="product-category-card h-100"
+                            >
+                                <div class="product-category-icon">
+                                    {{ category.icon|default:"✦" }}
+                                </div>
+
+                                <h3>{{ category.name }}</h3>
+
+                                <p>
+                                    {{ category.description|default:"Explore products in this category."|truncatechars:125 }}
+                                </p>
+
+                                {% if category.children.all %}
+                                    <div class="product-category-subcategories">
+                                        {% for child in category.children.all|slice:":3" %}
+                                            {% if child.is_active %}
+                                                <span>{{ child.name }}</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </section>
+    {% endif %}
+
+
+    {% if industries %}
+        <section class="section-panel">
+            <div class="container">
+
+                <div class="section-heading text-center reveal">
+                    <span>Shop by Industry</span>
+                    <h2>Ideas selected for your organization.</h2>
+                </div>
+
+                <div class="row g-4 mt-4">
+                    {% for industry in industries %}
+                        <div class="col-md-6 col-lg-4 reveal">
+                            <a
+                                href="{% url 'products:industry' industry.slug %}"
+                                class="product-category-card h-100"
+                            >
+                                <div class="product-category-icon">
+                                    {{ industry.icon|default:"◆" }}
+                                </div>
+
+                                <h3>{{ industry.name }}</h3>
+
+                                <p>
+                                    {{ industry.description|default:"View recommended branded products for this industry."|truncatechars:145 }}
+                                </p>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </section>
+    {% endif %}
+
+
+    {% if collections %}
+        <section class="section-panel">
+            <div class="container">
+
+                <div class="section-heading text-center reveal">
+                    <span>Curated Collections</span>
+                    <h2>Product ideas organized for the moment.</h2>
+                </div>
+
+                <div class="row g-4 mt-4">
+                    {% for collection in collections %}
+                        <div class="col-md-6 col-lg-4 reveal">
+                            <a
+                                href="{% url 'products:collection' collection.slug %}"
+                                class="product-category-card h-100"
+                            >
+                                {% if collection.image %}
+                                    <div class="marketplace-collection-image">
+                                        <img
+                                            src="{{ collection.image.url }}"
+                                            alt="{{ collection.name }}"
+                                            loading="lazy"
+                                        >
+                                    </div>
+                                {% endif %}
+
+                                <h3>{{ collection.name }}</h3>
+
+                                <p>
+                                    {{ collection.description|default:"Explore this curated product collection."|truncatechars:145 }}
+                                </p>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </section>
+    {% endif %}
+
+
+    {% if featured_products %}
+        <section class="section-panel">
+            <div class="container">
+
+                <div class="section-heading text-center reveal">
+                    <span>Featured Products</span>
+                    <h2>Popular branded product ideas.</h2>
+                </div>
+
+                <div class="row g-4 mt-4">
+                    {% for product in featured_products %}
+                        <div class="col-md-6 col-lg-3 reveal">
+                            {% include "products/partials/product_card.html" %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </section>
+    {% endif %}
+
+
+    {% if newest_products %}
+        <section class="section-panel">
+            <div class="container">
+
+                <div class="section-heading text-center reveal">
+                    <span>Recently Added</span>
+                    <h2>Discover the newest marketplace products.</h2>
+                </div>
+
+                <div class="row g-4 mt-4">
+                    {% for product in newest_products %}
+                        <div class="col-md-6 col-lg-3 reveal">
+                            {% include "products/partials/product_card.html" %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </section>
+    {% endif %}
+
+
+    {% for rail in homepage_rails %}
+        <section class="section-panel marketplace-product-rail">
+            <div class="container">
+
+                <div class="section-heading text-center reveal">
+                    <span>{{ rail.get_rail_type_display }}</span>
+                    <h2>{{ rail.title }}</h2>
+
+                    {% if rail.subtitle %}
+                        <p class="mx-auto mt-3" style="max-width: 760px;">
+                            {{ rail.subtitle }}
+                        </p>
+                    {% endif %}
+                </div>
+
+                <div class="row g-4 mt-4">
+                    {% for product in rail.resolved_products %}
+                        <div class="col-md-6 col-lg-3 reveal">
+                            {% include "products/partials/product_card.html" %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </section>
+    {% endfor %}
+
+
+    {% if not featured_products and not newest_products %}
+        <section class="section-panel">
+            <div class="container">
+                <div class="mini-card text-center">
+                    <h3>Products are being prepared.</h3>
+
+                    <p>
+                        Add active products in Django Admin or run your
+                        supplier synchronization process.
+                    </p>
+                </div>
+            </div>
+        </section>
+    {% endif %}
 
 </main>
 {% endblock %}
+
+
 {% block scripts %}
-{% load static %}
-<script src="{% static 'products/js/search.js' %}"></script>
 <script src="{% static 'products/js/search.js' %}"></script>
 <script src="{% static 'products/js/quote_cart.js' %}"></script>
 {% endblock %}

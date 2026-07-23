@@ -1,97 +1,233 @@
 {% extends "brands/base.html" %}
+
 {% load static %}
 
 {% block title %}
-Quote Builder | KaleidoBrands
+    Quote Builder | KaleidoBrands
+{% endblock %}
+
+{% block meta_description %}
+    Build a custom KaleidoBrands quote using products saved in your Quote Cart or Compare Cart, adjust quantities, and submit one professional quote request.
 {% endblock %}
 
 {% block body %}
-
 <main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
 
-<section class="section-panel">
+            <div class="section-heading text-center reveal">
+                <span>Quote Builder</span>
 
-<div class="container">
+                <h1>Build Your Custom Quote</h1>
 
-<div class="section-heading text-center">
-
-<span>Quote Builder</span>
-
-<h1>Build Your Custom Quote</h1>
-
-<p>
-
-Select multiple supplier products,
-
-adjust quantities,
-
-then request one professional quote.
-
-</p>
-
-</div>
-
-<form method="post">
-
-{% csrf_token %}
-<input type="hidden" name="quote_items" id="quoteItemsJSON">
-<div class="row">
-
-<div class="col-lg-7">
-
-<div id="quoteBuilderItems">
-
-</div>
-
-</div>
-
-<div class="col-lg-5">
-
-<div class="glass-card p-4">
-
-{{ form.as_p }}
-
-<button
-class="btn btn-kb-primary w-100 btn-lg">
-
-Submit Quote Request
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</form>
-
-</div>
-<div class="section-heading text-center mt-5 pt-5 reveal">
-    <span>Helpful Add-Ons</span>
-    <h2>Recommended products for this quote.</h2>
-</div>
-
-<div class="row g-4 mt-4">
-    {% for product in recommended_products %}
-        <div class="col-md-6 col-lg-3 reveal">
-            {% include "products/partials/product_card.html" %}
-        </div>
-    {% empty %}
-        <div class="col-12">
-            <div class="mini-card text-center">
-                <h4>No recommendations yet.</h4>
-                <p>Browse products to discover suggested add-ons.</p>
+                <p
+                    class="mx-auto mt-3"
+                    style="max-width: 760px;"
+                >
+                    Review products from your Quote Cart and Compare
+                    Cart, adjust quantities, and submit one professional
+                    quote request.
+                </p>
             </div>
+
+            <form
+                method="post"
+                id="quoteBuilderForm"
+                class="quote-builder-form"
+            >
+                {% csrf_token %}
+
+                <!-- Structured quote-builder products -->
+                <input
+                    type="hidden"
+                    name="quote_items"
+                    id="quoteItemsJSON"
+                    value="[]"
+                >
+
+                <!-- Readable combined products for form submission -->
+                <textarea
+                    name="saved_products"
+                    id="savedProductsField"
+                    hidden
+                ></textarea>
+
+                <div class="row g-4 align-items-start">
+
+                    <!-- Products selected for the quote -->
+                    <div class="col-lg-7">
+                        <div class="glass-card p-4 h-100">
+
+                            <div
+                                class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-4"
+                            >
+                                <div>
+                                    <span class="section-kicker">
+                                        Selected Products
+                                    </span>
+
+                                    <h2 class="h3 mb-1">
+                                        Products Included in This Quote
+                                    </h2>
+
+                                    <p class="mb-0">
+                                        Products saved in your Quote Cart
+                                        or Compare Cart will appear below.
+                                    </p>
+                                </div>
+
+                                <span
+                                    id="savedProductsCount"
+                                    class="quote-cart-page-count"
+                                    aria-live="polite"
+                                >
+                                    0 selected products
+                                </span>
+                            </div>
+
+                            <!-- Combined Quote Cart and Compare Cart preview -->
+                            <div
+                                id="savedProductsPreview"
+                                class="saved-products-preview mb-4"
+                                aria-live="polite"
+                            ></div>
+
+                            <!-- Interactive quantity controls -->
+                            <div
+                                id="quoteBuilderItems"
+                                class="quote-builder-items"
+                                aria-live="polite"
+                            ></div>
+
+                            <div
+                                id="quoteBuilderEmpty"
+                                class="mini-card text-center"
+                                hidden
+                            >
+                                <h4>No products selected yet.</h4>
+
+                                <p>
+                                    Browse the marketplace and save products
+                                    to your Quote Cart or Compare Cart.
+                                </p>
+
+                                <a
+                                    href="{% url 'products:home' %}"
+                                    class="btn btn-kb-primary"
+                                >
+                                    Browse Products
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Customer quote information -->
+                    <div class="col-lg-5">
+                        <div class="glass-card p-4 quote-builder-sidebar">
+
+                            <div class="mb-4">
+                                <span class="section-kicker">
+                                    Request Details
+                                </span>
+
+                                <h2 class="h3 mb-2">
+                                    Tell Us About Your Project
+                                </h2>
+
+                                <p class="mb-0">
+                                    Provide your contact information,
+                                    preferred quantities, customization
+                                    requirements, and deadline.
+                                </p>
+                            </div>
+
+                            {% if form.non_field_errors %}
+                                <div
+                                    class="alert alert-danger"
+                                    role="alert"
+                                >
+                                    {{ form.non_field_errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="quote-builder-fields">
+                                {{ form.as_p }}
+                            </div>
+
+                            <button
+                                type="submit"
+                                class="btn btn-kb-primary w-100 btn-lg"
+                                id="submitQuoteButton"
+                            >
+                                Submit Quote Request
+                            </button>
+
+                            <p class="small text-center mt-3 mb-0">
+                                Submitting this form does not require
+                                payment or commit you to an order.
+                            </p>
+
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+            <!-- Recommended products -->
+            <div class="section-heading text-center mt-5 pt-5 reveal">
+                <span>Helpful Add-Ons</span>
+
+                <h2>Recommended Products for This Quote</h2>
+
+                <p
+                    class="mx-auto mt-3"
+                    style="max-width: 700px;"
+                >
+                    Consider adding these complementary products
+                    to strengthen your campaign or event package.
+                </p>
+            </div>
+
+            <div class="row g-4 mt-3">
+                {% for product in recommended_products %}
+                    <div class="col-md-6 col-lg-3 reveal">
+                        {% include "products/partials/product_card.html" %}
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="mini-card text-center">
+                            <h4>No recommendations yet.</h4>
+
+                            <p>
+                                Browse products to discover suggested
+                                add-ons for your quote.
+                            </p>
+
+                            <a
+                                href="{% url 'products:home' %}"
+                                class="btn btn-kb-outline"
+                            >
+                                Browse Products
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
         </div>
-    {% endfor %}
-</div>
-</section>
-
+    </section>
 </main>
-
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'products/js/quote_builder.js' %}"></script>
+    <!-- Combines Quote Cart and Compare Cart for this request -->
+    <script
+        src="{% static 'products/js/quote_request_products.js' %}?v=1"
+    ></script>
+
+    <!-- Builds quantities and structured quote_items JSON -->
+    <script
+        src="{% static 'products/js/quote_builder.js' %}?v=2"
+    ></script>
 {% endblock %}

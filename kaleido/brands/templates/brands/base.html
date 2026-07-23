@@ -4,32 +4,101 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}KaleidoBrands | Promotional Products, Branded Apparel & Corporate Gifts{% endblock %}</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <meta name="description" content="{% block meta_description %}KaleidoBrands provides premium promotional products, custom branded apparel, corporate gifts, catalogs, and branding solutions that help businesses create lasting impressions.{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}promotional products, branded apparel, corporate gifts, custom merchandise, business branding, custom hats, polo shirts, healthcare scrubs, KaleidoBrands{% endblock %}">
+    <title>
+        {% block title %}
+            KaleidoBrands | Promotional Products, Branded Apparel & Corporate Gifts
+        {% endblock %}
+    </title>
+
+    <meta
+        name="description"
+        content="{% block meta_description %}KaleidoBrands provides premium promotional products, custom branded apparel, corporate gifts, catalogs, and branding solutions that help businesses create lasting impressions.{% endblock %}"
+    >
+
+    <meta
+        name="keywords"
+        content="{% block meta_keywords %}promotional products, branded apparel, corporate gifts, custom merchandise, business branding, custom hats, polo shirts, healthcare scrubs, KaleidoBrands{% endblock %}"
+    >
+
     <meta name="author" content="KaleidoBrands">
     <meta name="robots" content="index, follow">
 
-    <link rel="canonical" href="{% block canonical %}https://kaleidobrands.com/{% endblock %}">
-    <link rel="icon" href="{% static 'brands/images/kb-k.png' %}">
+    <link
+        rel="canonical"
+        href="{% block canonical %}https://kaleidobrands.com/{% endblock %}"
+    >
 
-    <meta property="og:title" content="{% block og_title %}KaleidoBrands | Branding That Inspires. Impressions That Last.{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Premium promotional products, branded apparel, corporate gifts, and custom branding solutions.{% endblock %}">
-    <meta property="og:url" content="{% block og_url %}https://kaleidobrands.com/{% endblock %}">
-    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
-    <meta property="og:image" content="{% block og_image %}https://kaleidobrands.com/static/brands/images/kb.png{% endblock %}">
+    <link
+        rel="icon"
+        href="{% static 'brands/images/kb-k.png' %}"
+    >
 
+    <!-- Open Graph -->
+    <meta
+        property="og:title"
+        content="{% block og_title %}KaleidoBrands | Branding That Inspires. Impressions That Last.{% endblock %}"
+    >
+
+    <meta
+        property="og:description"
+        content="{% block og_description %}Premium promotional products, branded apparel, corporate gifts, and custom branding solutions.{% endblock %}"
+    >
+
+    <meta
+        property="og:url"
+        content="{% block og_url %}https://kaleidobrands.com/{% endblock %}"
+    >
+
+    <meta
+        property="og:type"
+        content="{% block og_type %}website{% endblock %}"
+    >
+
+    <meta
+        property="og:image"
+        content="{% block og_image %}https://kaleidobrands.com/static/brands/images/kb.png{% endblock %}"
+    >
+
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block twitter_title %}KaleidoBrands{% endblock %}">
-    <meta name="twitter:description" content="{% block twitter_description %}Premium promotional products and custom branding solutions.{% endblock %}">
-    <meta name="twitter:image" content="{% block twitter_image %}https://kaleidobrands.com/static/brands/images/kb.png{% endblock %}">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{% static 'brands/css/style.css' %}" rel="stylesheet">
+    <meta
+        name="twitter:title"
+        content="{% block twitter_title %}KaleidoBrands{% endblock %}"
+    >
 
+    <meta
+        name="twitter:description"
+        content="{% block twitter_description %}Premium promotional products and custom branding solutions.{% endblock %}"
+    >
+
+    <meta
+        name="twitter:image"
+        content="{% block twitter_image %}https://kaleidobrands.com/static/brands/images/kb.png{% endblock %}"
+    >
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Main site stylesheet -->
+    <link
+        href="{% static 'brands/css/style.css' %}"
+        rel="stylesheet"
+    >
+
+    <!-- Page-specific styles -->
+    {% block styles %}{% endblock %}
+
+    <!-- Structured data -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -56,10 +125,19 @@
     }
     </script>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9W066MEVJF"></script>
+    <!-- Google Analytics -->
+    <script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-9W066MEVJF"
+    ></script>
+
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+
+        function gtag() {
+            window.dataLayer.push(arguments);
+        }
+
         gtag("js", new Date());
         gtag("config", "G-9W066MEVJF");
     </script>
@@ -67,234 +145,712 @@
     {% block head %}{% endblock %}
 </head>
 
-<body>
+<body
+    data-quote-user="{% if request.user.is_authenticated %}user-{{ request.user.pk }}{% else %}guest{% endif %}"
+>
 
-<nav class="navbar navbar-expand-xl fixed-top kb-navbar" aria-label="Primary navigation">
-    <div class="container-fluid kb-nav-container">
-        <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'brands:home' %}#home">
-            <img src="{% static 'brands/images/kb-k.png' %}" alt="KaleidoBrands K logo" class="nav-logo">
-            <span>Kaleido<span>Brands</span></span>
-        </a>
+    <!-- Primary navigation -->
+    <nav
+        class="navbar navbar-expand-xl fixed-top kb-navbar"
+        aria-label="Primary navigation"
+    >
+        <div class="container-fluid kb-nav-container">
 
-        <button
-            class="navbar-toggler border-0 shadow-none"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#mainNav"
-            aria-controls="mainNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-        >
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <a
+                class="navbar-brand d-flex align-items-center gap-2"
+                href="{% url 'brands:home' %}#home"
+            >
+                <img
+                    src="{% static 'brands/images/kb-k.png' %}"
+                    alt="KaleidoBrands K logo"
+                    class="nav-logo"
+                >
 
-        <div class="collapse navbar-collapse" id="mainNav">
-            <ul class="navbar-nav kb-main-nav mx-xl-auto align-items-xl-center">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'brands:home' %}#home">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'brands:home' %}#about">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'brands:home' %}#services">Services</a>
-                </li>
+                <span>
+                    Kaleido<span>Brands</span>
+                </span>
+            </a>
 
-                <li class="nav-item dropdown">
+            <button
+                class="navbar-toggler border-0 shadow-none"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNav"
+                aria-controls="mainNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div
+                class="collapse navbar-collapse"
+                id="mainNav"
+            >
+                <ul
+                    class="navbar-nav kb-main-nav mx-xl-auto align-items-xl-center"
+                >
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="{% url 'brands:home' %}#home"
+                        >
+                            Home
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="{% url 'brands:home' %}#about"
+                        >
+                            About
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="{% url 'brands:home' %}#services"
+                        >
+                            Services
+                        </a>
+                    </li>
+
+                    <!-- Products dropdown -->
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="productsDropdown"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            Products
+                        </a>
+
+                        <ul
+                            class="dropdown-menu kb-dropdown"
+                            aria-labelledby="productsDropdown"
+                        >
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'products:home' %}"
+                                >
+                                    Browse Products
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'brands:home' %}#catalog"
+                                >
+                                    Catalog Hub
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'products:supplier_detail' 'kaeser-blair' %}"
+                                >
+                                    Kaeser & Blair
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'products:quote_cart' %}"
+                                >
+                                    Quote Cart
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'products:quote_builder' %}"
+                                >
+                                    Quote Builder
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'products:quote_history' %}"
+                                >
+                                    Quote History
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- Resources dropdown -->
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="resourcesDropdown"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            Resources
+                        </a>
+
+                        <ul
+                            class="dropdown-menu kb-dropdown"
+                            aria-labelledby="resourcesDropdown"
+                        >
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'brands:home' %}#process"
+                                >
+                                    Our Process
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'brands:home' %}#catalog"
+                                >
+                                    Catalogs
+                                </a>
+                            </li>
+
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'brands:home' %}#contact"
+                                >
+                                    Contact Support
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="{% url 'brands:home' %}#contact"
+                        >
+                            Contact
+                        </a>
+                    </li>
+                </ul>
+
+                <div
+                    class="kb-nav-actions d-flex align-items-xl-center gap-2"
+                >
+                    <!-- Navbar quote-cart counter -->
                     <a
-                        class="nav-link dropdown-toggle"
-                        href="#"
-                        id="productsDropdown"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
+                        class="kb-cart-link position-relative"
+                        href="{% url 'products:quote_cart' %}"
+                        aria-label="Open Quote Cart"
                     >
+                        <span
+                            class="kb-cart-label"
+                            aria-hidden="true"
+                        >
+                            🛒
+                        </span>
+
+                        <span
+                            id="quoteCartCount"
+                            class="quote-cart-count"
+                            data-quote-cart-count
+                            aria-label="Saved quote products"
+                        >
+                            0
+                        </span>
+                    </a>
+
+                    <!-- Staff navigation -->
+                    {% if request.user.is_staff %}
+                        <div class="dropdown">
+                            <button
+                                class="btn kb-nav-icon-btn dropdown-toggle"
+                                type="button"
+                                id="adminDropdown"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                Admin
+                            </button>
+
+                            <ul
+                                class="dropdown-menu dropdown-menu-end kb-dropdown kb-admin-dropdown"
+                                aria-labelledby="adminDropdown"
+                            >
+                                <li>
+                                    <h6 class="dropdown-header">
+                                        Operations
+                                    </h6>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'customers:executive_dashboard' %}"
+                                    >
+                                        Executive Dashboard
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'customers:crm_dashboard' %}"
+                                    >
+                                        CRM
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'customers:crm_analytics' %}"
+                                    >
+                                        CRM Analytics
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'customers:order_analytics' %}"
+                                    >
+                                        Order Analytics
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'customers:staff_ticket_list' %}"
+                                    >
+                                        Support Center
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'customers:staff_return_list' %}"
+                                    >
+                                        Returns Center
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'customers:shipment_list' %}"
+                                    >
+                                        Shipments
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+
+                                <li>
+                                    <h6 class="dropdown-header">
+                                        Suppliers
+                                    </h6>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'products:supplier_sync_dashboard' %}"
+                                    >
+                                        Supplier Sync
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'products:supplier_analytics' %}"
+                                    >
+                                        Supplier Analytics
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'products:supplier_inventory_dashboard' %}"
+                                    >
+                                        Inventory
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'products:purchase_order_list' %}"
+                                    >
+                                        Purchase Orders
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'products:supplier_operations_dashboard' %}"
+                                    >
+                                        Supplier Operations
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'products:recommendation_analytics' %}"
+                                    >
+                                        Recommendation Analytics
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <!-- Customer account navigation -->
+                    {% if request.user.is_authenticated %}
+                        <div class="dropdown">
+                            <button
+                                class="btn kb-account-btn dropdown-toggle"
+                                type="button"
+                                id="accountDropdown"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                My Account
+                            </button>
+
+                            <ul
+                                class="dropdown-menu dropdown-menu-end kb-dropdown"
+                                aria-labelledby="accountDropdown"
+                            >
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'customers:dashboard' %}"
+                                    >
+                                        Dashboard
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'customers:order_list' %}"
+                                    >
+                                        My Orders
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'customers:cart_detail' %}"
+                                    >
+                                        Shopping Cart
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'customers:asset_library' %}"
+                                    >
+                                        Brand Assets
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'customers:return_request_list' %}"
+                                    >
+                                        Returns
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        class="dropdown-item"
+                                        href="{% url 'customers:support_ticket_list' %}"
+                                    >
+                                        Support
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a
+                            class="btn kb-account-btn"
+                            href="{% url 'customers:login' %}"
+                        >
+                            Sign In
+                        </a>
+                    {% endif %}
+
+                    <a
+                        class="btn btn-kb-primary kb-quote-cta"
+                        href="{% url 'brands:home' %}?quote=1#contact"
+                    >
+                        Request Quote
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page content -->
+    <main>
+        {% block body %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="kb-footer">
+        <div class="container">
+            <div class="row g-4 py-5">
+
+                <div class="col-md-3">
+                    <h5>About KaleidoBrands</h5>
+
+                    <p>
+                        We help businesses create memorable brand
+                        impressions through curated promotional
+                        products, apparel, gifts, and custom branding
+                        solutions.
+                    </p>
+                </div>
+
+                <div class="col-md-3">
+                    <h5>Our Services</h5>
+
+                    <a href="{% url 'brands:home' %}#services">
+                        Promotional Products
+                    </a>
+
+                    <a href="{% url 'brands:home' %}#services">
+                        Custom Apparel
+                    </a>
+
+                    <a href="{% url 'brands:home' %}#services">
+                        Corporate Gifts
+                    </a>
+
+                    <a href="{% url 'brands:home' %}#services">
+                        Brand Strategy
+                    </a>
+                </div>
+
+                <div class="col-md-3">
+                    <h5>Information</h5>
+
+                    <a href="{% url 'brands:home' %}#about">
+                        About Us
+                    </a>
+
+                    <a href="{% url 'brands:home' %}#catalog">
+                        Catalog
+                    </a>
+
+                    <a href="{% url 'brands:home' %}#process">
+                        How It Works
+                    </a>
+
+                    <a href="{% url 'brands:home' %}?quote=1#contact">
+                        Request Quote
+                    </a>
+
+                    <a href="{% url 'products:home' %}">
                         Products
                     </a>
-                    <ul class="dropdown-menu kb-dropdown" aria-labelledby="productsDropdown">
-                        <li><a class="dropdown-item" href="{% url 'products:home' %}">Browse Products</a></li>
-                        <li><a class="dropdown-item" href="{% url 'brands:home' %}#catalog">Catalog Hub</a></li>
-                        <li><a class="dropdown-item" href="{% url 'products:supplier_detail' 'kaeser-blair' %}">Kaeser & Blair</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'products:quote_builder' %}">Quote Builder</a></li>
-                        <li><a class="dropdown-item" href="{% url 'products:quote_history' %}">Quote History</a></li>
-                    </ul>
-                </li>
 
-                <li class="nav-item dropdown">
-                    <a
-                        class="nav-link dropdown-toggle"
-                        href="#"
-                        id="resourcesDropdown"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        Resources
+                    <a href="{% url 'products:quote_cart' %}">
+                        Quote Cart
                     </a>
-                    <ul class="dropdown-menu kb-dropdown" aria-labelledby="resourcesDropdown">
-                        <li><a class="dropdown-item" href="{% url 'brands:home' %}#process">Our Process</a></li>
-                        <li><a class="dropdown-item" href="{% url 'brands:home' %}#catalog">Catalogs</a></li>
-                        <li><a class="dropdown-item" href="{% url 'brands:home' %}#contact">Contact Support</a></li>
-                    </ul>
-                </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'brands:home' %}#contact">Contact</a>
-                </li>
-            </ul>
+                    <a href="{% url 'products:quote_builder' %}">
+                        Quote Builder
+                    </a>
 
-            <div class="kb-nav-actions d-flex align-items-xl-center gap-2">
+                    <a href="{% url 'products:supplier_detail' 'kaeser-blair' %}">
+                        Kaeser & Blair Catalog
+                    </a>
 
-                <a class="kb-cart-link" href="{% url 'products:quote_cart' %}" aria-label="Open quote cart">
-                    <span class="kb-cart-label">🛒</span>
-                    <span id="quoteCartCount"   class="quote-cart-count">0</span>
-                </a>
+                    <a href="{% url 'products:quote_history' %}">
+                        Quote History
+                    </a>
 
-                {% if request.user.is_staff %}
-                <div class="dropdown">
-                    <button
-                        class="btn kb-nav-icon-btn dropdown-toggle"
-                        type="button"
-                        id="adminDropdown"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-                        Admin
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end kb-dropdown kb-admin-dropdown" aria-labelledby="adminDropdown">
-                        <li><h6 class="dropdown-header">Operations</h6></li>
-                        <li><a class="dropdown-item" href="{% url 'customers:executive_dashboard' %}">Executive Dashboard</a></li>
-                        <li><a class="dropdown-item" href="{% url 'customers:crm_dashboard' %}">CRM</a></li>
-                        <li><a class="dropdown-item" href="{% url 'customers:crm_analytics' %}">CRM Analytics</a></li>
-                        <li><a class="dropdown-item" href="{% url 'customers:order_analytics' %}">Order Analytics</a></li>
-                        <li><a class="dropdown-item" href="{% url 'customers:staff_ticket_list' %}">Support Center</a></li>
-                        <li><a class="dropdown-item" href="{% url 'customers:staff_return_list' %}">Returns Center</a></li>
-                        <li><a class="dropdown-item" href="{% url 'customers:shipment_list' %}">Shipments</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><h6 class="dropdown-header">Suppliers</h6></li>
-                        <li><a class="dropdown-item" href="{% url 'products:supplier_sync_dashboard' %}">Supplier Sync</a></li>
-                        <li><a class="dropdown-item" href="{% url 'products:supplier_analytics' %}">Supplier Analytics</a></li>
-                        <li><a class="dropdown-item" href="{% url 'products:supplier_inventory_dashboard' %}">Inventory</a></li>
-                        <li><a class="dropdown-item" href="{% url 'products:purchase_order_list' %}">Purchase Orders</a></li>
-                        <li><a class="dropdown-item" href="{% url 'products:supplier_operations_dashboard' %}">Supplier Operations</a></li>
-                        <li><a class="dropdown-item" href="{% url 'products:recommendation_analytics' %}">Recommendation Analytics</a></li>
-                    </ul>
+                    <a href="{% url 'customers:dashboard' %}">
+                        Customer Portal
+                    </a>
+
+                    <a href="{% url 'customers:asset_library' %}">
+                        Brand Assets
+                    </a>
+
+                    <a href="{% url 'customers:order_list' %}">
+                        My Orders
+                    </a>
                 </div>
-                {% endif %}
 
-                {% if request.user.is_authenticated %}
-                <div class="dropdown">
-                    <button
-                        class="btn kb-account-btn dropdown-toggle"
-                        type="button"
-                        id="accountDropdown"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
+                <div class="col-md-3">
+                    <h5>Get in Touch</h5>
+
+                    <a href="tel:+15135109397">
+                        +1 (513) 510-9397
+                    </a>
+
+                    <a href="mailto:sales@kaleidobrands.com">
+                        sales@kaleidobrands.com
+                    </a>
+
+                    <a href="mailto:helpdesk@kaleidobrands.com">
+                        helpdesk@kaleidobrands.com
+                    </a>
+
+                    <a
+                        href="https://www.google.com/maps/search/Palmyra,+PA+17078"
+                        target="_blank"
+                        rel="noopener noreferrer"
                     >
-                        My Account
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end kb-dropdown" aria-labelledby="accountDropdown">
-                        <li><a class="dropdown-item" href="{% url 'customers:dashboard' %}">Dashboard</a></li>
-                        <li><a class="dropdown-item" href="{% url 'customers:order_list' %}">My Orders</a></li>
-                        <li><a class="dropdown-item" href="{% url 'customers:cart_detail' %}">Shopping Cart</a></li>
-                        <li><a class="dropdown-item" href="{% url 'customers:asset_library' %}">Brand Assets</a></li>
-                        <li><a class="dropdown-item" href="{% url 'customers:return_request_list' %}">Returns</a></li>
-                        <li><a class="dropdown-item" href="{% url 'customers:support_ticket_list' %}">Support</a></li>
-                    </ul>
+                        Palmyra, PA 17078
+                    </a>
                 </div>
-                {% else %}
-                <a class="btn kb-account-btn" href="{% url 'customers:login' %}">Sign In</a>
-                {% endif %}
+            </div>
 
-                <a class="btn btn-kb-primary kb-quote-cta" href="{% url 'brands:home' %}?quote=1#contact">
-                    Request Quote
-                </a>
+            <div class="footer-bottom">
+                <div>
+                    © {% now "Y" %} KaleidoBrands.
+                    All rights reserved.
+                </div>
+
+                <div class="footer-socials">
+                    <a
+                        href="https://www.facebook.com/kaleidobrands/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Facebook"
+                    >
+                        <img
+                            src="{% static 'brands/images/facebook.png' %}"
+                            alt="Facebook"
+                        >
+                    </a>
+
+                    <a
+                        href="https://www.linkedin.com/company/kaleidobrands/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="LinkedIn"
+                    >
+                        <img
+                            src="{% static 'brands/images/linkedin.png' %}"
+                            alt="LinkedIn"
+                        >
+                    </a>
+
+                    <a
+                        href="https://www.google.com/maps/search/Palmyra,+PA+17078"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Location"
+                    >
+                        <img
+                            src="{% static 'brands/images/location.png' %}"
+                            alt="Location"
+                        >
+                    </a>
+                </div>
             </div>
         </div>
+    </footer>
+
+    <!-- Floating Quote Cart -->
+    <div class="floating-cart-wrap">
+        <a
+            href="{% url 'products:quote_cart' %}"
+            class="floating-quote-cart"
+            aria-label="Open Quote Cart"
+        >
+            <span
+                class="floating-cart-icon"
+                aria-hidden="true"
+            >
+                🛒
+            </span>
+
+            <span
+                id="floatingQuoteCartCount"
+                class="quote-cart-count"
+                data-quote-cart-count
+                aria-label="Saved quote products"
+            >
+                0
+            </span>
+        </a>
+
+        <div
+            id="floatingCartPreview"
+            class="floating-cart-preview"
+            aria-live="polite"
+        ></div>
     </div>
-</nav>
 
-{% block body %}{% endblock %}
+    <!-- Scroll to top -->
+    <button
+        class="scroll-top"
+        id="scrollTop"
+        type="button"
+        aria-label="Back to top"
+    >
+        ↑
+    </button>
 
-<footer class="kb-footer">
-    <div class="container">
-        <div class="row g-4 py-5">
-            <div class="col-md-3">
-                <h5>About KaleidoBrands</h5>
-                <p>We help businesses create memorable brand impressions through curated promotional products, apparel, gifts, and custom branding solutions.</p>
-            </div>
+    <!-- Quote-cart notification -->
+    <div
+        id="kbToast"
+        class="kb-toast"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
 
-            <div class="col-md-3">
-                <h5>Our Services</h5>
-                <a href="{% url 'brands:home' %}#services">Promotional Products</a>
-                <a href="{% url 'brands:home' %}#services">Custom Apparel</a>
-                <a href="{% url 'brands:home' %}#services">Corporate Gifts</a>
-                <a href="{% url 'brands:home' %}#services">Brand Strategy</a>
-            </div>
+    <!-- Bootstrap -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
 
-            <div class="col-md-3">
-                <h5>Information</h5>
-                <a href="{% url 'brands:home' %}#about">About Us</a>
-                <a href="{% url 'brands:home' %}#catalog">Catalog</a>
-                <a href="{% url 'brands:home' %}#process">How It Works</a>
-                <a href="{% url 'brands:home' %}?quote=1#contact">Request Quote</a>
-                <a href="{% url 'products:home' %}">Products</a>
-                <a href="{% url 'products:quote_cart' %}">Quote Cart</a>
-                <a href="{% url 'products:quote_builder' %}">Quote Builder</a>
-                <a href="{% url 'products:supplier_detail' 'kaeser-blair' %}">Kaeser & Blair Catalog</a>
-                <a href="{% url 'products:quote_history' %}">Quote History</a>
-                <a href="{% url 'customers:dashboard' %}">Customer Portal</a>
-                <a href="{% url 'customers:asset_library' %}">Brand Assets</a>
-                <a href="{% url 'customers:order_list' %}">My Orders</a>
-            </div>
+    <!-- Main site JavaScript -->
+    <script src="{% static 'brands/js/main.js' %}"></script>
 
-            <div class="col-md-3">
-                <h5>Get in Touch</h5>
-                <a href="tel:+15135109397">+1 (513) 510-9397</a>
-                <a href="mailto:sales@kaleidobrands.com">sales@kaleidobrands.com</a>
-                <a href="mailto:helpdesk@kaleidobrands.com">helpdesk@kaleidobrands.com</a>
-                <a href="https://www.google.com/maps/search/Palmyra,+PA+17078" target="_blank" rel="noopener noreferrer">Palmyra, PA 17078</a>
-            </div>
-        </div>
+    <!-- Quote Cart JavaScript: load exactly once -->
+    <script
+        src="{% static 'products/js/quote_cart.js' %}?v=16"
+    ></script>
 
-        <div class="footer-bottom">
-            <div>© {% now "Y" %} KaleidoBrands. All rights reserved.</div>
-
-            <div class="footer-socials">
-                <a href="https://www.facebook.com/kaleidobrands/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                    <img src="{% static 'brands/images/facebook.png' %}" alt="Facebook">
-                </a>
-
-                <a href="https://www.linkedin.com/company/kaleidobrands/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                    <img src="{% static 'brands/images/linkedin.png' %}" alt="LinkedIn">
-                </a>
-
-                <a href="https://www.google.com/maps/search/Palmyra,+PA+17078" target="_blank" rel="noopener noreferrer" aria-label="Location">
-                    <img src="{% static 'brands/images/location.png' %}" alt="Location">
-                </a>
-            </div>
-        </div>
-    </div>
-</footer>
-
-<div class="floating-cart-wrap">
-    <a href="{% url 'products:quote_cart' %}" class="floating-quote-cart" aria-label="Open quote cart">
-        🛒
-        <span id="floatingQuoteCartCount">0</span>
-    </a>
-
-    <div class="floating-cart-preview" id="floatingCartPreview"></div>
-</div>
-
-<button class="scroll-top" id="scrollTop" aria-label="Back to top">↑</button>
-
-<div id="kbToast" class="kb-toast"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{% static 'brands/js/main.js' %}"></script>
-
-{% block scripts %}{% endblock %}
+    <!-- Page-specific scripts -->
+    {% block scripts %}{% endblock %}
 
 </body>
 </html>

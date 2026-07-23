@@ -1,0 +1,434 @@
+{% extends "brands/base.html" %}
+{% load static %}
+
+{% block title %}
+Compare Products | KaleidoBrands
+{% endblock %}
+
+{% block meta_description %}
+Compare promotional products by price, minimum quantity, supplier,
+availability, material, imprint methods, and production details.
+{% endblock %}
+
+{% block head %}
+<link
+    rel="stylesheet"
+    href="{% static 'products/css/marketplace.css' %}"
+>
+{% endblock %}
+
+{% block body %}
+<main class="inner-page marketplace-page">
+    <form id="comparisonCsrfForm" hidden>
+    {% csrf_token %}
+    </form>
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>Product Comparison</span>
+
+                <h1>
+                    Compare products side by side.
+                </h1>
+
+                <p
+                    class="mx-auto mt-3"
+                    style="max-width: 760px;"
+                >
+                    Review pricing, order minimums, availability,
+                    suppliers, decoration methods, and production
+                    details before requesting a quote.
+                </p>
+            </div>
+
+
+            <div class="compare-page-toolbar reveal">
+
+                <div>
+                    <strong>
+                        {{ compare_count }}
+                    </strong>
+
+                    of
+
+                    <strong>
+                        {{ maximum_compare_products }}
+                    </strong>
+
+                    products selected
+                </div>
+
+                <div class="compare-page-actions">
+
+                    <a
+                        href="{% url 'products:search' %}"
+                        class="btn btn-kb-outline"
+                    >
+                        Add More Products
+                    </a>
+
+                    {% if products %}
+                        <button
+                            type="button"
+                            class="btn btn-kb-primary"
+                            id="clearComparisonButton"
+                            data-url="{% url 'products:compare_clear' %}"
+                        >
+                            Clear Comparison
+                        </button>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            {% if products %}
+
+                <div class="compare-table-wrapper reveal">
+
+                    <table class="product-compare-table">
+
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    Product Details
+                                </th>
+
+                                {% for product in products %}
+                                    <th
+                                        scope="col"
+                                        data-compare-column="{{ product.pk }}"
+                                    >
+
+                                        <button
+                                            type="button"
+                                            class="compare-remove-btn"
+                                            data-product-id="{{ product.pk }}"
+                                            data-remove-url="{% url 'products:compare_remove' product.pk %}"
+                                            aria-label="Remove {{ product.name }} from comparison"
+                                        >
+                                            ×
+                                        </button>
+
+                                        <div class="compare-product-image">
+
+                                            {% if product.image %}
+                                                <img
+                                                    src="{{ product.image.url }}"
+                                                    alt="{{ product.name }}"
+                                                    loading="lazy"
+                                                >
+
+                                            {% elif product.external_image_url %}
+                                                <img
+                                                    src="{{ product.external_image_url }}"
+                                                    alt="{{ product.name }}"
+                                                    loading="lazy"
+                                                >
+
+                                            {% else %}
+                                                <div class="product-placeholder-themed">
+                                                    <span>KB</span>
+                                                </div>
+                                            {% endif %}
+
+                                        </div>
+
+                                        <a
+                                            href="{{ product.get_absolute_url }}"
+                                            class="compare-product-name"
+                                        >
+                                            {{ product.name }}
+                                        </a>
+
+                                    </th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+
+
+                        <tbody>
+
+                            <tr>
+                                <th scope="row">
+                                    Category
+                                </th>
+
+                                {% for product in products %}
+                                    <td data-compare-column="{{ product.pk }}">
+                                        {% if product.category %}
+                                            {{ product.category.name }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+
+                            <tr>
+                                <th scope="row">
+                                    Supplier
+                                </th>
+
+                                {% for product in products %}
+                                    <td data-compare-column="{{ product.pk }}">
+                                        {% if product.supplier_record %}
+                                            {{ product.supplier_record.name }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+
+                            <tr>
+                                <th scope="row">
+                                    Starting Price
+                                </th>
+
+                                {% for product in products %}
+                                    <td
+                                        class="compare-price"
+                                        data-compare-column="{{ product.pk }}"
+                                    >
+                                        {% if product.starting_price %}
+                                            ${{ product.starting_price }}
+                                        {% else %}
+                                            Request quote
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+
+                            <tr>
+                                <th scope="row">
+                                    Minimum Quantity
+                                </th>
+
+                                {% for product in products %}
+                                    <td data-compare-column="{{ product.pk }}">
+                                        {% if product.min_quantity %}
+                                            {{ product.min_quantity }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+
+                            <tr>
+                                <th scope="row">
+                                    Availability
+                                </th>
+
+                                {% for product in products %}
+                                    <td data-compare-column="{{ product.pk }}">
+                                        {% if product.inventory_status %}
+                                            <span
+                                                class="compare-status status-{{ product.inventory_status|slugify }}"
+                                            >
+                                                {{ product.get_inventory_status_display }}
+                                            </span>
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+
+                            <tr>
+                                <th scope="row">
+                                    Material
+                                </th>
+
+                                {% for product in products %}
+                                    <td data-compare-column="{{ product.pk }}">
+                                        {% if product.material %}
+                                            {{ product.material }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+
+                            <tr>
+                                <th scope="row">
+                                    Available Colors
+                                </th>
+
+                                {% for product in products %}
+                                    <td data-compare-column="{{ product.pk }}">
+                                        {% if product.colors %}
+                                        <div class="compare-tag-list">
+                                            <span>
+                                                {{ product.colors }}
+                                            </span>
+                                        </div>
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+
+                            <tr>
+                                <th scope="row">
+                                    Imprint Methods
+                                </th>
+
+                                {% for product in products %}
+                                    <td data-compare-column="{{ product.pk }}">
+
+                                        {% with imprints=product.imprint_methods.all %}
+                                            {% if imprints|length %}
+                                                <div class="compare-tag-list">
+
+                                                    {% for imprint in imprints %}
+                                                        <span>
+                                                            {{ imprint.name }}
+                                                        </span>
+                                                    {% endfor %}
+
+                                                </div>
+                                            {% else %}
+                                                —
+                                            {% endif %}
+                                        {% endwith %}
+
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+
+                            <tr>
+                                <th scope="row">
+                                    Production Time
+                                </th>
+
+                                {% for product in products %}
+                                    <td data-compare-column="{{ product.pk }}">
+                                        {% if product.production_time %}
+                                            {{ product.production_time }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+
+                            <tr>
+                                <th scope="row">
+                                    Setup Fee
+                                </th>
+
+                                {% for product in products %}
+                                    <td data-compare-column="{{ product.pk }}">
+                                        {% if product.setup_fee %}
+                                            ${{ product.setup_fee }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+
+                            <tr>
+                                <th scope="row">
+                                    Actions
+                                </th>
+
+                                {% for product in products %}
+                                    <td data-compare-column="{{ product.pk }}">
+
+                                        <div class="compare-product-actions">
+
+                                            <a
+                                                href="{{ product.get_absolute_url }}"
+                                                class="btn btn-kb-outline"
+                                            >
+                                                View Product
+                                            </a>
+
+                                            <button
+                                                type="button"
+                                                class="save-product-btn"
+                                                data-product-id="{{ product.pk }}"
+                                                data-product-name="{{ product.name|escape }}"
+                                                data-product-url="{% url 'products:detail' product.slug %}"
+                                                data-product-category="{% if product.category %}{{ product.category.name|escape }}{% else %}Product{% endif %}"
+                                                data-product-price="{% if product.starting_price %}{{ product.starting_price }}{% endif %}"
+                                            >
+                                                Save Product
+                                            </button>
+
+                                        </div>
+
+                                    </td>
+                                {% endfor %}
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="marketplace-empty-state reveal">
+
+                    <div
+                        class="marketplace-empty-icon"
+                        aria-hidden="true"
+                    >
+                        ⇄
+                    </div>
+
+                    <h2>
+                        No products selected
+                    </h2>
+
+                    <p>
+                        Add up to four products from the marketplace
+                        to compare pricing, suppliers, order minimums,
+                        availability, and production details.
+                    </p>
+
+                    <div class="marketplace-empty-actions">
+
+                        <a
+                            href="{% url 'products:search' %}"
+                            class="btn btn-kb-primary"
+                        >
+                            Browse Products
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+    </section>
+
+</main>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'products/js/compare.js' %}"></script>
+<script src="{% static 'products/js/quote_cart.js' %}"></script>
+{% endblock %}

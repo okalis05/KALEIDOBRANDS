@@ -1,54 +1,212 @@
-<a href="{{ product.get_absolute_url }}" class="product-result-card">
+<article class="product-card h-100">
+
+    <a
+        href="{{ product.get_absolute_url }}"
+        class="product-card-image"
+        aria-label="View details for {{ product.name }}"
+    >
+        {% if product.image %}
+            <img
+                src="{{ product.image.url }}"
+                alt="{{ product.name }}"
+                loading="lazy"
+            >
+        {% elif product.external_image_url %}
+            <img
+                src="{{ product.external_image_url }}"
+                alt="{{ product.name }}"
+                loading="lazy"
+            >
+        {% else %}
+            <div
+                class="product-placeholder-themed"
+                aria-hidden="true"
+            >
+                <span>
+                    {% if product.category %}
+                        {{ product.category.icon|default:"✦" }}
+                    {% else %}
+                        ✦
+                    {% endif %}
+                </span>
+
+                <strong>
+                    {{ product.name|slice:":2"|upper }}
+                </strong>
+            </div>
+        {% endif %}
 
 
-    <div class="product-result-image">
+        {% if product.is_featured %}
+            <span class="featured-ribbon">
+                Featured
+            </span>
+        {% endif %}
 
-    {% if product.image %}
-        <img src="{{ product.image.url }}" alt="{{ product.name }}">
 
-    {% elif product.external_image_url %}
-        <img src="{{ product.external_image_url }}" alt="{{ product.name }}">
+        {% if product.inventory_status %}
+            <span
+                class="product-status status-{{ product.inventory_status|slugify }}"
+            >
+                {{ product.get_inventory_status_display|default:product.inventory_status }}
+            </span>
+        {% endif %}
+    </a>
 
-    {% else %}
 
-        <div class="product-placeholder product-placeholder-themed">
-            <span>{{ product.category.icon|default:"✨" }}</span>
-            <strong>{{ product.name|slice:":2"|upper }}</strong>
-        </div>
+    <div class="product-card-content">
 
-    {% endif %}
-
-    </div>
-
-    <div class="product-result-body">
-        <div class="product-card-badges">
-            <small>{{ product.category.name|default:"KaleidoBrands" }}</small>
-
-            {% if product.supplier_record %}
-                <span class="supplier-mini-badge">{{ product.supplier_record.name }}</span>
-            {% endif %}
-        </div>
-
-        <h4>{{ product.name }}</h4>
-        <p>{{ product.short_description|truncatewords:16 }}</p>
-
-        <div class="product-meta">
-            <span>Min {{ product.min_quantity }}</span>
-            {% if product.starting_price %}
-                <strong>From ${{ product.starting_price }}</strong>
+        <div class="product-card-meta">
+            {% if product.category %}
+                <a
+                    href="{% url 'products:category' product.category.slug %}"
+                >
+                    {{ product.category.name }}
+                </a>
             {% else %}
-                <strong>Quote</strong>
+                <span>
+                    Promotional Product
+                </span>
             {% endif %}
         </div>
 
-        <button
-            type="button"
-            class="save-product-btn"
-            data-name="{{ product.name }}"
-            data-url="{{ product.get_absolute_url }}"
-            data-category="{{ product.category.name|default:'Product' }}"
-            aria-label="Save {{ product.name }} to quote cart">
-            Save to Quote Cart
-        </button>
+
+        <h3 class="product-card-title">
+            <a href="{{ product.get_absolute_url }}">
+                {{ product.name }}
+            </a>
+        </h3>
+
+
+        {% if product.supplier_record %}
+            <div class="product-supplier">
+                <span>Supplier:</span>
+
+                <strong>
+                    {{ product.supplier_record.name }}
+                </strong>
+            </div>
+        {% endif %}
+
+
+        <p class="product-card-description">
+            {{ product.short_description|default:product.description|default:"Custom promotional product available from KaleidoBrands."|truncatechars:110 }}
+        </p>
+
+
+        <div class="product-pricing">
+
+            <div class="product-price">
+                <small>Starting at</small>
+
+                <strong>
+                    {% if product.starting_price is not None %}
+                        From ${{ product.starting_price|floatformat:2 }}
+                    {% else %}
+                        Request quote
+                    {% endif %}
+                </strong>
+            </div>
+
+
+            <div class="product-minimum">
+                <small>Minimum quantity</small>
+
+                <strong>
+                    {% if product.min_quantity %}
+                        MOQ {{ product.min_quantity }}
+                    {% else %}
+                        Contact us
+                    {% endif %}
+                </strong>
+            </div>
+
+
+            {% if product.setup_fee %}
+                <div class="product-setup-fee">
+                    <small>Setup fee</small>
+
+                    <strong>
+                        ${{ product.setup_fee|floatformat:2 }}
+                    </strong>
+                </div>
+            {% endif %}
+
+
+            {% if product.production_time %}
+                <div class="product-lead-time">
+                    <small>Production time</small>
+
+                    <strong>
+                        {{ product.production_time }}
+                    </strong>
+                </div>
+            {% endif %}
+
+        </div>
+
+
+        {% with industries=product.industry_groups.all %}
+        {% if industries|length %}
+                <div
+                    class="product-card-tags"
+                    aria-label="Applicable industries"
+                >
+                    {% for industry in industries|slice:":2" %}
+                        <a
+                            href="{% url 'products:industry' industry.slug %}"
+                        >
+                            {{ industry.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+
+        <div class="product-card-actions">
+
+            <a
+                href="{{ product.get_absolute_url }}"
+                class="btn btn-kb-outline"
+            >
+                View Details
+            </a>
+
+
+            <button
+                type="button"
+                class="save-product-btn"
+                data-product-id="{{ product.pk }}"
+                data-product-name="{{ product.name|escape }}"
+                data-product-url="{{ product.get_absolute_url }}"
+                data-product-category="{% if product.category %}{{ product.category.name|escape }}{% else %}Product{% endif %}"
+                data-product-price="{% if product.starting_price %}{{ product.starting_price }}{% endif %}"
+            >
+                Save Product
+            </button>
+            <button
+                type="button"
+                class="btn btn-kb-outline product-compare-btn"
+                data-compare-add
+                data-add-url="{% url 'products:compare_add' product.pk %}"
+                aria-pressed="{% if product.pk in compare_ids %}true{% else %}false{% endif %}"
+            >
+                <span aria-hidden="true">
+                    ⇄
+                </span>
+
+                <span data-compare-label>
+                    {% if product.pk in compare_ids %}
+                        Added to Compare
+                    {% else %}
+                        Compare
+                    {% endif %}
+                </span>
+            </button>
+
+        </div>
+
     </div>
-</a>
+
+</article>

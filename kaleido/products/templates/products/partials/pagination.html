@@ -1,0 +1,62 @@
+{% if page_obj and page_obj.paginator.num_pages > 1 %}
+    <nav
+        class="marketplace-pagination mt-5"
+        aria-label="Product result pages"
+    >
+        <ul class="pagination justify-content-center flex-wrap">
+
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a
+                        class="page-link"
+                        href="?{% if query %}q={{ query|urlencode }}&{% endif %}{% if category_slug %}category={{ category_slug|urlencode }}&{% endif %}{% if industry_slug %}industry={{ industry_slug|urlencode }}&{% endif %}{% if collection_slug %}collection={{ collection_slug|urlencode }}&{% endif %}{% if imprint_slug %}imprint={{ imprint_slug|urlencode }}&{% endif %}{% if max_price %}max_price={{ max_price|urlencode }}&{% endif %}{% if min_quantity %}min_quantity={{ min_quantity|urlencode }}&{% endif %}{% if sort %}sort={{ sort|urlencode }}&{% endif %}page={{ page_obj.previous_page_number }}"
+                    >
+                        Previous
+                    </a>
+                </li>
+            {% endif %}
+
+
+            {% for page_number in page_obj.paginator.page_range %}
+                {% if page_number == page_obj.number %}
+                    <li
+                        class="page-item active"
+                        aria-current="page"
+                    >
+                        <span class="page-link">
+                            {{ page_number }}
+                        </span>
+                    </li>
+
+                {% elif page_number >= page_obj.number|add:"-2" and page_number <= page_obj.number|add:"2" %}
+                    <li class="page-item">
+                        <a
+                            class="page-link"
+                            href="?{% if query %}q={{ query|urlencode }}&{% endif %}{% if category_slug %}category={{ category_slug|urlencode }}&{% endif %}{% if industry_slug %}industry={{ industry_slug|urlencode }}&{% endif %}{% if collection_slug %}collection={{ collection_slug|urlencode }}&{% endif %}{% if imprint_slug %}imprint={{ imprint_slug|urlencode }}&{% endif %}{% if max_price %}max_price={{ max_price|urlencode }}&{% endif %}{% if min_quantity %}min_quantity={{ min_quantity|urlencode }}&{% endif %}{% if sort %}sort={{ sort|urlencode }}&{% endif %}page={{ page_number }}"
+                        >
+                            {{ page_number }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a
+                        class="page-link"
+                        href="?{% if query %}q={{ query|urlencode }}&{% endif %}{% if category_slug %}category={{ category_slug|urlencode }}&{% endif %}{% if industry_slug %}industry={{ industry_slug|urlencode }}&{% endif %}{% if collection_slug %}collection={{ collection_slug|urlencode }}&{% endif %}{% if imprint_slug %}imprint={{ imprint_slug|urlencode }}&{% endif %}{% if max_price %}max_price={{ max_price|urlencode }}&{% endif %}{% if min_quantity %}min_quantity={{ min_quantity|urlencode }}&{% endif %}{% if sort %}sort={{ sort|urlencode }}&{% endif %}page={{ page_obj.next_page_number }}"
+                    >
+                        Next
+                    </a>
+                </li>
+            {% endif %}
+
+        </ul>
+
+        <p class="text-center text-muted mt-3">
+            Page {{ page_obj.number }}
+            of {{ page_obj.paginator.num_pages }}
+        </p>
+    </nav>
+{% endif %}

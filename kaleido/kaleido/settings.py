@@ -49,8 +49,8 @@ CSRF_TRUSTED_ORIGINS = [
 INSTALLED_APPS = [
     "brands",
     "dashboard",
-    "products",
     "customers",
+    "products.apps.ProductsConfig",
     "rest_framework",
     "django.contrib.sitemaps",
     "django.contrib.admin",
@@ -228,3 +228,8 @@ RETURN_NOTIFICATION_EMAIL = os.getenv(
     "sales@kaleidobrands.com",
 )
 
+KAESER_BLAIR_CSV_PATH = (
+    BASE_DIR
+    / "data"
+    / "sample_kaeser_blair_products.csv"
+)

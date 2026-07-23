@@ -1,39 +1,88 @@
 {% extends "brands/base.html" %}
 
-{% block title %}Quote Cart | KaleidoBrands{% endblock %}
+{% load static %}
+
+{% block title %}
+    Quote Cart | KaleidoBrands
+{% endblock %}
+
+{% block meta_description %}
+    Review your saved promotional product ideas and request pricing, customization options, and expert support from KaleidoBrands.
+{% endblock %}
 
 {% block body %}
 <main class="inner-page">
     <section class="section-panel">
         <div class="container">
+
             <div class="section-heading text-center reveal">
                 <span>Quote Cart</span>
+
                 <h1>Your Saved Product Ideas</h1>
-                <p class="mx-auto mt-3" style="max-width:760px;">
-                    Save products you like, then send them to KaleidoBrands for pricing and customization help.
+
+                <p
+                    class="mx-auto mt-3"
+                    style="max-width: 760px;"
+                >
+                    Save products you like, review your selections,
+                    and send them to KaleidoBrands for pricing,
+                    customization options, and expert support.
                 </p>
             </div>
 
             <div class="quote-cart-panel glass-card reveal">
+
                 <div class="quote-cart-header">
                     <div>
                         <h3>Saved Products</h3>
-                        <p>Review the products you want pricing for before submitting your quote request.</p>
+
+                        <p>
+                            Review the products you want pricing for
+                            before submitting your quote request.
+                        </p>
                     </div>
 
-                    <span id="quoteCartPageCount" class="quote-cart-page-count">0 items</span>
+                    <span
+                        id="quoteCartPageCount"
+                        class="quote-cart-page-count"
+                        data-quote-cart-page-count
+                        aria-live="polite"
+                    >
+                        0 items
+                    </span>
                 </div>
-                <div id="quoteCartItems"></div>
 
-                <div class="text-center mt-4">
-                    <a href="{% url 'brands:home' %}?quote=1#contact" class="btn btn-kb-primary btn-lg">
+                <div
+                    id="quoteCartItems"
+                    aria-live="polite"
+                ></div>
+
+                <div
+                    class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4"
+                >
+                    <a
+                        href="{% url 'brands:home' %}?quote=1#contact"
+                        class="btn btn-kb-primary btn-lg"
+                    >
                         Request Quote for Saved Ideas
                     </a>
 
-                    <button class="btn btn-kb-outline btn-lg" id="clearQuoteCart" type="button">
+                    <a
+                        href="{% url 'products:home' %}"
+                        class="btn btn-kb-outline btn-lg"
+                    >
+                        Continue Browsing
+                    </a>
+
+                    <button
+                        class="btn btn-kb-outline btn-lg"
+                        id="clearQuoteCart"
+                        type="button"
+                    >
                         Clear Saved Ideas
                     </button>
                 </div>
+
             </div>
         </div>
     </section>
@@ -41,7 +90,7 @@
 {% endblock %}
 
 {% block scripts %}
-{% load static %}
-<script src="{% static 'products/js/quote_cart.js' %}"></script>
-<script src="{% static 'products/js/recently_viewed.js' %}"></script>
+    <script
+        src="{% static 'products/js/recently_viewed.js' %}?v=2"
+    ></script>
 {% endblock %}

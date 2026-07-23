@@ -1,6 +1,6 @@
 from datetime import timedelta
 from decimal import Decimal
-
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
@@ -191,6 +191,81 @@ class MarketplaceFoundationModelTests(TestCase):
 
         self.assertTrue(
             rail.is_current,
+        )
+
+    def test_search_page_loads_without_active_filters(self):
+        response = self.client.get(
+            reverse("products:search")
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("active_filter_chips", response.context)
+        self.assertIn("active_filter_count", response.context)
+        self.assertEqual(
+            response.context["active_filter_chips"],
+            [],
+        )
+        self.assertEqual(
+            response.context["active_filter_count"],
+            0,
+        )
+
+
+    def test_search_with_no_matching_products_returns_empty_results(self):
+        response = self.client.get(
+            reverse("products:search"),
+            {
+                "q": "zzzz-no-product",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.context["total_results"],
+            0,
+        )
+        self.assertEqual(
+            response.context["result_start"],
+            0,
+        )
+        self.assertEqual(
+            response.context["result_end"],
+            0,
+        )
+        self.assertEqual(
+            response.context["active_filter_count"],
+            1,
+        )
+        self.assertContains(
+            response,
+            "No matching products",
+        )
+
+
+    def test_search_keyword_creates_active_filter_chip(self):
+        response = self.client.get(
+            reverse("products:search"),
+            {
+                "q": "shirt",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        chips = response.context["active_filter_chips"]
+
+        self.assertEqual(len(chips), 1)
+        self.assertEqual(
+            response.context["active_filter_count"],
+            1,
+        )
+        self.assertEqual(
+            chips[0]["label"],
+            "Search",
+        )
+        self.assertEqual(
+            chips[0]["value"],
+            "shirt",
         )
 
 

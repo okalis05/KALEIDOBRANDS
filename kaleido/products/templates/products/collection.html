@@ -1,0 +1,140 @@
+{% extends "brands/base.html" %}
+{% load static %}
+
+{% block title %}{{ collection.name }} | KaleidoBrands{% endblock %}
+
+{% block meta_description %}
+{{ collection.description|default:"Explore this curated promotional product collection."|truncatechars:155 }}
+{% endblock %}
+
+{% block body %}
+<main class="inner-page marketplace-page">
+
+    <section class="product-breadcrumb-section">
+        <div class="container">
+            <div class="product-breadcrumb">
+                <a href="{% url 'brands:home' %}">Home</a>
+                <span>›</span>
+                <a href="{% url 'products:home' %}">Products</a>
+                <span>›</span>
+                <strong>{{ collection.name }}</strong>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>Curated Collection</span>
+                <h1>{{ collection.name }}</h1>
+
+                {% if collection.description %}
+                    <p class="mx-auto mt-3" style="max-width: 760px;">
+                        {{ collection.description }}
+                    </p>
+                {% endif %}
+            </div>
+
+
+            {% if collection.image %}
+                <div class="marketplace-collection-hero reveal mt-4">
+                    <img
+                        src="{{ collection.image.url }}"
+                        alt="{{ collection.name }}"
+                    >
+                </div>
+            {% endif %}
+
+
+            <form
+                method="get"
+                action="{% url 'products:collection' collection.slug %}"
+                class="product-filter-panel reveal mt-5"
+            >
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-lg-9">
+                        <label for="collectionSearch">
+                            Search this collection
+                        </label>
+
+                        <input
+                            id="collectionSearch"
+                            type="search"
+                            name="q"
+                            value="{{ query }}"
+                            class="form-control"
+                            placeholder="Search products in this collection..."
+                        >
+                    </div>
+
+                    <div class="col-lg-3 d-grid">
+                        <button
+                            type="submit"
+                            class="btn btn-kb-primary"
+                        >
+                            Search
+                        </button>
+                    </div>
+
+                    {% if query %}
+                        <div class="col-12">
+                            <a
+                                href="{% url 'products:collection' collection.slug %}"
+                                class="btn btn-kb-outline"
+                            >
+                                Clear Search
+                            </a>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </form>
+
+
+            <div class="marketplace-results-heading mt-5">
+                <div>
+                    <span>Collection Products</span>
+
+                    <h2>
+                        {{ paginator.count }}
+                        result{{ paginator.count|pluralize }}
+                    </h2>
+                </div>
+            </div>
+
+
+            <div class="row g-4 mt-2">
+                {% for product in products %}
+                    <div class="col-md-6 col-lg-3 reveal">
+                        {% include "products/partials/product_card.html" %}
+                    </div>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="mini-card text-center">
+                            <h3>No products are available.</h3>
+
+                            <p>
+                                This collection may still be under development.
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+            {% include "products/partials/pagination.html" %}
+
+        </div>
+    </section>
+
+</main>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'products/js/search.js' %}"></script>
+<script src="{% static 'products/js/quote_cart.js' %}"></script>
+{% endblock %}
