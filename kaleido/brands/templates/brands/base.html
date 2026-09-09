@@ -89,6 +89,12 @@
         rel="stylesheet"
     >
 
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
     <!-- Main site stylesheet -->
     <link
         href="{% static 'brands/css/style.css' %}"
@@ -187,169 +193,252 @@
                 class="collapse navbar-collapse"
                 id="mainNav"
             >
-                <ul
-                    class="navbar-nav kb-main-nav mx-xl-auto align-items-xl-center"
-                >
-                    <li class="nav-item">
-                        <a
-                            class="nav-link"
-                            href="{% url 'brands:home' %}#home"
-                        >
-                            Home
-                        </a>
-                    </li>
 
-                    <li class="nav-item">
-                        <a
-                            class="nav-link"
-                            href="{% url 'brands:home' %}#about"
-                        >
-                            About
-                        </a>
-                    </li>
+<ul class="navbar-nav kb-main-nav mx-xl-auto align-items-xl-center">
 
-                    <li class="nav-item">
-                        <a
-                            class="nav-link"
-                            href="{% url 'brands:home' %}#services"
-                        >
-                            Services
-                        </a>
-                    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'brands:home' %}#home">
+            Home
+        </a>
+    </li>
 
-                    <!-- Products dropdown -->
-                    <li class="nav-item dropdown">
-                        <a
-                            class="nav-link dropdown-toggle"
-                            href="#"
-                            id="productsDropdown"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            Products
-                        </a>
+    <!-- PRODUCTS -->
+    <li class="nav-item dropdown">
+        <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="productsDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+        >
+            Products
+        </a>
 
-                        <ul
-                            class="dropdown-menu kb-dropdown"
-                            aria-labelledby="productsDropdown"
-                        >
-                            <li>
-                                <a
-                                    class="dropdown-item"
-                                    href="{% url 'products:home' %}"
-                                >
-                                    Browse Products
-                                </a>
-                            </li>
+        <ul
+                class="dropdown-menu kb-dropdown"
+                aria-labelledby="productsDropdown"
+            >
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'products:home' %}"
+                    >
+                        All Products
+                    </a>
+                </li>
 
-                            <li>
-                                <a
-                                    class="dropdown-item"
-                                    href="{% url 'brands:home' %}#catalog"
-                                >
-                                    Catalog Hub
-                                </a>
-                            </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'products:home' %}#categories"
+                    >
+                        Shop by Category
+                    </a>
+                </li>
 
-                            <li>
-                                <a
-                                    class="dropdown-item"
-                                    href="{% url 'products:supplier_detail' 'kaeser-blair' %}"
-                                >
-                                    Kaeser & Blair
-                                </a>
-                            </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'products:home' %}#industries"
+                    >
+                        Shop by Industry
+                    </a>
+                </li>
 
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'products:home' %}#collections"
+                    >
+                        Curated Collections
+                    </a>
+                </li>
 
-                            <li>
-                                <a
-                                    class="dropdown-item"
-                                    href="{% url 'products:quote_cart' %}"
-                                >
-                                    Quote Cart
-                                </a>
-                            </li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
 
-                            <li>
-                                <a
-                                    class="dropdown-item"
-                                    href="{% url 'products:quote_builder' %}"
-                                >
-                                    Quote Builder
-                                </a>
-                            </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'products:compare' %}"
+                    >
+                        Compare Products
+                    </a>
+                </li>
 
-                            <li>
-                                <a
-                                    class="dropdown-item"
-                                    href="{% url 'products:quote_history' %}"
-                                >
-                                    Quote History
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'products:search' %}"
+                    >
+                        Search Products
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-                    <!-- Resources dropdown -->
-                    <li class="nav-item dropdown">
-                        <a
-                            class="nav-link dropdown-toggle"
-                            href="#"
-                            id="resourcesDropdown"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            Resources
-                        </a>
 
-                        <ul
-                            class="dropdown-menu kb-dropdown"
-                            aria-labelledby="resourcesDropdown"
-                        >
-                            <li>
-                                <a
-                                    class="dropdown-item"
-                                    href="{% url 'brands:home' %}#process"
-                                >
-                                    Our Process
-                                </a>
-                            </li>
+        <!-- SHOP BY -->
+        <li class="nav-item dropdown">
+            <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="shopByDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                Shop By
+            </a>
 
-                            <li>
-                                <a
-                                    class="dropdown-item"
-                                    href="{% url 'brands:home' %}#catalog"
-                                >
-                                    Catalogs
-                                </a>
-                            </li>
+            <ul
+                class="dropdown-menu kb-dropdown"
+                aria-labelledby="shopByDropdown"
+            >
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'brands:home' %}#categories"
+                    >
+                        Product Category
+                    </a>
+                </li>
 
-                            <li>
-                                <a
-                                    class="dropdown-item"
-                                    href="{% url 'brands:home' %}#contact"
-                                >
-                                    Contact Support
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'brands:home' %}#industries"
+                    >
+                        Industry
+                    </a>
+                </li>
 
-                    <li class="nav-item">
-                        <a
-                            class="nav-link"
-                            href="{% url 'brands:home' %}#contact"
-                        >
-                            Contact
-                        </a>
-                    </li>
-                </ul>
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'brands:home' %}#collections"
+                    >
+                        Curated Collection
+                    </a>
+                </li>
 
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'brands:home' %}#new-arrivals"
+                    >
+                        New Arrivals
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'brands:home' %}#featured"
+                    >
+                        Featured Products
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
+        <!-- QUOTES -->
+        <li class="nav-item dropdown">
+            <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="quoteDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                Quotes
+            </a>
+
+            <ul
+                class="dropdown-menu kb-dropdown"
+                aria-labelledby="quoteDropdown"
+            >
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'products:quote_builder' %}"
+                    >
+                        Build a Quote
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'products:quote_cart' %}"
+                    >
+                        Quote Cart
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'products:quote_history' %}"
+                    >
+                        Quote History
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
+        <!-- RESOURCES -->
+        <li class="nav-item dropdown">
+            <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="resourcesDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                Resources
+            </a>
+
+            <ul
+                class="dropdown-menu kb-dropdown"
+                aria-labelledby="resourcesDropdown"
+            >
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'brands:home' %}#process"
+                    >
+                        How It Works
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'products:supplier_detail' 'kaeser-blair' %}"
+                    >
+                        Supplier Catalogs
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        class="dropdown-item"
+                        href="{% url 'brands:home' %}#contact"
+                    >
+                        Contact
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+    </ul>
                 <div
                     class="kb-nav-actions d-flex align-items-xl-center gap-2"
                 >
@@ -611,11 +700,11 @@
                     {% endif %}
 
                     <a
-                        class="btn btn-kb-primary kb-quote-cta"
-                        href="{% url 'brands:home' %}?quote=1#contact"
-                    >
-                        Request Quote
-                    </a>
+    class="btn btn-kb-primary kb-quote-cta"
+    href="{% url 'products:quote_builder' %}"
+>
+    Build a Quote
+</a>
                 </div>
             </div>
         </div>
@@ -641,79 +730,65 @@
                         solutions.
                     </p>
                 </div>
-
                 <div class="col-md-3">
-                    <h5>Our Services</h5>
+    <h5>Shop</h5>
 
-                    <a href="{% url 'brands:home' %}#services">
-                        Promotional Products
-                    </a>
+    <a href="{% url 'products:home' %}">
+        All Products
+    </a>
 
-                    <a href="{% url 'brands:home' %}#services">
-                        Custom Apparel
-                    </a>
+    <a href="{% url 'products:home' %}#categories">
+        Shop by Category
+    </a>
 
-                    <a href="{% url 'brands:home' %}#services">
-                        Corporate Gifts
-                    </a>
+    <a href="{% url 'products:home' %}#industries">
+        Shop by Industry
+    </a>
 
-                    <a href="{% url 'brands:home' %}#services">
-                        Brand Strategy
-                    </a>
-                </div>
+    <a href="{% url 'products:home' %}#collections">
+        Curated Collections
+    </a>
 
-                <div class="col-md-3">
-                    <h5>Information</h5>
+    <a href="{% url 'products:compare' %}">
+        Compare Products
+    </a>
 
-                    <a href="{% url 'brands:home' %}#about">
-                        About Us
-                    </a>
+    <a href="{% url 'products:search' %}">
+        Search Products
+    </a>
+</div>
 
-                    <a href="{% url 'brands:home' %}#catalog">
-                        Catalog
-                    </a>
+<div class="col-md-3">
+    <h5>Resources</h5>
 
-                    <a href="{% url 'brands:home' %}#process">
-                        How It Works
-                    </a>
+    <a href="{% url 'brands:home' %}#process">
+        How It Works
+    </a>
 
-                    <a href="{% url 'brands:home' %}?quote=1#contact">
-                        Request Quote
-                    </a>
+    <a href="{% url 'products:supplier_detail' 'kaeser-blair' %}">
+        Supplier Catalogs
+    </a>
 
-                    <a href="{% url 'products:home' %}">
-                        Products
-                    </a>
+    <a href="{% url 'products:quote_builder' %}">
+        Build a Quote
+    </a>
 
-                    <a href="{% url 'products:quote_cart' %}">
-                        Quote Cart
-                    </a>
+    <a href="{% url 'products:quote_cart' %}">
+        Quote Cart
+    </a>
 
-                    <a href="{% url 'products:quote_builder' %}">
-                        Quote Builder
-                    </a>
+    <a href="{% url 'products:quote_history' %}">
+        Quote History
+    </a>
 
-                    <a href="{% url 'products:supplier_detail' 'kaeser-blair' %}">
-                        Kaeser & Blair Catalog
-                    </a>
+    <a href="{% url 'customers:dashboard' %}">
+        Customer Portal
+    </a>
 
-                    <a href="{% url 'products:quote_history' %}">
-                        Quote History
-                    </a>
-
-                    <a href="{% url 'customers:dashboard' %}">
-                        Customer Portal
-                    </a>
-
-                    <a href="{% url 'customers:asset_library' %}">
-                        Brand Assets
-                    </a>
-
-                    <a href="{% url 'customers:order_list' %}">
-                        My Orders
-                    </a>
-                </div>
-
+    <a href="{% url 'brands:home' %}#contact">
+        Contact
+    </a>
+</div>
                 <div class="col-md-3">
                     <h5>Get in Touch</h5>
 

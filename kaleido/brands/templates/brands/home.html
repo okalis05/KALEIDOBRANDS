@@ -3,13 +3,17 @@
 
 {% block body %}
 
-<main>
+<main class="kb-home">
 
+    <!-- =========================================================
+         HERO
+    ========================================================== -->
     <section id="home" class="hero-section section-panel">
         <div class="container">
             <div class="row align-items-center min-vh-100 g-5">
+
                 <div class="col-lg-6 reveal">
-                    <div class="eyebrow">Promotional Branding Studio</div>
+                    <div class="eyebrow">Promotional Branding Marketplace</div>
 
                     <h1>
                         Branding That Inspires.
@@ -17,525 +21,752 @@
                     </h1>
 
                     <p class="hero-text">
-                        KaleidoBrands helps businesses stand out with polished promotional products,
-                        custom apparel, corporate gifts, and branded merchandise designed to leave a lasting impression.
+                        Discover promotional products, custom apparel, corporate gifts,
+                        event merchandise, and branded essentials selected to help your
+                        business make a lasting impression.
                     </p>
 
                     <div class="hero-actions">
-                        <a href="#quoteForm" class="btn btn-kb-primary btn-lg">Request a Quote</a>
-                        <a href="#catalog" class="btn btn-kb-outline btn-lg">Browse Catalogs</a>
+                        <a href="{% url 'products:home' %}" class="btn btn-kb-primary btn-lg">
+                            Shop Products
+                        </a>
+
+                        <a href="{% url 'products:quote_builder' %}"  class="btn btn-kb-outline btn-lg">
+                            Build a Quote
+                        </a>
                     </div>
 
                     <div class="hero-stats">
                         <div>
-                            <strong>Premium</strong>
+                            <strong>Curated</strong>
                             <span>Product sourcing</span>
                         </div>
+
                         <div>
                             <strong>Custom</strong>
                             <span>Brand solutions</span>
                         </div>
+
                         <div>
-                            <strong>Fast</strong>
-                            <span>Quote support</span>
+                            <strong>Simple</strong>
+                            <span>Quote workflow</span>
                         </div>
                     </div>
                 </div>
 
+
+                <!-- MARKETPLACE SHOWCASE -->
                 <div class="col-lg-6 reveal delay-1">
-                    <div class="hero-card glass-card hero-showcase">
-                        <img src="{% static 'brands/images/kb.png' %}" alt="KaleidoBrands full logo" class="hero-logo">
+                    <div class="hero-card glass-card hero-showcase hero-marketplace-showcase">
+
+                        <div class="hero-showcase-heading">
+                            <span class="hero-showcase-kicker">Explore KaleidoBrands</span>
+                            <h2>Find the right product for every brand moment.</h2>
+                            <p>
+                                Shop popular categories or browse the complete marketplace.
+                            </p>
+                        </div>
+
+                        <div class="hero-category-grid">
+
+                            <a href="{% url 'products:home' %}#categories" class="hero-category-tile">
+                                <div class="hero-category-icon">
+                                    <i class="bi bi-cup-straw" aria-hidden="true"></i>
+                                </div>
+                                <div>
+                                    <strong>Drinkware</strong>
+                                    <span>Mugs, tumblers & bottles</span>
+                                </div>
+                            </a>
+
+                            <a href="{% url 'products:home' %}#categories" class="hero-category-tile">
+                                <div class="hero-category-icon"><i class="bi bi-person-standing" aria-hidden="true"></i></div>
+                                <div>
+                                    <strong>Apparel</strong>
+                                    <span>Shirts, polos & outerwear</span>
+                                </div>
+                            </a>
+
+                            <a href="{% url 'products:home' %}#categories" class="hero-category-tile">
+                                <div class="hero-category-icon"><i class="bi bi-bag" aria-hidden="true"></i></div>
+                                <div>
+                                    <strong>Bags</strong>
+                                    <span>Totes, backpacks & travel</span>
+                                </div>
+                            </a>
+
+                            <a href="{% url 'products:home' %}#collections"  class="hero-category-tile">
+                                <div class="hero-category-icon"><i class="bi bi-gift" aria-hidden="true"></i></div>
+                                <div>
+                                    <strong>Corporate Gifts</strong>
+                                    <span>Memorable client & team gifts</span>
+                                </div>
+                            </a>
+
+                        </div>
+
+                        <div class="hero-marketplace-footer">
+                            <a href="{% url 'products:home' %}" >
+                                Browse the full marketplace →
+                            </a>
+                        </div>
+
                         <div class="floating-tag tag-one">Apparel</div>
                         <div class="floating-tag tag-two">Corporate Gifts</div>
                         <div class="floating-tag tag-three">Events</div>
+
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
 
-    <section class="trust-strip">
+
+    <!-- =========================================================
+         MARKETPLACE SEARCH
+    ========================================================== -->
+    <section class="home-search-section">
         <div class="container">
-            <div class="trust-grid">
-                <div>
+
+            <div class="home-search-panel glass-card reveal">
+
+                <div class="section-heading text-center">
+                    <span>Start Exploring</span>
+                    <h2>What are you looking for?</h2>
+                </div>
+
+                <form action="{% url 'products:search' %}" method="get" class="home-marketplace-search">
+                    <input
+                        type="search"
+                        name="q"
+                        class="catalog-search-input"
+                        placeholder="Search drinkware, apparel, bags, tech, gifts..."
+                        autocomplete="off"
+                    >
+
+                    <button type="submit" class="btn btn-kb-primary">
+                        Search Products
+                    </button>
+                </form>
+
+                <div class="home-popular-searches">
+                    <strong>Popular:</strong>
+
+                    <a href="{% url 'products:search' %}?q=drinkware">
+                        Drinkware
+                    </a>
+
+                    <a href="{% url 'products:search' %}?q=shirts">
+                        T-Shirts
+                    </a>
+
+                    <a href="{% url 'products:search' %}?q=bags">
+                        Bags
+                    </a>
+
+                    <a href="{% url 'products:search' %}?q=pens">
+                        Pens
+                    </a>
+
+                    <a href="{% url 'products:search' %}?q=gifts">
+                        Corporate Gifts
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- =========================================================
+         SHOP BY CATEGORY
+    ========================================================== -->
+    <section id="categories" class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>Shop by Category</span>
+                <h2>Start with what your brand needs.</h2>
+
+                <p class="mx-auto mt-3 home-section-copy">
+                    Explore popular promotional product categories and discover
+                    products ready for customization.
+                </p>
+            </div>
+
+
+            <div class="row g-4 mt-4">
+
+                <div class="col-sm-6 col-lg-3 reveal">
+                    <a href="{% url 'products:search' %}?q=drinkware" class="product-category-card">
+                        <div class="product-category-icon"><i class="bi bi-cup-straw" aria-hidden="true"></i></div>
+                        <h3>Drinkware</h3>
+                        <p>Mugs, tumblers, bottles, glasses and everyday favorites.</p>
+                        <span class="home-card-link">Explore Drinkware →</span>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 reveal delay-1">
+                    <a href="{% url 'products:search' %}?q=apparel" class="product-category-card">
+                        <div class="product-category-icon"><i class="bi bi-person-standing" aria-hidden="true"></i></div>
+                        <h3>Apparel</h3>
+                        <p>T-shirts, polos, jackets, uniforms and branded clothing.</p>
+                        <span class="home-card-link">Explore Apparel →</span>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 reveal delay-2">
+                    <a href="{% url 'products:search' %}?q=bags" class="product-category-card">
+                        <div class="product-category-icon"><i class="bi bi-bag" aria-hidden="true"></i></div>
+                        <h3>Bags</h3>
+                        <p>Totes, backpacks, travel bags and useful branded carriers.</p>
+                        <span class="home-card-link">Explore Bags →</span>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 reveal delay-3">
+                    <a href="{% url 'products:search' %}?q=tech" class="product-category-card">
+                        <div class="product-category-icon"><i class="bi bi-laptop" aria-hidden="true"></i></div>
+                        <h3>Tech</h3>
+                        <p>Chargers, accessories and modern branded technology.</p>
+                        <span class="home-card-link">Explore Tech →</span>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 reveal">
+                    <a href="{% url 'products:search' %}?q=writing" class="product-category-card">
+                        <div class="product-category-icon"><i class="bi bi-pencil" aria-hidden="true"></i></div>
+                        <h3>Writing</h3>
+                        <p>Pens, pencils, notebooks and practical office essentials.</p>
+                        <span class="home-card-link">Explore Writing →</span>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 reveal delay-1">
+                    <a href="{% url 'products:search' %}?q=wellness" class="product-category-card">
+                        <div class="product-category-icon"><i class="bi bi-heart-pulse" aria-hidden="true"></i></div>
+                        <h3>Wellness</h3>
+                        <p>Health, fitness and wellness products for modern campaigns.</p>
+                        <span class="home-card-link">Explore Wellness →</span>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 reveal delay-2">
+                    <a href="{% url 'products:search' %}?q=office" class="product-category-card">
+                        <div class="product-category-icon"><i class="bi bi-building" aria-hidden="true"></i></div>
+                        <h3>Office</h3>
+                        <p>Workplace essentials for employees, clients and teams.</p>
+                        <span class="home-card-link">Explore Office →</span>
+                    </a>
+                </div>
+
+                <div class="col-sm-6 col-lg-3 reveal delay-3">
+                    <a href="{% url 'products:home' %}"  class="product-category-card home-view-all-card">
+                        <div class="product-category-icon"><i class="bi bi-grid" aria-hidden="true"></i></div>
+                        <h3>View Everything</h3>
+                        <p>Explore the complete KaleidoBrands promotional marketplace.</p>
+                        <span class="home-card-link">All Products →</span>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- =========================================================
+         SHOP BY INDUSTRY
+    ========================================================== -->
+    <section id="industries" class="section-panel soft-bg">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>Shop by Industry</span>
+                <h2>Products selected around how you do business.</h2>
+            </div>
+
+            <div class="trust-grid mt-5">
+
+                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
+                     <div class="home-industry-icon">
+                        <i class="bi bi-hospital"></i>
+                    </div>
                     <strong>Healthcare</strong>
-                    <span>Scrubs, uniforms, wellness campaigns</span>
-                </div>
-                <div>
+                    <span>Uniforms, wellness campaigns and employee essentials</span>
+                </a>
+
+                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
+                    <div class="home-industry-icon">
+                        <i class="bi bi-buildings"></i>
+                    </div>
                     <strong>Corporate</strong>
-                    <span>Executive gifts and employee kits</span>
-                </div>
-                <div>
+                    <span>Employee kits, executive gifts and client appreciation</span>
+                </a>
+
+                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
+                    <div class="home-industry-icon">
+                        <i class="bi bi-mortarboard"></i>
+                    </div>
+                    <strong>Education</strong>
+                    <span>Campus events, student programs and school spirit</span>
+                </a>
+
+                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
+                    <div class="home-industry-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <strong>Hospitality</strong>
+                    <span>Guest experiences, uniforms and branded amenities</span>
+                </a>
+
+                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
+                    <div class="home-industry-icon">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
                     <strong>Events</strong>
-                    <span>Trade shows and conference giveaways</span>
-                </div>
-                <div>
+                    <span>Trade shows, conferences and memorable giveaways</span>
+                </a>
+
+                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
+                    <div class="home-industry-icon">
+                        <i class="bi bi-trophy"></i>
+                    </div>
                     <strong>Teams</strong>
-                    <span>Polos, hats, shirts and spirit wear</span>
-                </div>
+                    <span>Polos, hats, shirts, spirit wear and recognition</span>
+                </a>
+
+                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
+                    <div class="home-industry-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <strong>Nonprofits</strong>
+                    <span>Fundraisers, volunteer programs and community events</span>
+                </a>
+
+                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
+                    <div class="home-industry-icon">
+                        <i class="bi bi-tools"></i>
+                    </div>
+                    <strong>Construction</strong>
+                    <span>Worksite apparel, safety campaigns and durable giveaways</span>
+                </a>
+
             </div>
+
         </div>
     </section>
 
-    <section id="about" class="section-panel">
-        <div class="container">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-5 reveal">
-                    <div class="image-frame">
-                        <img src="{% static 'brands/images/kb-k.png' %}" alt="KaleidoBrands K symbol">
+<!-- =========================================================
+     FEATURED PRODUCTS
+========================================================== -->
+{% if featured_marketplace_products %}
+<section id="featured" class="section-panel">
+    <div class="container">
+
+        <div class="home-section-header reveal">
+            <div class="section-heading">
+                <span>Featured Products</span>
+                <h2>Popular picks worth a closer look.</h2>
+
+                <p class="mt-3 home-section-copy">
+                    Explore selected promotional products for branded
+                    merchandise, campaigns, events and business gifting.
+                </p>
+            </div>
+
+            <a href="{% url 'products:home' %}" class="btn btn-kb-outline">
+                View All Products
+            </a>
+        </div>
+
+        <div class="marketplace-page">
+            <div class="row g-4 mt-3">
+
+                {% for product in featured_marketplace_products %}
+                    <div class="col-sm-6 col-lg-3 reveal">
+                        {% include "products/partials/product_card.html" %}
                     </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endif %}
+
+
+    <!-- =========================================================
+         CURATED COLLECTIONS
+    ========================================================== -->
+    <section id="collections" class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>Curated Collections</span>
+                <h2>Ideas built around real occasions.</h2>
+
+                <p class="mx-auto mt-3 home-section-copy">
+                    Skip endless scrolling and start with collections designed
+                    around common promotional goals.
+                </p>
+            </div>
+
+            <div class="row g-4 mt-4">
+
+                <div class="col-md-6 col-lg-4 reveal">
+                    <a href="{% url 'products:home' %}#collections" class="catalog-card home-collection-card">
+                        <div class="catalog-card-top">
+                            <span>01</span>
+                            <div class="catalog-icon"><i class="bi bi-gift" aria-hidden="true"></i></div>
+                        </div>
+
+                        <h3>Employee Gifts</h3>
+                        <p>
+                            Thoughtful products for onboarding, recognition,
+                            milestones and employee appreciation.
+                        </p>
+
+                        <span class="catalog-detail-link">Explore collection →</span>
+                    </a>
                 </div>
 
-                <div class="col-lg-7 reveal delay-1">
+                <div class="col-md-6 col-lg-4 reveal delay-1">
+                    <a href="{% url 'products:home' %}#collections" class="catalog-card home-collection-card">
+                        <div class="catalog-card-top">
+                            <span>02</span>
+                            <div class="catalog-icon"><i class="bi bi-calendar-event" aria-hidden="true"></i></div>
+                        </div>
+
+                        <h3>Trade Show Essentials</h3>
+                        <p>
+                            High-visibility products designed for conferences,
+                            events, booths and brand activations.
+                        </p>
+
+                        <span class="catalog-detail-link">Explore collection →</span>
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-lg-4 reveal delay-2">
+                    <a href="{% url 'products:home' %}#collections" class="catalog-card home-collection-card">
+                        <div class="catalog-card-top">
+                            <span>03</span>
+                            <div class="catalog-icon"><i class="bi bi-award" aria-hidden="true"></i></div>
+                        </div>
+
+                        <h3>Executive Gifts</h3>
+                        <p>
+                            Elevated gifts for important clients, leadership
+                            teams and business milestones.
+                        </p>
+
+                        <span class="catalog-detail-link">Explore collection →</span>
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-lg-4 reveal">
+                    <a href="{% url 'products:home' %}#collections" class="catalog-card home-collection-card">
+                        <div class="catalog-card-top">
+                            <span>04</span>
+                            <div class="catalog-icon"><i class="bi bi-cash-stack" aria-hidden="true"></i></div>
+                        </div>
+
+                        <h3>Budget-Friendly Picks</h3>
+                        <p>
+                            Promotional ideas made for larger quantities and
+                            campaigns with tighter budgets.
+                        </p>
+
+                        <span class="catalog-detail-link">Explore collection →</span>
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-lg-4 reveal delay-1">
+                    <a href="{% url 'products:home' %}#collections" class="catalog-card home-collection-card">
+                        <div class="catalog-card-top">
+                            <span>05</span>
+                            <div class="catalog-icon"><i class="bi bi-flower1" aria-hidden="true"></i></div>
+                        </div>
+
+                        <h3>Eco-Conscious Picks</h3>
+                        <p>
+                            Products and materials suited to sustainability-focused
+                            brand campaigns.
+                        </p>
+
+                        <span class="catalog-detail-link">Explore collection →</span>
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-lg-4 reveal delay-2">
+                    <a href="{% url 'products:home' %}#collections" class="catalog-card home-collection-card">
+                        <div class="catalog-card-top">
+                            <span>06</span>
+                            <div class="catalog-icon"><i class="bi bi-gift" aria-hidden="true"></i></div>
+                        </div>
+
+                        <h3>Holiday Gifts</h3>
+                        <p>
+                            Seasonal appreciation ideas for customers,
+                            employees and business partners.
+                        </p>
+
+                        <span class="catalog-detail-link">Explore collection →</span>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- =========================================================
+     NEW ARRIVALS
+    ========================================================== -->
+    {% if newest_marketplace_products %}
+    <section id="new-arrivals" class="section-panel soft-bg">
+        <div class="container">
+
+            <div class="home-section-header reveal">
+                <div class="section-heading">
+                    <span>New Arrivals</span>
+                    <h2>Fresh additions to the marketplace.</h2>
+
+                    <p class="mt-3 home-section-copy">
+                        Discover recently added products and new supplier
+                        selections available through KaleidoBrands.
+                    </p>
+                </div>
+
+                <a href="{% url 'products:home' %}" class="btn btn-kb-outline">
+                    Explore Marketplace
+                </a>
+            </div>
+
+            <div class="marketplace-page">
+                <div class="row g-4 mt-3">
+
+                    {% for product in newest_marketplace_products %}
+                        <div class="col-sm-6 col-lg-3 reveal">
+                            {% include "products/partials/product_card.html" %}
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+    {% endif %}
+
+
+    <!-- =========================================================
+         MARKETPLACE CTA
+    ========================================================== -->
+    <section class="section-panel soft-bg">
+        <div class="container">
+
+            <div class="home-marketplace-cta glass-card reveal">
+
+                <div>
                     <div class="section-heading">
-                        <span>About Us</span>
-                        <h2>A polished branding partner for businesses that want to be remembered.</h2>
+                        <span>Marketplace</span>
+                        <h2>Thousands of possibilities. One place to start.</h2>
                     </div>
 
                     <p>
-                        KaleidoBrands was created to make promotional branding simple, elegant, and effective.
-                        We help businesses choose products that match their identity, audience, budget, and goals.
+                        Browse the KaleidoBrands marketplace, save products,
+                        compare options and build a quote around your project.
                     </p>
-
-                    <div class="row g-3 mt-4">
-                        <div class="col-md-6">
-                            <div class="mini-card border-blue">
-                                <h4>Strategic Product Selection</h4>
-                                <p>We help you choose useful, attractive, and brand-aligned products.</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="mini-card border-red">
-                                <h4>Clean Brand Presentation</h4>
-                                <p>Your logo, colors, and message are handled with professional attention.</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="mini-card border-gold">
-                                <h4>Reliable Support</h4>
-                                <p>From idea to delivery, we guide the process with clear communication.</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="mini-card border-blue">
-                                <h4>Lasting Impressions</h4>
-                                <p>We focus on products people keep, use, and remember.</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+
+                <div class="home-marketplace-cta-actions">
+                    <a href="{% url 'products:home' %}"  class="btn btn-kb-primary btn-lg">
+                        Browse Products
+                    </a>
+
+                    <a href="{% url 'products:compare' %}"  class="btn btn-kb-outline btn-lg">
+                        Compare Products
+                    </a>
+                </div>
+
             </div>
+
         </div>
     </section>
 
-    <section id="services" class="section-panel soft-bg">
-    <div class="container">
-        <div class="section-heading text-center reveal">
-            <span>Services</span>
-            <h2>Everything your brand needs to look sharp and stay visible.</h2>
-        </div>
 
-        <div class="row g-4 mt-4">
-            <div class="col-md-6 col-lg-3 reveal">
-                <div class="service-card">
-                    <div class="service-mark red-mark"></div>
-                    <h3>Promotional Products</h3>
-                    <p>Pens, drinkware, bags, tech accessories, event items, office gifts, and everyday brand essentials.</p>
-                </div>
+    <!-- =========================================================
+         PROCESS
+    ========================================================== -->
+    <section id="process" class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>How It Works</span>
+                <h2>From product discovery to delivery.</h2>
             </div>
 
-            <div class="col-md-6 col-lg-3 reveal delay-1">
-                <div class="service-card">
-                    <div class="service-mark blue-mark"></div>
-                    <h3>Custom Apparel</h3>
-                    <p>Branded shirts, polos, hats, jackets, uniforms, and team apparel for organizations and events.</p>
-                </div>
-            </div>
+            <div class="timeline mt-5">
 
-            <div class="col-md-6 col-lg-3 reveal delay-2">
-                <div class="service-card">
-                    <div class="service-mark gold-mark"></div>
-                    <h3>Corporate Gifts</h3>
-                    <p>Elegant appreciation gifts for clients, employees, teams, conferences, and business milestones.</p>
-                </div>
-            </div>
+                <div class="timeline-item reveal">
+                    <div class="timeline-number">1</div>
 
-            <div class="col-md-6 col-lg-3 reveal delay-3">
-                <div class="service-card">
-                    <div class="service-mark blue-mark"></div>
-                    <h3>Brand Consulting</h3>
-                    <p>Guidance on product selection, logo placement, colors, campaign ideas, and presentation quality.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="catalog" class="section-panel">
-    <div class="container">
-        <div class="section-heading text-center reveal">
-            <span>Catalog Hub</span>
-            <h2>Explore promotional products built for real business visibility.</h2>
-            <p class="mx-auto mt-3" style="max-width:760px;">
-                Browse curated categories for apparel, drinkware, office products, event giveaways,
-                employee gifts, client appreciation, and custom branded merchandise.
-            </p>
-        </div>
-
-        <div class="catalog-search-wrap reveal">
-            <input type="search" id="catalogSearch" class="catalog-search-input" placeholder="Search catalogs: polos, hats, scrubs, drinkware, gifts, trade shows...">
-        </div>
-
-        <div class="row g-4 mt-4" id="catalogCards">
-            {% for category in catalog_categories %}
-                <div class="col-md-6 col-lg-4 catalog-card-wrap" data-title="{{ category.title|lower }}" data-keywords="{{ category.keywords|lower }}">
-                    <div class="catalog-card glass-card">
-                        <div class="catalog-card-top">
-                            <span>{{ forloop.counter|stringformat:"02d" }}</span>
-                            <div class="catalog-icon">{{ category.icon }}</div>
-                        </div>
-
-                        <h3>{{ category.title }}</h3>
-                        <p>{{ category.description }}</p>
-
-                        {% if category.links %}
-                            <div class="catalog-mini-links">
-                                {% for link in category.links %}
-                                    <a href="{{ link.url }}" target="_blank">{{ link.label }}</a>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-
-                        <a href="#quoteForm" class="catalog-detail-link">Request {{ category.title }} ideas →</a>
+                    <div>
+                        <h3>Discover</h3>
+                        <p>
+                            Browse products, categories, industries and curated
+                            collections to find the right ideas.
+                        </p>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
 
-        <div class="main-catalog-frame reveal mt-5">
-            <div class="ratio ratio-16x9 shadow rounded-5 overflow-hidden">
-                <iframe
-                    src="https://online.flippingbook.com/view/1003101311/"
-                    title="KaleidoBrands Main Catalog"
-                    allowfullscreen
-                    loading="lazy"
-                    style="border:0;">
-                </iframe>
+                <div class="timeline-item reveal delay-1">
+                    <div class="timeline-number">2</div>
+
+                    <div>
+                        <h3>Build your quote</h3>
+                        <p>
+                            Save products and tell us your quantity, budget,
+                            deadline and branding requirements.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item reveal delay-2">
+                    <div class="timeline-number">3</div>
+
+                    <div>
+                        <h3>Approve your design</h3>
+                        <p>
+                            Review product details, decoration options, artwork
+                            placement and final specifications.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item reveal delay-3">
+                    <div class="timeline-number">4</div>
+
+                    <div>
+                        <h3>Bring your brand to life</h3>
+                        <p>
+                            Once approved, your promotional products move
+                            through production and toward delivery.
+                        </p>
+                    </div>
+                </div>
+
             </div>
-        </div>
-    </div>
-</section>
 
-<section id="featured" class="section-panel soft-bg">
-    <div class="container">
-        <div class="section-heading text-center reveal">
-            <span>Featured Ideas</span>
-            <h2>Popular promotional products that move fast.</h2>
         </div>
+    </section>
 
-        <div class="row g-4 mt-4">
-            {% for product in featured_products %}
+
+    <!-- =========================================================
+         WHY KALEIDOBRANDS
+    ========================================================== -->
+    <section class="section-panel soft-bg">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
+                <span>Why KaleidoBrands</span>
+                <h2>More than a product search.</h2>
+            </div>
+
+            <div class="row g-4 mt-4">
+
                 <div class="col-md-6 col-lg-3 reveal">
-                    <div class="product-card">
-                        <div class="product-icon">{{ product.icon }}</div>
-                        <h4>{{ product.title }}</h4>
-                        <p>{{ product.description }}</p>
-                        <a href="#quoteForm">Request quote</a>
+                    <div class="mini-card border-red">
+                        <h4>Curated Sourcing</h4>
+                        <p>
+                            Discover useful products selected around your
+                            audience, budget and brand goals.
+                        </p>
                     </div>
                 </div>
-            {% endfor %}
+
+                <div class="col-md-6 col-lg-3 reveal delay-1">
+                    <div class="mini-card border-blue">
+                        <h4>Brand Expertise</h4>
+                        <p>
+                            Match products with decoration methods, colors and
+                            presentation that support your brand.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3 reveal delay-2">
+                    <div class="mini-card border-gold">
+                        <h4>Easy Quoting</h4>
+                        <p>
+                            Save your selections, share project details and
+                            keep product ideas organized in one place.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3 reveal delay-3">
+                    <div class="mini-card border-blue">
+                        <h4>Dedicated Support</h4>
+                        <p>
+                            Get help navigating product selection, artwork,
+                            quantities and project requirements.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
-    </div>
-</section>
+    </section>
 
-<section id="process" class="section-panel">
-    <div class="container">
-        <div class="section-heading text-center reveal">
-            <span>Process</span>
-            <h2>Simple, clear, and built around your brand goals.</h2>
-        </div>
 
-        <div class="timeline mt-5">
-            <div class="timeline-item reveal">
-                <div class="timeline-number">1</div>
-                <div>
-                    <h3>Tell us your goal</h3>
-                    <p>Share your event, audience, budget, logo, deadline, and brand style.</p>
-                </div>
-            </div>
+    <!-- =========================================================
+         FINAL CTA
+    ========================================================== -->
+    <section id="contact" class="section-panel">
+        <div class="container">
 
-            <div class="timeline-item reveal delay-1">
-                <div class="timeline-number">2</div>
-                <div>
-                    <h3>We curate product ideas</h3>
-                    <p>You receive clean, practical product options that fit your business needs.</p>
-                </div>
-            </div>
+            <div class="home-final-cta glass-card reveal">
 
-            <div class="timeline-item reveal delay-2">
-                <div class="timeline-number">3</div>
-                <div>
-                    <h3>You approve the design</h3>
-                    <p>We review placement, colors, mockups, and final details before production.</p>
-                </div>
-            </div>
-
-            <div class="timeline-item reveal delay-3">
-                <div class="timeline-number">4</div>
-                <div>
-                    <h3>Your brand gets delivered</h3>
-                    <p>Your finished promotional products are prepared to create lasting impressions.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="section-panel soft-bg">
-    <div class="container">
-        <div class="section-heading text-center reveal">
-            <span>Why Choose Us</span>
-            <h2>Built for businesses that care about presentation.</h2>
-        </div>
-
-        <div class="row g-4 mt-4">
-            <div class="col-md-4 reveal">
-                <div class="mini-card border-red">
-                    <h4>Concierge Support</h4>
-                    <p>You get product guidance instead of guessing through thousands of items alone.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4 reveal delay-1">
-                <div class="mini-card border-blue">
-                    <h4>Clean Quote Workflow</h4>
-                    <p>Upload your logo, share your goals, and receive organized next steps.</p>
-                </div>
-            </div>
-
-            <div class="col-md-4 reveal delay-2">
-                <div class="mini-card border-gold">
-                    <h4>Professional Brand Fit</h4>
-                    <p>We help match products, colors, decoration, and timing to your campaign.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="contact" class="section-panel contact-section">
-    <div class="container">
-        <div class="row g-5 align-items-start">
-            <div class="col-lg-5 reveal">
-                <div class="section-heading">
-                    <span>Contact & Quote</span>
-                    <h2>Ready to build your next brand impression?</h2>
+                <div class="section-heading text-center">
+                    <span>Ready When You Are</span>
+                    <h2>Let's create something worth remembering.</h2>
                 </div>
 
                 <p>
-                    Send us a message or request a quote for promotional products,
-                    custom apparel, corporate gifts, events, teams, or branded merchandise.
+                    Already know what you need? Start a quote.
+                    Still exploring? Browse the marketplace and save your favorites.
                 </p>
 
-                <div class="contact-options">
-                    <a href="tel:+15135109397">Call: 513-510-9397</a>
-                    <a href="mailto:helpdesk@kaleidobrands.com">Support: helpdesk@kaleidobrands.com</a>
-                    <a href="mailto:sales@kaleidobrands.com">Quotes: sales@kaleidobrands.com</a>
-                    <a href="sms:+15135109397">Text: 513-510-9397</a>
+                <div class="hero-actions justify-content-center">
+                    <a href="{% url 'products:quote_builder' %}" class="btn btn-kb-primary btn-lg">
+                        Build a Quote
+                    </a>
+
+                    <a href="{% url 'products:home' %}" class="btn btn-kb-outline btn-lg">
+                        Shop Products
+                    </a>
                 </div>
-            </div>
 
-            <div class="col-lg-7 reveal delay-1">
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-success rounded-4 shadow-sm">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-
-                <ul class="nav nav-pills mb-4 gap-2" id="contactTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active btn-kb-tab" id="message-tab" data-bs-toggle="pill" data-bs-target="#messageForm" type="button" role="tab">
-                            Send Message
-                        </button>
-                    </li>
-
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link btn-kb-tab" id="quote-tab" data-bs-toggle="pill" data-bs-target="#quoteForm" type="button" role="tab">
-                            Request Quote
-                        </button>
-                    </li>
-                </ul>
-
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="messageForm" role="tabpanel">
-                        <div class="contact-card glass-card">
-                            <form method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="form_type" value="contact">
-
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label>Name</label>
-                                        <input type="text" name="name" class="form-control" required>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Email</label>
-                                        <input type="email" name="email" class="form-control" required>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Phone</label>
-                                        <input type="text" name="phone" class="form-control">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Company</label>
-                                        <input type="text" name="company" class="form-control">
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label>Subject</label>
-                                        <input type="text" name="subject" class="form-control" placeholder="How can we help?">
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label>Message</label>
-                                        <textarea name="message" rows="5" class="form-control" required></textarea>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
-                                            Send Message
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane fade" id="quoteForm" role="tabpanel">
-                        <div class="contact-card glass-card">
-                            <form method="post" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <input type="hidden" name="form_type" value="quote">
-                                <input type="hidden" name="saved_products" id="savedProductsField">
-                                <div id="savedProductsPreview" class="saved-products-preview"></div>
-
-                                <div class="quote-progress">
-                                    <span class="active">1 Product</span>
-                                    <span>2 Details</span>
-                                    <span>3 Artwork</span>
-                                    <span>4 Submit</span>
-                                </div>
-
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label>Name</label>
-                                        <input type="text" name="name" class="form-control" required>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Email</label>
-                                        <input type="email" name="email" class="form-control" required>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Phone</label>
-                                        <input type="text" name="phone" class="form-control">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Company</label>
-                                        <input type="text" name="company" class="form-control">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Product Interest</label>
-                                        <select name="product_interest" class="form-control" required>
-                                            <option value="">Select a product category</option>
-                                            <option value="Healthcare Scrubs">Healthcare Scrubs</option>
-                                            <option value="Polo Shirts">Polo Shirts</option>
-                                            <option value="Hats">Hats</option>
-                                            <option value="Custom T-Shirts">Custom T-Shirts</option>
-                                            <option value="Drinkware">Drinkware</option>
-                                            <option value="Bags">Bags</option>
-                                            <option value="Corporate Gifts">Corporate Gifts</option>
-                                            <option value="Trade Show Giveaways">Trade Show Giveaways</option>
-                                            <option value="Other">Other</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Quantity</label>
-                                        <input type="number" name="quantity" min="1" class="form-control" placeholder="Example: 100">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Budget</label>
-                                        <input type="text" name="budget" class="form-control" placeholder="$500 - $2,000">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Deadline</label>
-                                        <input type="date" name="deadline" class="form-control">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Company Logo</label>
-                                        <input type="file" name="logo" class="form-control" accept=".png,.jpg,.jpeg,.svg,.pdf,.ai,.eps">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Artwork / Design Files</label>
-                                        <input type="file" name="artwork" class="form-control" accept=".png,.jpg,.jpeg,.pdf,.ai,.eps,.psd">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Imprint Colors</label>
-                                        <input type="text" name="colors" class="form-control" placeholder="Red, White, Blue">
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label>Decoration Method</label>
-                                        <select name="decoration" class="form-control">
-                                            <option value="Not Sure">Not Sure</option>
-                                            <option value="Embroidery">Embroidery</option>
-                                            <option value="Screen Printing">Screen Printing</option>
-                                            <option value="DTF Printing">DTF Printing</option>
-                                            <option value="Heat Transfer">Heat Transfer</option>
-                                            <option value="Laser Engraving">Laser Engraving</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label>Additional Details</label>
-                                        <textarea name="message" rows="5" class="form-control" placeholder="Tell us product colors, logo placement, event date, audience, and any catalog item numbers." required></textarea>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <button class="btn btn-kb-primary w-100 btn-lg" type="submit">
-                                            Submit Quote Request
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                <div class="home-contact-mini">
+                    <a href="tel:+15135109397">513-510-9397</a>
+                    <span>•</span>
+                    <a href="mailto:sales@kaleidobrands.com">sales@kaleidobrands.com</a>
                 </div>
 
             </div>
+
         </div>
-    </div>
-</section>
+    </section>
 
 </main>
 
 {% endblock %}
-{% block scripts %}
-{% load static %}
-<script src="{% static 'products/js/quote_cart.js' %}"></script>
-{% endblock %}
+
+

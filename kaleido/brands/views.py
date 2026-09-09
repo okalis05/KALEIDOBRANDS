@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.core.mail import EmailMessage
 from .models import ContactMessage, QuoteRequest
+from products.models import Product
 
 
 CATALOG_CATEGORIES = [
@@ -172,11 +173,54 @@ Project Details:
             messages.success(request, "Thank you. Your quote request has been sent.")
             return redirect("brands:home")
 
+
+
+
+
+    featured_marketplace_products = (
+        Product.objects
+        .filter(
+            is_active=True,
+            is_featured=True,
+        )
+        .select_related(
+            "category",
+            "supplier_record",
+        )
+        .prefetch_related(
+            "gallery_images",
+        )
+        .order_by("-updated_at")[:8]
+    )
+
+    newest_marketplace_products = (
+        Product.objects
+        .filter(
+            is_active=True,
+        )
+        .select_related(
+            "category",
+            "supplier_record",
+        )
+        .prefetch_related(
+            "gallery_images",
+        )
+        .order_by("-created_at")[:8]
+)
+
+
+
+
+
+
     return render(
         request,
         "brands/home.html",
         {
             "catalog_categories": CATALOG_CATEGORIES,
             "featured_products": FEATURED_PRODUCTS,
+            "featured_marketplace_products": featured_marketplace_products,
+            "newest_marketplace_products": newest_marketplace_products,
+            
         },
     )
