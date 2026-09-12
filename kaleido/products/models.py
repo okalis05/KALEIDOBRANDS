@@ -306,7 +306,7 @@ class Product(models.Model):
 
     supplier_price = models.DecimalField(
         max_digits=10,
-        decimal_places=2,
+        decimal_places=4,
         null=True,
         blank=True,
     )
@@ -580,6 +580,77 @@ class Product(models.Model):
         return ""
 
 
+class SupplierPriceBreak(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="supplier_price_breaks",
+    )
+
+    min_quantity = models.PositiveIntegerField()
+
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=4,
+    )
+
+    price_uom = models.CharField(
+        max_length=20,
+        blank=True,
+    )
+
+    discount_code = models.CharField(
+        max_length=20,
+        blank=True,
+    )
+
+    part_id = models.CharField(
+        max_length=100,
+        blank=True,
+    )
+
+    part_description = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+
+    effective_date = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    expiry_date = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        ordering = [
+            "min_quantity",
+        ]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "product",
+                    "part_id",
+                    "min_quantity",
+                ],
+                name=(
+                    "unique_supplier_product_"
+                    "part_price_break"
+                ),
+            )
+        ]
+
+    def __str__(self):
+        return (
+            f"{self.product} - "
+            f"{self.min_quantity}+ @ "
+            f"${self.price}"
+        )
+    
+
 class ProductImage(models.Model):
     product = models.ForeignKey(
         Product,
@@ -697,6 +768,7 @@ class SupplierSyncLog(models.Model):
             f"{supplier_name} sync - "
             f"{self.status}"
         )
+
 
 
 from .models_recommendations import *

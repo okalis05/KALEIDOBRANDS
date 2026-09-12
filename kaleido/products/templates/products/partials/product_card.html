@@ -3,25 +3,26 @@
     <a
         href="{{ product.get_absolute_url }}"
         class="product-card-image"
-        aria-label="View details for {{ product.name }}"
+        aria-label="View {{ product.name }}"
     >
         {% if product.image %}
             <img
                 src="{{ product.image.url }}"
                 alt="{{ product.name }}"
                 loading="lazy"
+                width="600"
+                height="600"
             >
         {% elif product.external_image_url %}
             <img
                 src="{{ product.external_image_url }}"
                 alt="{{ product.name }}"
                 loading="lazy"
+                width="600"
+                height="600"
             >
         {% else %}
-            <div
-                class="product-placeholder-themed"
-                aria-hidden="true"
-            >
+            <div class="product-placeholder-themed" aria-hidden="true">
                 <span>
                     {% if product.category %}
                         {{ product.category.icon|default:"✦" }}
@@ -30,46 +31,38 @@
                     {% endif %}
                 </span>
 
-                <strong>
-                    {{ product.name|slice:":2"|upper }}
-                </strong>
+                <strong>{{ product.name|slice:":2"|upper }}</strong>
             </div>
         {% endif %}
 
+        <div class="product-card-badges">
+            {% if product.is_featured %}
+                <span class="featured-ribbon">
+                    Featured
+                </span>
+            {% endif %}
 
-        {% if product.is_featured %}
-            <span class="featured-ribbon">
-                Featured
-            </span>
-        {% endif %}
-
-
-        {% if product.inventory_status %}
+            {% if product.inventory_status and product.inventory_status != "unknown" %}
             <span
                 class="product-status status-{{ product.inventory_status|slugify }}"
             >
                 {{ product.get_inventory_status_display|default:product.inventory_status }}
             </span>
-        {% endif %}
+            {% endif %}
+        </div>
     </a>
-
 
     <div class="product-card-content">
 
         <div class="product-card-meta">
             {% if product.category %}
-                <a
-                    href="{% url 'products:category' product.category.slug %}"
-                >
+                <a href="{% url 'products:category' product.category.slug %}">
                     {{ product.category.name }}
                 </a>
             {% else %}
-                <span>
-                    Promotional Product
-                </span>
+                <span>Promotional Product</span>
             {% endif %}
         </div>
-
 
         <h3 class="product-card-title">
             <a href="{{ product.get_absolute_url }}">
@@ -77,135 +70,89 @@
             </a>
         </h3>
 
-
-        {% if product.supplier_record %}
-            <div class="product-supplier">
-                <span>Supplier:</span>
-
-                <strong>
-                    {{ product.supplier_record.name }}
-                </strong>
-            </div>
-        {% endif %}
-
-
         <p class="product-card-description">
-            {{ product.short_description|default:product.description|default:"Custom promotional product available from KaleidoBrands."|truncatechars:110 }}
+            {{ product.short_description|default:product.description|default:"Custom promotional product available from KaleidoBrands."|truncatechars:92 }}
         </p>
 
-
-        <div class="product-pricing">
-
-            <div class="product-price">
+        <div class="product-card-summary">
+            <div>
                 <small>Starting at</small>
 
                 <strong>
                     {% if product.starting_price is not None %}
-                        From ${{ product.starting_price|floatformat:2 }}
+                        ${{ product.starting_price|floatformat:2 }}
                     {% else %}
                         Request quote
                     {% endif %}
                 </strong>
             </div>
 
-
-            <div class="product-minimum">
-                <small>Minimum quantity</small>
+            <div>
+                <small>Minimum</small>
 
                 <strong>
                     {% if product.min_quantity %}
-                        MOQ {{ product.min_quantity }}
+                        {{ product.min_quantity }} units
                     {% else %}
                         Contact us
                     {% endif %}
                 </strong>
             </div>
-
-
-            {% if product.setup_fee %}
-                <div class="product-setup-fee">
-                    <small>Setup fee</small>
-
-                    <strong>
-                        ${{ product.setup_fee|floatformat:2 }}
-                    </strong>
-                </div>
-            {% endif %}
-
-
-            {% if product.production_time %}
-                <div class="product-lead-time">
-                    <small>Production time</small>
-
-                    <strong>
-                        {{ product.production_time }}
-                    </strong>
-                </div>
-            {% endif %}
-
         </div>
 
+        {% if product.production_time %}
+            <div class="product-card-lead-time">
+                <span>Production time</span>
+                <strong>{{ product.production_time }}</strong>
+            </div>
+        {% endif %}
+<div class="product-card-actions">
+    <a
+        href="{{ product.get_absolute_url }}"
+        class="btn btn-kb-primary product-card-primary-action"
+    >
+        View Product
+    </a>
 
-        {% with industries=product.industry_groups.all %}
-        {% if industries|length %}
-                <div
-                    class="product-card-tags"
-                    aria-label="Applicable industries"
-                >
-                    {% for industry in industries|slice:":2" %}
-                        <a
-                            href="{% url 'products:industry' industry.slug %}"
-                        >
-                            {{ industry.name }}
-                        </a>
-                    {% endfor %}
-                </div>
+    <button
+        type="button"
+        class="btn product-card-icon-action save-product-btn"
+        data-product-id="{{ product.pk }}"
+        data-product-name="{{ product.name|escape }}"
+        data-product-url="{{ product.get_absolute_url }}"
+        data-product-category="{% if product.category %}{{ product.category.name|escape }}{% else %}Product{% endif %}"
+        data-product-price="{% if product.starting_price is not None %}{{ product.starting_price }}{% endif %}"
+        aria-label="Save {{ product.name }}"
+        aria-pressed="false"
+        title="Save product"
+    >
+        <i class="bi bi-heart" aria-hidden="true"></i>
+    </button>
+
+    <button
+        type="button"
+        class="btn product-card-icon-action product-compare-btn"
+        data-compare-add
+        data-add-url="{% url 'products:compare_add' product.pk %}"
+        aria-label="Compare {{ product.name }}"
+        aria-pressed="{% if product.pk in compare_ids %}true{% else %}false{% endif %}"
+        title="Compare product"
+    >
+         <i
+            class="bi {% if product.pk in compare_ids %}bi-check-lg{% else %}bi-arrow-left-right{% endif %}"
+            aria-hidden="true"
+            data-compare-icon >
+        </i>
+
+        <span class="visually-hidden" data-compare-label>
+            {% if product.pk in compare_ids %}
+                Added to compare
+            {% else %}
+                Compare
             {% endif %}
-        {% endwith %}
-
-
-        <div class="product-card-actions">
-
-            <a
-                href="{{ product.get_absolute_url }}"
-                class="btn btn-kb-outline"
-            >
-                View Details
-            </a>
-
-
-            <button
-                type="button"
-                class="save-product-btn"
-                data-product-id="{{ product.pk }}"
-                data-product-name="{{ product.name|escape }}"
-                data-product-url="{{ product.get_absolute_url }}"
-                data-product-category="{% if product.category %}{{ product.category.name|escape }}{% else %}Product{% endif %}"
-                data-product-price="{% if product.starting_price %}{{ product.starting_price }}{% endif %}"
-            >
-                Save Product
-            </button>
-            <button
-                type="button"
-                class="btn btn-kb-outline product-compare-btn"
-                data-compare-add
-                data-add-url="{% url 'products:compare_add' product.pk %}"
-                aria-pressed="{% if product.pk in compare_ids %}true{% else %}false{% endif %}"
-            >
-                <span aria-hidden="true">
-                    ⇄
-                </span>
-
-                <span data-compare-label>
-                    {% if product.pk in compare_ids %}
-                        Added to Compare
-                    {% else %}
-                        Compare
-                    {% endif %}
-                </span>
-            </button>
-
-        </div>
+        </span>
+    </button>
+</div>
 
     </div>
 
