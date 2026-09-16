@@ -297,6 +297,34 @@ class HPGSyncService:
                 or ""
             ),
 
+            "colors": (
+                mapped.get(
+                    "colors"
+                )
+                or ""
+            ),
+
+            "dimensions": (
+                mapped.get(
+                    "dimensions"
+                )
+                or ""
+            ),
+
+            "lead_time": (
+                mapped.get(
+                    "lead_time"
+                )
+                or "Varies by product"
+            ),
+
+            "decoration_methods": (
+                mapped.get(
+                    "decoration_methods"
+                )
+                or ""
+            ),
+
             "supplier_price": (
                 mapped.get(
                     "supplier_price"

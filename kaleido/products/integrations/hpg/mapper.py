@@ -203,6 +203,237 @@ def _extract_text_items(container, key):
         if value
     ]
 
+def extract_product_colors(product):
+    """
+    Extract unique customer-facing color names from ProductPartArray.
+
+    Supplier hex values are intentionally ignored here because some HPG
+    records contain malformed hex values. Color names are safer for the
+    marketplace.
+    """
+
+    if not product:
+        return []
+
+    part_array = (
+        product.get("ProductPartArray")
+        or {}
+    )
+
+    parts = (
+        part_array.get("ProductPart")
+        or []
+    )
+
+    colors = []
+
+    for part in _as_list(parts):
+        if not isinstance(part, dict):
+            continue
+
+        color_array = (
+            part.get("ColorArray")
+            or {}
+        )
+
+        color_items = (
+            color_array.get("Color")
+            or []
+        )
+
+        for color in _as_list(color_items):
+            if not isinstance(color, dict):
+                continue
+
+            name = (
+                color.get("colorName")
+                or color.get("standardColorName")
+                or ""
+            )
+
+            name = str(name).strip()
+
+            if name and name not in colors:
+                colors.append(name)
+
+    return colors
+
+
+def extract_product_dimensions(product):
+    """
+    Return a concise customer-facing dimensions string from the first
+    ProductPart containing usable dimensional information.
+    """
+
+    if not product:
+        return ""
+
+    part_array = (
+        product.get("ProductPartArray")
+        or {}
+    )
+
+    parts = (
+        part_array.get("ProductPart")
+        or []
+    )
+
+    for part in _as_list(parts):
+        if not isinstance(part, dict):
+            continue
+
+        dimension = (
+            part.get("Dimension")
+            or {}
+        )
+
+        if not isinstance(dimension, dict):
+            continue
+
+        uom = str(
+            dimension.get("dimensionUom")
+            or ""
+        ).strip().upper()
+
+        unit = {
+            "IN": "in",
+            "FT": "ft",
+            "CM": "cm",
+            "MM": "mm",
+        }.get(
+            uom,
+            uom.lower(),
+        )
+
+        pieces = []
+
+        for label, key in (
+            ("Height", "height"),
+            ("Width", "width"),
+            ("Depth", "depth"),
+        ):
+            value = dimension.get(key)
+
+            if value not in (None, ""):
+                text = str(value).strip()
+
+                pieces.append(
+                    f"{label}: {text}"
+                    + (f" {unit}" if unit else "")
+                )
+
+        if pieces:
+            return ", ".join(pieces)
+
+    return ""
+
+
+def extract_product_lead_time(product):
+    """
+    Extract the first usable supplier lead time and present it as a
+    customer-friendly business-day estimate.
+    """
+
+    if not product:
+        return ""
+
+    part_array = (
+        product.get("ProductPartArray")
+        or {}
+    )
+
+    parts = (
+        part_array.get("ProductPart")
+        or []
+    )
+
+    for part in _as_list(parts):
+        if not isinstance(part, dict):
+            continue
+
+        lead_time = _safe_int(
+            part.get("leadTime")
+        )
+
+        if lead_time is None or lead_time <= 0:
+            continue
+
+        if lead_time == 1:
+            return "1 business day"
+
+        return f"{lead_time} business days"
+
+    return ""
+
+
+def extract_decoration_methods(product):
+    """
+    Normalize PromoStandards LocationDecoration records into concise
+    customer-facing decoration methods.
+
+    Example:
+        "GC16 Screen Print Front Of Product"
+    becomes:
+        "Screen Print"
+
+    Raw supplier decoration combinations remain available in raw data.
+    """
+
+    if not product:
+        return []
+
+    decoration_array = (
+        product.get("LocationDecorationArray")
+        or {}
+    )
+
+    decorations = (
+        decoration_array.get("LocationDecoration")
+        or []
+    )
+
+    methods = []
+
+    known_methods = (
+        ("screen print", "Screen Print"),
+        ("laser engrav", "Laser Engraving"),
+        ("embroid", "Embroidery"),
+        ("pad print", "Pad Print"),
+        ("digital print", "Digital Print"),
+        ("full color", "Full Color"),
+        ("heat transfer", "Heat Transfer"),
+        ("deboss", "Deboss"),
+        ("emboss", "Emboss"),
+        ("sublimation", "Sublimation"),
+        ("direct to garment", "Direct to Garment"),
+        ("dtg", "Direct to Garment"),
+    )
+
+    for decoration in _as_list(decorations):
+        if not isinstance(decoration, dict):
+            continue
+
+        location_name = str(
+            decoration.get("locationName")
+            or ""
+        ).strip()
+
+        decoration_name = str(
+            decoration.get("decorationName")
+            or ""
+        ).strip()
+
+        searchable = (
+            f"{location_name} {decoration_name}"
+        ).lower()
+
+        for needle, display_name in known_methods:
+            if needle in searchable:
+                if display_name not in methods:
+                    methods.append(display_name)
+
+    return methods
+
 
 def extract_net_price_breaks(
     pricing,
@@ -513,6 +744,22 @@ def map_product_bundle(
         )
     )
 
+    colors = extract_product_colors(
+        product
+    )
+
+    dimensions = extract_product_dimensions(
+        product
+    )
+
+    lead_time = extract_product_lead_time(
+        product
+    )
+
+    decoration_methods = extract_decoration_methods(
+        product
+    )
+
     return {
         # ----------------------------------------------------------
         # Supplier identity
@@ -538,6 +785,18 @@ def map_product_bundle(
             description[:240]
             if description
             else ""
+        ),
+
+        "colors": ", ".join(
+            colors
+        ),
+
+        "dimensions": dimensions,
+
+        "lead_time": lead_time,
+
+        "decoration_methods": ", ".join(
+            decoration_methods
         ),
 
         # ----------------------------------------------------------
