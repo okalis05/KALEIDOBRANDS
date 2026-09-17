@@ -942,7 +942,7 @@ def product_search(request):
     )
 
     form = ProductSearchForm(
-        normalized_query or None,
+        normalized_query,
         active_collections=active_collections,
     )
 
