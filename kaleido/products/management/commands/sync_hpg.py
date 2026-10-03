@@ -11,14 +11,27 @@ from products.integrations.hpg.services import (
 )
 
 
-DEFAULT_TEST_PRODUCTS = [
-    "GC16",
-]
+DEFAULT_TEST_PRODUCTS = {
+    "denwell": ["GC16"],
+    "hubpen": ["208"],
+}
+
+SUPPORTED_HPG_BRANDS = (
+    "denwell",
+    "hubpen",
+    "sugarspot",
+    "beacon",
+    "best",
+    "handstands",
+    "mixie",
+    "origaudio",
+    "mapleridge",
+)
 
 
 class Command(BaseCommand):
     help = (
-        "Synchronize HPG / Denwell products "
+        "Synchronize brand products "
         "through PromoStandards."
     )
 
@@ -26,6 +39,15 @@ class Command(BaseCommand):
         self,
         parser,
     ):
+        parser.add_argument(
+            "--brand",
+            choices=SUPPORTED_HPG_BRANDS,
+            default="denwell",
+            help=(
+                "HPG brand to synchronize. "
+                "Defaults to denwell."
+            ),
+        )
         parser.add_argument(
             "--dry-run",
             action="store_true",
@@ -71,6 +93,7 @@ class Command(BaseCommand):
         **options,
     ):
         dry_run = options["dry_run"]
+        brand = options["brand"]
 
         limit = options.get("limit")
         since_days = options.get(
@@ -101,7 +124,8 @@ class Command(BaseCommand):
             )
 
         service = HPGSyncService(
-            dry_run=dry_run
+            brand=brand,
+            dry_run=dry_run,
         )
 
         #
@@ -172,14 +196,25 @@ class Command(BaseCommand):
             )
 
         else:
+            if brand not in DEFAULT_TEST_PRODUCTS:
+                raise CommandError(
+                    f"{brand} requires --product-id or --since-days."
+                )
+
             product_ids = list(
-                DEFAULT_TEST_PRODUCTS
+                DEFAULT_TEST_PRODUCTS[
+                    brand
+                ]
             )
 
         if limit is not None:
             product_ids = (
                 product_ids[:limit]
             )
+
+        self.stdout.write(
+            f"HPG brand: {brand}"
+        )
 
         self.stdout.write(
             f"Products to process: "
