@@ -135,6 +135,75 @@ class Supplier(models.Model):
         return self.name
 
 
+class Brand(models.Model):
+    """
+    Customer-facing promotional product brand.
+
+    This model is intentionally separate from Supplier.
+
+    Supplier represents the upstream catalog/integration source
+    (for example HPG, PCNA, SanMar, Koozie Group).
+
+    Brand represents the customer-facing brand displayed throughout
+    the KaleidoBrands marketplace.
+    """
+
+    name = models.CharField(
+        max_length=150,
+        unique=True,
+    )
+
+    slug = models.SlugField(
+        max_length=170,
+        unique=True,
+    )
+
+    logo = models.ImageField(
+        upload_to="brands/logos/",
+        blank=True,
+        null=True,
+    )
+
+    website = models.URLField(
+        blank=True,
+    )
+
+    description = models.TextField(
+        blank=True,
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+    )
+
+    show_in_brand_showcase = models.BooleanField(
+        default=True,
+    )
+
+    display_order = models.PositiveIntegerField(
+        default=100,
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+        ordering = [
+            "display_order",
+            "name",
+        ]
+        verbose_name = "Brand"
+        verbose_name_plural = "Brands"
+
+    def __str__(self):
+        return self.name
+
+    
 class SupplierCatalog(models.Model):
     SOURCE_TYPE_CHOICES = [
         (
