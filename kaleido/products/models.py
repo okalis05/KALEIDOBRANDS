@@ -422,6 +422,7 @@ class Product(models.Model):
     )
 
     slug = models.SlugField(
+        max_length=120,
         unique=True,
     )
 
@@ -470,7 +471,7 @@ class Product(models.Model):
     )
 
     colors = models.CharField(
-        max_length=255,
+        max_length=2000,
         blank=True,
     )
 
