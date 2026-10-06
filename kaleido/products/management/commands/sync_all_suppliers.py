@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime, timedelta, timezone
 import time
@@ -7,6 +8,8 @@ from django.conf import settings
 from django.db import connection
 from django.core.management import call_command
 from django.core.management.base import BaseCommand, CommandError
+
+from products.models import FamilyWeeklySyncCheckpoint
 
 
 LOCK_FILE = (
@@ -47,6 +50,14 @@ class Command(BaseCommand):
         "origaudio",
         "mapleridge",
     )
+
+    FAMILY_CHECKPOINT_PATHS = {
+        "sanmar": Path(settings.BASE_DIR) / "var" / "sanmar_sync" / "checkpoint.json",
+        "pcna": Path(settings.BASE_DIR) / "var" / "pcna_sync" / "checkpoint.json",
+        "koozie": Path(settings.BASE_DIR) / "var" / "koozie_sync" / "checkpoint.json",
+        "magnet": Path(settings.BASE_DIR) / "var" / "magnet_sync" / "checkpoint.json",
+        "vantage": Path(settings.BASE_DIR) / "var" / "vantage_sync" / "checkpoint.json",
+    }
 
     ALL_KEYS = tuple(
         item[0] for item in FAMILY_COMMANDS
@@ -224,6 +235,84 @@ class Command(BaseCommand):
         except FileNotFoundError:
             pass
 
+    def _hydrate_family_checkpoint(
+        self,
+        key,
+        *,
+        since_days,
+    ):
+        checkpoint_path = self.FAMILY_CHECKPOINT_PATHS.get(key)
+
+        if checkpoint_path is None:
+            return None
+
+        row, _ = FamilyWeeklySyncCheckpoint.objects.get_or_create(
+            supplier_key=key,
+            defaults={
+                "checkpoint": {},
+                "window_days": since_days,
+            },
+        )
+
+        checkpoint_path.parent.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        checkpoint = row.checkpoint or {}
+
+        checkpoint_path.write_text(
+            json.dumps(
+                checkpoint,
+                indent=2,
+                sort_keys=True,
+            )
+        )
+
+        self.stdout.write(
+            f"DURABLE CHECKPOINT LOADED: {key} "
+            f"| successful="
+            f"{len(checkpoint.get('successful_parent_ids') or [])}"
+        )
+
+        return checkpoint_path
+
+    def _persist_family_checkpoint(
+        self,
+        key,
+        checkpoint_path,
+        *,
+        since_days,
+    ):
+        if checkpoint_path is None:
+            return
+
+        if not checkpoint_path.exists():
+            return
+
+        try:
+            checkpoint = json.loads(
+                checkpoint_path.read_text()
+            )
+        except (OSError, json.JSONDecodeError) as exc:
+            raise CommandError(
+                f"Unable to persist {key} family checkpoint: {exc}"
+            ) from exc
+
+        FamilyWeeklySyncCheckpoint.objects.update_or_create(
+            supplier_key=key,
+            defaults={
+                "checkpoint": checkpoint,
+                "window_days": since_days,
+            },
+        )
+
+        self.stdout.write(
+            f"DURABLE CHECKPOINT SAVED: {key} "
+            f"| successful="
+            f"{len(checkpoint.get('successful_parent_ids') or [])}"
+        )
+
     def _run_family(
         self,
         key,
@@ -259,14 +348,18 @@ class Command(BaseCommand):
         if limit is not None:
             kwargs["limit"] = limit
 
-        # Dedicated family commands already maintain their own
-        # production checkpoints. Resume is enabled by the weekly
-        # batch runner without changing supplier-specific logic.
-        if (
+        checkpoint_path = None
+        durable_family_run = (
             not dry_run
             and getattr(self, "_weekly_batch", False)
-            and key != "jornik"
-        ):
+            and key in self.FAMILY_CHECKPOINT_PATHS
+        )
+
+        if durable_family_run:
+            checkpoint_path = self._hydrate_family_checkpoint(
+                key,
+                since_days=since_days,
+            )
             kwargs["resume"] = True
 
         # Jornik has its own command interface and does not
@@ -274,10 +367,18 @@ class Command(BaseCommand):
         if key != "jornik":
             kwargs["continue_on_error"] = True
 
-        call_command(
-            command,
-            **kwargs,
-        )
+        try:
+            call_command(
+                command,
+                **kwargs,
+            )
+        finally:
+            if durable_family_run:
+                self._persist_family_checkpoint(
+                    key,
+                    checkpoint_path,
+                    since_days=since_days,
+                )
 
     def _run_generic(
         self,

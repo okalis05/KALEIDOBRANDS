@@ -884,3 +884,27 @@ class HPGWeeklySyncCheckpoint(models.Model):
 
     def __str__(self):
         return f"HPG weekly checkpoint: {self.brand}"
+
+
+class FamilyWeeklySyncCheckpoint(models.Model):
+    supplier_key = models.CharField(
+        max_length=40,
+        unique=True,
+        db_index=True,
+    )
+    checkpoint = models.JSONField(
+        default=dict,
+        blank=True,
+    )
+    window_days = models.PositiveIntegerField(
+        default=8,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+        ordering = ("supplier_key",)
+
+    def __str__(self):
+        return f"Family weekly checkpoint: {self.supplier_key}"
