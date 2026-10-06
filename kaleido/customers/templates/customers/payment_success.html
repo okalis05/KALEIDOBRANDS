@@ -1,41 +1,103 @@
 {% extends "brands/base.html" %}
 
-{% block title %}Payment Successful | KaleidoBrands{% endblock %}
+{% block title %}
+Payment Successful
+{% endblock %}
 
 {% block body %}
-<main class="inner-page">
-    <section class="section-panel">
-        <div class="container">
-            <div class="quote-success-card glass-card text-center">
-                <span class="quote-success-icon">✓</span>
-                <h1>Payment Successful</h1>
-                <p>Your payment for order <strong>{{ order.order_number }}</strong> has been received.</p>
 
-                <div class="mt-4">
-                    <a href="{% url 'customers:order_detail' order.id %}" class="btn btn-kb-primary btn-lg">
-                        View Order
-                    </a>
+<div class="container py-5">
+
+    {% if payment_confirmed or order.payment_status == "paid" %}
+
+        <div class="card shadow border-0">
+
+            <div class="card-body text-center">
+
+                <div class="display-1 text-success mb-3">
+                    ✓
                 </div>
 
-                <h1>Payment Submitted</h1>
+                <h2 class="mb-3">
+                    Payment Successful
+                </h2>
 
-                <p>
-                    Stripe is confirming your payment. Once confirmed, your order status will update automatically.
+                <p class="lead">
+                    Thank you for your purchase.
                 </p>
 
-                <h3>{{ order.order_number }}</h3>
+                <hr>
 
-                {% if order.payment_status == "paid" %}
-                    <div class="alert alert-success mt-4">
-                        Payment confirmed.
-                    </div>
-                {% else %}
-                    <div class="alert alert-info mt-4">
-                        Payment confirmation is pending.
-                    </div>
+                <p>
+                    <strong>Order Number</strong><br>
+                    {{ order.order_number }}
+                </p>
+
+                <p>
+                    <strong>Total Paid</strong><br>
+                    ${{ order.total|floatformat:2 }}
+                </p>
+
+                {% if order.paid_at %}
+                <p>
+                    <strong>Paid On</strong><br>
+                    {{ order.paid_at|date:"F j, Y g:i A" }}
+                </p>
                 {% endif %}
+
+                <div class="mt-4">
+
+                    <a
+                        href="{% url 'customers:order_detail' order.id %}"
+                        class="btn btn-primary">
+
+                        View Order
+
+                    </a>
+
+                    <a
+                        href="{% url 'products:home' %}"
+                        class="btn btn-outline-secondary">
+
+                        Continue Shopping
+
+                    </a>
+
+                </div>
+
             </div>
+
         </div>
-    </section>
-</main>
+
+    {% else %}
+
+        <div class="card border-warning">
+
+            <div class="card-body text-center">
+
+                <h3 class="text-warning">
+                    Payment Verification Pending
+                </h3>
+
+                <p>
+                    Stripe has not yet confirmed your payment.
+                    Please wait a few moments and refresh this page.
+                </p>
+
+                <a
+                    href="{% url 'customers:payment_success' order.id %}?session_id={{ request.GET.session_id }}"
+                    class="btn btn-warning">
+
+                    Verify Payment Again
+
+                </a>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
 {% endblock %}

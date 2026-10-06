@@ -1,0 +1,90 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Shop by Industry | KaleidoBrands{% endblock %}
+
+{% block content %}
+
+<section class="section-panel">
+    <div class="container">
+
+        <div class="section-heading text-center mb-5">
+            <span>Shop by Industry</span>
+            <h1>Products selected around how you do business.</h1>
+            <p class="mx-auto" style="max-width: 720px;">
+                Explore branded merchandise and promotional products
+                organized around the needs of your industry.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            {% for industry in industries %}
+
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+
+                    <a
+                        href="{% url 'products:industry' industry.slug %}"
+                        class="text-decoration-none text-dark"
+                    >
+
+                        <article class="product-card h-100">
+
+                            <div class="product-card-content">
+
+                                <div class="product-card-meta">
+                                    Industry
+                                </div>
+
+                                <h3 class="product-card-title">
+                                    {{ industry.name }}
+                                </h3>
+
+                                {% if industry.description %}
+
+                                    <p class="product-card-description">
+                                        {{ industry.description|truncatewords:20 }}
+                                    </p>
+
+                                {% else %}
+
+                                    <p class="product-card-description">
+                                        Explore products selected for
+                                        {{ industry.name }} organizations.
+                                    </p>
+
+                                {% endif %}
+
+                                <div class="mt-auto pt-3">
+
+                                    <strong>
+                                        {{ industry.product_count }}
+                                    </strong>
+
+                                    product{{ industry.product_count|pluralize }}
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    </a>
+
+                </div>
+
+            {% empty %}
+
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <h3>No industries available yet.</h3>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

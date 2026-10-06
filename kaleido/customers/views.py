@@ -1,5 +1,6 @@
 import os
 import stripe
+import logging
 from decimal import Decimal
 from django.utils import timezone
 from django.conf import settings
@@ -8,8 +9,6 @@ from django.contrib import messages
 from django.contrib.auth import login
 
 from django.http import FileResponse, Http404
-
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 
 from products.models import (
@@ -23,8 +22,6 @@ from customers.services.marketplace import (
 )
 from .forms import ShipmentTrackingForm, ShipmentForm, ShipmentItemSelectionForm, CustomerAddressForm, CustomerProfileForm, CustomerRegistrationForm, BrandAssetForm, ArtworkProofForm, CheckoutForm
 from .models import  Shipment, CustomerAddress, BrandAsset, ArtworkProof, Order, CustomerLead, CustomerLead, CRMActivity, Cart, CartItem,  OrderItem
-
-from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Count, Sum, Avg, Q
 
 from django.http import JsonResponse,  HttpResponse
@@ -37,6 +34,7 @@ from django.core.mail import EmailMessage
 from django.views.decorators.csrf import csrf_exempt
 from products.services.purchase_orders import (create_purchase_orders_from_order)
 from products.services.purchase_order_delivery import (deliver_purchase_order)
+from products.services.customer_pricing import resolve_customer_unit_price
 from customers.services.shipping import (
     create_default_shipment_for_paid_order,
 )
@@ -58,7 +56,6 @@ from customers.services.support_notifications import (
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.db import transaction, models
-from django.shortcuts import get_object_or_404, redirect, render
 from customers.forms import (
     ReturnItemFormSet,
     ReturnMessageForm,
@@ -108,10 +105,6 @@ from customers.services.refund_reporting import (
 )
 from datetime import datetime, time
 
-from django.contrib.admin.views.decorators import (
-    staff_member_required,
-)
-
 
 from customers.services.refund_exports import (
     export_refund_requests_csv,
@@ -119,8 +112,6 @@ from customers.services.refund_exports import (
     export_webhook_events_csv,
 )
 from django.core.paginator import Paginator
-
-
 
 
 
@@ -147,7 +138,7 @@ def signup(request):
             "form": form,
         },
     )
-
+logger = logging.getLogger(__name__)
 
 @login_required
 def dashboard(request):
@@ -634,28 +625,78 @@ def get_active_cart(user):
 
 @login_required
 def add_to_cart(request, product_slug):
-    product = get_object_or_404(Product, slug=product_slug, is_active=True)
-    cart = get_active_cart(request.user)
-
-    price = product.starting_price or Decimal("0.00")
-
-    item, created = CartItem.objects.get_or_create(
-        cart=cart,
-        product=product,
-        defaults={
-            "product_name": product.name,
-            "quantity": 1,
-            "unit_price": price,
-        },
+    product = get_object_or_404(
+        Product,
+        slug=product_slug,
+        is_active=True,
     )
 
-    if not created:
-        item.quantity += 1
-        item.save(update_fields=["quantity"])
+    cart = get_active_cart(request.user)
 
-    messages.success(request, f"{product.name} added to your cart.")
+    item = (
+        CartItem.objects
+        .filter(
+            cart=cart,
+            product=product,
+        )
+        .first()
+    )
+
+    if item:
+        new_quantity = item.quantity + 1
+    else:
+        # A product must enter the checkout cart at a valid
+        # purchasable quantity. For supplier products this is
+        # normally the product MOQ.
+        try:
+            product_moq = int(
+                product.min_quantity or 1
+            )
+        except (TypeError, ValueError):
+            product_moq = 1
+
+        new_quantity = max(1, product_moq)
+
+    unit_price = resolve_customer_unit_price(
+        product,
+        new_quantity,
+    )
+
+    if unit_price is None:
+        messages.error(
+            request,
+            (
+                f"{product.name} does not have valid pricing "
+                f"for quantity {new_quantity:,}. "
+                "Please choose a valid quantity or request a quote."
+            ),
+        )
+        return redirect("customers:cart_detail")
+
+    if item:
+        item.quantity = new_quantity
+        item.unit_price = unit_price
+        item.save(
+            update_fields=[
+                "quantity",
+                "unit_price",
+            ]
+        )
+    else:
+        CartItem.objects.create(
+            cart=cart,
+            product=product,
+            product_name=product.name,
+            quantity=new_quantity,
+            unit_price=unit_price,
+        )
+
+    messages.success(
+        request,
+        f"{product.name} added to your cart.",
+    )
+
     return redirect("customers:cart_detail")
-
 
 @login_required
 def cart_detail(request):
@@ -680,23 +721,103 @@ def update_cart_item(request, item_id):
     )
 
     if request.method == "POST":
-        quantity = request.POST.get("quantity", "1")
+        quantity = request.POST.get(
+            "quantity",
+            "1",
+        )
 
         try:
             quantity = int(quantity)
-        except ValueError:
+        except (TypeError, ValueError):
             quantity = 1
 
         if quantity <= 0:
             item.delete()
-            messages.success(request, "Item removed from cart.")
-        else:
-            item.quantity = quantity
-            item.save(update_fields=["quantity"])
-            messages.success(request, "Cart updated.")
 
-    return redirect("customers:cart_detail")
+            messages.success(
+                request,
+                "Item removed from cart.",
+            )
 
+            return redirect(
+                "customers:cart_detail"
+            )
+
+        product = item.product
+
+        if product is None:
+            messages.error(
+                request,
+                "This cart item no longer has a valid product.",
+            )
+
+            return redirect(
+                "customers:cart_detail"
+            )
+
+        try:
+            minimum_quantity = int(
+                product.min_quantity or 1
+            )
+        except (TypeError, ValueError):
+            minimum_quantity = 1
+
+        minimum_quantity = max(
+            1,
+            minimum_quantity,
+        )
+
+        if quantity < minimum_quantity:
+            messages.error(
+                request,
+                (
+                    f"The minimum quantity for "
+                    f"{product.name} is "
+                    f"{minimum_quantity:,}."
+                ),
+            )
+
+            return redirect(
+                "customers:cart_detail"
+            )
+
+        unit_price = resolve_customer_unit_price(
+            product,
+            quantity,
+        )
+
+        if unit_price is None:
+            messages.error(
+                request,
+                (
+                    f"{product.name} does not have "
+                    f"valid pricing for quantity "
+                    f"{quantity:,}."
+                ),
+            )
+
+            return redirect(
+                "customers:cart_detail"
+            )
+
+        item.quantity = quantity
+        item.unit_price = unit_price
+
+        item.save(
+            update_fields=[
+                "quantity",
+                "unit_price",
+            ]
+        )
+
+        messages.success(
+            request,
+            "Cart updated.",
+        )
+
+    return redirect(
+        "customers:cart_detail"
+    )
 
 @login_required
 def remove_cart_item(request, item_id):
@@ -932,55 +1053,281 @@ def checkout_success(request, order_id):
 
 @login_required
 def start_payment(request, order_id):
-    order = get_object_or_404(
-        Order,
-        id=order_id,
-        customer=request.user,
-    )
+    with transaction.atomic():
 
-    if order.total <= 0:
-        messages.error(request, "This order does not have a payable balance.")
-        return redirect("customers:order_detail", order_id=order.id)
+        order = (
+            Order.objects
+            .select_for_update()
+            .get(
+                id=order_id,
+                customer=request.user,
+            )
+        )
+
+    # Do not create another Stripe session for a paid order.
+    if order.payment_status == "paid":
+        messages.info(
+            request,
+            "This order has already been paid."
+        )
+        return redirect(
+            "customers:order_detail",
+            order_id=order.id,
+        )
+
+    if order.total is None or order.total <= Decimal("0.00"):
+        messages.error(
+            request,
+            "This order does not have a payable balance."
+        )
+        return redirect(
+            "customers:order_detail",
+            order_id=order.id,
+        )
 
     stripe.api_key = settings.STRIPE_SECRET_KEY
 
+    # Checkout marks the purchased cart as converted.
+    # Retrieve that cart so its ID can be stored in Stripe metadata.
+    converted_cart = (
+        Cart.objects
+        .filter(
+            user=request.user,
+            status="converted",
+        )
+        .order_by("-id")
+        .first()
+    )
+
+    if converted_cart is None:
+        messages.error(
+            request,
+            "The shopping cart associated with this order "
+            "could not be found."
+        )
+        return redirect(
+            "customers:order_detail",
+            order_id=order.id,
+        )
+
     success_url = request.build_absolute_uri(
-        reverse("customers:payment_success", kwargs={"order_id": order.id})
+        reverse(
+            "customers:payment_success",
+            kwargs={"order_id": order.id},
+        )
+    )
+
+    success_url = (
+        f"{success_url}"
+        "?session_id={CHECKOUT_SESSION_ID}"
     )
 
     cancel_url = request.build_absolute_uri(
-        reverse("customers:payment_cancel", kwargs={"order_id": order.id})
+        reverse(
+            "customers:payment_cancel",
+            kwargs={"order_id": order.id},
+        )
     )
 
-    session = stripe.checkout.Session.create(
-        payment_method_types=["card"],
-        mode="payment",
-        customer_email=request.user.email,
-        line_items=[
-            {
-                "price_data": {
-                    "currency": "usd",
-                    "product_data": {
-                        "name": f"KaleidoBrands Order {order.order_number}",
+    currency = getattr(
+        settings,
+        "STRIPE_CURRENCY",
+        "usd",
+    ).lower()
+
+    try:
+        stripe_session = stripe.checkout.Session.create(
+            mode="payment",
+            payment_method_types=["card"],
+            customer_email=request.user.email or None,
+            client_reference_id=str(order.id),
+            line_items=[
+                {
+                    "price_data": {
+                        "currency": currency,
+                        "product_data": {
+                            "name": (
+                                "KaleidoBrands Order "
+                                f"{order.order_number}"
+                            ),
+                        },
+                        "unit_amount": int(
+                            order.total * Decimal("100")
+                        ),
                     },
-                    "unit_amount": int(order.total * 100),
-                },
-                "quantity": 1,
-            }
-        ],
-        success_url=success_url,
-        cancel_url=cancel_url,
-        metadata={
-            "order_id": str(order.id),
-            "order_number": order.order_number,
-        },
-    )
+                    "quantity": 1,
+                }
+            ],
+            metadata={
+                "order_id": str(order.id),
+                "order_number": str(order.order_number),
+                "cart_id": str(converted_cart.id),
+            },
+            payment_intent_data={
+                "metadata": {
+                    "order_id": str(order.id),
+                    "order_number": str(
+                        order.order_number
+                    ),
+                    "cart_id": str(converted_cart.id),
+                }
+            },
+            success_url=success_url,
+            cancel_url=cancel_url,
+        )
+
+    except stripe.error.StripeError as error:
+        logger.exception(
+            "Stripe Checkout Session creation failed "
+            "for order %s: %s",
+            order.order_number,
+            error,
+        )
+
+        messages.error(
+            request,
+            "Stripe is temporarily unavailable. "
+            "Your order was not charged. Please try again."
+        )
+
+        return redirect(
+            "customers:order_detail",
+            order_id=order.id,
+        )
+
+    if not stripe_session.url:
+        logger.error(
+            "Stripe returned no Checkout URL for order %s.",
+            order.order_number,
+        )
+
+        messages.error(
+            request,
+            "Stripe could not create a payment page."
+        )
+
+        return redirect(
+            "customers:order_detail",
+            order_id=order.id,
+        )
 
     order.payment_status = "pending"
-    order.stripe_checkout_session_id = session.id
-    order.save(update_fields=["payment_status", "stripe_checkout_session_id"])
+    order.stripe_checkout_session_id = stripe_session.id
 
-    return redirect(session.url)
+    order.save(
+        update_fields=[
+            "payment_status",
+            "stripe_checkout_session_id",
+        ]
+    )
+
+    return redirect(stripe_session.url)
+
+
+@transaction.atomic
+def finalize_paid_order(order, stripe_session):
+    """
+    Finalize a paid Stripe Checkout order exactly once.
+
+    This function:
+    - verifies Stripe marked the session as paid,
+    - locks the order row,
+    - marks the order paid,
+    - stores Stripe identifiers,
+    - clears the exact purchased cart,
+    - sends paid-order emails only once,
+    - keeps OrderItem records intact.
+    """
+
+    payment_status = stripe_session.get("payment_status")
+
+    if payment_status != "paid":
+        return False
+
+    # Lock the order to prevent the webhook and success page
+    # from finalizing the same payment simultaneously.
+    order = (
+        Order.objects
+        .select_for_update()
+        .get(pk=order.pk)
+    )
+
+    was_already_paid = order.payment_status == "paid"
+
+    order.payment_status = "paid"
+    order.stripe_checkout_session_id = (
+        stripe_session.get("id") or ""
+    )
+    order.stripe_payment_intent_id = (
+        stripe_session.get("payment_intent") or ""
+    )
+
+    if not order.paid_at:
+        order.paid_at = timezone.now()
+
+    order.save(
+        update_fields=[
+            "payment_status",
+            "stripe_checkout_session_id",
+            "stripe_payment_intent_id",
+            "paid_at",
+        ]
+    )
+
+    metadata = stripe_session.get("metadata") or {}
+    cart_id = metadata.get("cart_id")
+
+    paid_cart = None
+
+    if cart_id:
+        paid_cart = (
+            Cart.objects
+            .select_for_update()
+            .filter(
+                id=cart_id,
+                user=order.customer,
+            )
+            .first()
+        )
+
+    # Fallback for Checkout Sessions created before cart_id
+    # was added to Stripe metadata.
+    if paid_cart is None:
+        paid_cart = (
+            Cart.objects
+            .select_for_update()
+            .filter(
+                user=order.customer,
+                status="converted",
+            )
+            .order_by("-id")
+            .first()
+        )
+
+    if paid_cart:
+        paid_cart.items.all().delete()
+
+        if paid_cart.status != "converted":
+            paid_cart.status = "converted"
+            paid_cart.save(
+                update_fields=["status"]
+            )
+
+    # Send confirmation emails only the first time
+    # this order changes to paid.
+    if not was_already_paid:
+        try:
+            send_paid_order_emails(order)
+
+        except Exception:
+            logger.exception(
+                "Paid-order email failed for order %s.",
+                order.order_number,
+            )
+
+    return True
+
+
 
 
 @login_required
@@ -991,18 +1338,84 @@ def payment_success(request, order_id):
         customer=request.user,
     )
 
-    messages.success(
-        request,
-        "Payment submitted. Stripe will confirm your payment shortly."
+    session_id = request.GET.get("session_id", "").strip()
+
+    if not session_id:
+
+        messages.warning(
+            request,
+            "Stripe has not yet returned a payment session."
+        )
+
+        return render(
+            request,
+            "customers/payment_success.html",
+            {
+                "order": order,
+                "payment_confirmed": (
+                    order.payment_status == "paid"
+                ),
+            },
+        )
+
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+
+    try:
+        stripe_session = stripe.checkout.Session.retrieve(
+            session_id
+        )
+
+    except stripe.error.StripeError:
+
+        messages.error(
+            request,
+            "Unable to verify the payment with Stripe."
+        )
+
+        return render(
+            request,
+            "customers/payment_success.html",
+            {
+                "order": order,
+                "payment_confirmed": False,
+            },
+        )
+
+    metadata = stripe_session.get("metadata") or {}
+
+    if str(metadata.get("order_id")) != str(order.id):
+        return HttpResponse(
+            "Invalid payment session.",
+            status=400,
+        )
+
+    payment_confirmed = finalize_paid_order(
+        order,
+        stripe_session,
     )
+
+    order.refresh_from_db()
+
+    if payment_confirmed:
+        messages.success(
+            request,
+            "Payment completed successfully."
+        )
+    else:
+        messages.warning(
+            request,
+            "Stripe has not confirmed this payment yet."
+        )
 
     return render(
         request,
         "customers/payment_success.html",
         {
             "order": order,
+            "payment_confirmed": payment_confirmed,
         },
     )
+
 
 
 @login_required
@@ -1060,131 +1473,158 @@ Review order:
 def stripe_webhook(request):
     payload = request.body
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE")
-    endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
+
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
+    supplier_alert_email = getattr(
+        settings,
+        "SUPPLIER_ALERT_EMAIL",
+        settings.DEFAULT_FROM_EMAIL,
+    )
+
+    support_notification_email = getattr(
+        settings,
+        "SUPPORT_NOTIFICATION_EMAIL",
+        settings.DEFAULT_FROM_EMAIL,
+    )
+
+    endpoint_secret = getattr(
+        settings,
+        "STRIPE_WEBHOOK_SECRET",
+        "",
+    )
+
+    if not endpoint_secret:
+        return HttpResponse(
+            "Stripe webhook secret is not configured.",
+            status=500,
+        )
 
     try:
-        if endpoint_secret:
-            event = stripe.Webhook.construct_event(
-                payload,
-                sig_header,
-                endpoint_secret,
-            )
-        else:
-            event = stripe.Event.construct_from(
-                stripe.util.json.loads(payload),
-                stripe.api_key,
-            )
+        event = stripe.Webhook.construct_event(
+            payload,
+            sig_header,
+            endpoint_secret,
+        )
 
     except ValueError:
-        return HttpResponse(status=400)
+        return HttpResponse(
+            "Invalid payload.",
+            status=400,
+        )
 
     except stripe.error.SignatureVerificationError:
-        return HttpResponse(status=400)
+        return HttpResponse(
+            "Invalid signature.",
+            status=400,
+        )
 
     if event["type"] == "checkout.session.completed":
+
         session = event["data"]["object"]
 
-        order_id = session.get("metadata", {}).get("order_id")
+        metadata = session.get("metadata") or {}
+        order_id = metadata.get("order_id")
 
-        if order_id:
-            try:
-                order = Order.objects.get(id=order_id)
-                was_already_paid = order.payment_status == "paid"
-                order.payment_status = "paid"
+        if not order_id:
+            return HttpResponse(
+                "Missing order_id.",
+                status=400,
+            )
 
+        try:
+            order = Order.objects.get(id=order_id)
 
-                order.stripe_checkout_session_id = session.get("id", "")
-                order.stripe_payment_intent_id = session.get("payment_intent", "")
-                order.paid_at = timezone.now()
-                order.save(
-                    update_fields=[
-                        "payment_status",
-                        "stripe_checkout_session_id",
-                        "stripe_payment_intent_id",
-                        "paid_at",
-                    ]
+        except Order.DoesNotExist:
+            return HttpResponse(
+                "Order not found.",
+                status=404,
+            )
+
+        payment_confirmed = finalize_paid_order(
+            order,
+            session,
+        )
+
+        if not payment_confirmed:
+            return HttpResponse(
+                "Payment not confirmed.",
+                status=400,
+            )
+
+        #
+        # Supplier Purchase Orders
+        #
+        try:
+            purchase_orders = create_purchase_orders_from_order(order)
+
+            delivery_failures = []
+
+            for purchase_order in purchase_orders:
+
+                success, message = deliver_purchase_order(
+                    purchase_order
                 )
-                
 
-                try:
-                    purchase_orders = create_purchase_orders_from_order(
-                        order
+                if not success:
+                    delivery_failures.append(
+                        f"{purchase_order.po_number}: {message}"
                     )
 
-                    delivery_failures = []
-                
-                    for purchase_order in purchase_orders:
-                        success, result_message = deliver_purchase_order(
-                            purchase_order
-                        )
+            if delivery_failures:
 
-                        if not success:
-                            delivery_failures.append(
-                                (
-                                    f"{purchase_order.po_number}: "
-                                    f"{result_message}"
-                                )
-                            )
+                EmailMessage(
+                    subject=(
+                        f"Supplier PO Delivery Review - "
+                        f"{order.order_number}"
+                    ),
+                    body=(
+                        "Payment was confirmed, however one or more "
+                        "supplier purchase orders require attention.\n\n"
+                        + "\n".join(delivery_failures)
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=[supplier_alert_email],
+                ).send(fail_silently=True)
 
-                    if delivery_failures:
-                        EmailMessage(
-                            subject=(
-                                f"Supplier PO Delivery Review - "
-                                f"{order.order_number}"
-                            ),
-                            body=(
-                                "Payment was confirmed and supplier purchase "
-                                "orders were created, but one or more purchase "
-                                "orders require staff review.\n\n"
-                                + "\n".join(delivery_failures)
-                            ),
-                            from_email=settings.DEFAULT_FROM_EMAIL,
-                            to=["sales@kaleidobrands.com"],
-                        ).send(fail_silently=True)
+        except Exception as exc:
 
-                except Exception as error:
-                    EmailMessage(
-                        subject=(
-                            f"Purchase Order Automation Failed - "
-                            f"{order.order_number}"
-                        ),
-                        body=(
-                            f"Payment was confirmed for order "
-                            f"{order.order_number}, but the supplier purchase "
-                            f"order workflow failed.\n\n"
-                            f"Error: {error}"
-                        ),
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        to=["sales@kaleidobrands.com"],
-                    ).send(fail_silently=True)
-                
-                try:
-                    shipment, shipment_created = (
-                        create_default_shipment_for_paid_order(order)
-                    )
+            EmailMessage(
+                subject=(
+                    f"Purchase Order Automation Failed - "
+                    f"{order.order_number}"
+                ),
+                body=(
+                    f"Payment was received successfully.\n\n"
+                    f"Purchase-order automation failed.\n\n"
+                    f"{exc}"
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[supplier_alert_email],
+            ).send(fail_silently=True)
 
-                except Exception as error:
-                    EmailMessage(
-                        subject=(
-                            f"Shipment Creation Failed - "
-                            f"{order.order_number}"
-                        ),
-                        body=(
-                            f"Payment was confirmed for order "
-                            f"{order.order_number}, but the initial "
-                            f"shipment could not be created.\n\n"
-                            f"Error: {error}"
-                        ),
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                        to=["sales@kaleidobrands.com"],
-                    ).send(fail_silently=True)
+        #
+        # Shipment Creation
+        #
+        try:
+            create_default_shipment_for_paid_order(order)
 
+        except Exception as exc:
 
-                if not was_already_paid:
-                    send_paid_order_emails(order)
-
-            except Order.DoesNotExist:
-                return HttpResponse(status=404)
+            EmailMessage(
+                subject=(
+                    f"Shipment Creation Failed - "
+                    f"{order.order_number}"
+                ),
+                body=(
+                    f"Payment was received successfully.\n\n"
+                    f"Shipment creation failed.\n\n"
+                    f"{exc}"
+                ),
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[support_notification_email],
+            ).send(fail_silently=True)
 
     return HttpResponse(status=200)
 

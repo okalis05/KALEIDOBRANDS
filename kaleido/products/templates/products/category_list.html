@@ -1,0 +1,98 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Shop by Category | KaleidoBrands{% endblock %}
+
+{% block content %}
+
+<section class="section-panel">
+    <div class="container">
+
+        <div class="section-heading text-center mb-5">
+            <span>Shop by Category</span>
+            <h1>Find the right products for your brand.</h1>
+            <p class="mx-auto" style="max-width: 720px;">
+                Explore promotional products, branded merchandise,
+                apparel, gifts and business essentials by category.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            {% for card in category_cards %}
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+
+                    <a
+                        href="{% url 'products:category' card.category.slug %}"
+                        class="text-decoration-none text-dark"
+                    >
+                        <article class="product-card h-100">
+
+                            <div class="product-card-image">
+
+                                {% if card.representative_product %}
+
+                                    {% if card.representative_product.image %}
+                                        <img
+                                            src="{{ card.representative_product.image.url }}"
+                                            alt="{{ card.category.name }}"
+                                            loading="lazy"
+                                        >
+
+                                    {% elif card.representative_product.external_image_url %}
+                                        <img
+                                            src="{{ card.representative_product.external_image_url }}"
+                                            alt="{{ card.category.name }}"
+                                            loading="lazy"
+                                        >
+                                    {% endif %}
+
+                                {% endif %}
+
+                            </div>
+
+                            <div class="product-card-content">
+
+                                <div class="product-card-meta">
+                                    Product Category
+                                </div>
+
+                                <h3 class="product-card-title">
+                                    {{ card.category.name }}
+                                </h3>
+
+                                {% if card.category.description %}
+                                    <p class="product-card-description">
+                                        {{ card.category.description|truncatewords:18 }}
+                                    </p>
+                                {% endif %}
+
+                                <div class="mt-auto pt-3">
+                                    <strong>
+                                        {{ card.product_count }}
+                                    </strong>
+                                    product{{ card.product_count|pluralize }}
+                                </div>
+
+                            </div>
+
+                        </article>
+                    </a>
+
+                </div>
+
+            {% empty %}
+
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <h3>No categories available yet.</h3>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

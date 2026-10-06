@@ -10,25 +10,89 @@
     Build a custom KaleidoBrands quote using products saved in your Quote Cart or Compare Cart, adjust quantities, and submit one professional quote request.
 {% endblock %}
 
+{% block head %}
+<link
+    rel="stylesheet"
+    href="{% static 'products/css/marketplace.css' %}"
+>
+{% endblock %}
+
 {% block body %}
-<main class="inner-page">
-    <section class="section-panel">
+<main class="kb-quote-builder">
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+    <section class="kb-quote-hero">
         <div class="container">
 
-            <div class="section-heading text-center reveal">
-                <span>Quote Builder</span>
+            <div class="kb-quote-hero-inner">
 
-                <h1>Build Your Custom Quote</h1>
+                <div class="kb-quote-hero-copy">
+                    <span class="kb-quote-eyebrow">
+                        KaleidoBrands Quote Studio
+                    </span>
 
-                <p
-                    class="mx-auto mt-3"
-                    style="max-width: 760px;"
-                >
-                    Review products from your Quote Cart and Compare
-                    Cart, adjust quantities, and submit one professional
-                    quote request.
-                </p>
+                    <h1>
+                        Build Your
+                        <span>Custom Quote</span>
+                    </h1>
+
+                    <p>
+                        Review your products, adjust quantities, and tell
+                        us about your project. We'll prepare a personalized
+                        quote with pricing, options, and production details.
+                    </p>
+                </div>
+
+                <div class="kb-quote-benefits">
+
+                    <div class="kb-quote-benefit">
+                        <div class="kb-quote-benefit-icon is-green">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+
+                        <div>
+                            <strong>No Payment Required</strong>
+                            <span>Just submit your request</span>
+                        </div>
+                    </div>
+
+                    <div class="kb-quote-benefit">
+                        <div class="kb-quote-benefit-icon is-purple">
+                            <i class="bi bi-lightning-charge-fill"></i>
+                        </div>
+
+                        <div>
+                            <strong>Fast Response</strong>
+                            <span>We'll get back to you quickly</span>
+                        </div>
+                    </div>
+
+                    <div class="kb-quote-benefit">
+                        <div class="kb-quote-benefit-icon is-pink">
+                            <i class="bi bi-heart-fill"></i>
+                        </div>
+
+                        <div>
+                            <strong>Custom Pricing</strong>
+                            <span>Volume, branding & bulk discounts</span>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
+
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         QUOTE WORKSPACE
+         ===================================================== -->
+    <section class="kb-quote-workspace">
+        <div class="container">
 
             <form
                 method="post"
@@ -37,7 +101,6 @@
             >
                 {% csrf_token %}
 
-                <!-- Structured quote-builder products -->
                 <input
                     type="hidden"
                     name="quote_items"
@@ -45,137 +108,253 @@
                     value="[]"
                 >
 
-                <!-- Readable combined products for form submission -->
                 <textarea
                     name="saved_products"
                     id="savedProductsField"
                     hidden
                 ></textarea>
 
-                <div class="row g-4 align-items-start">
 
-                    <!-- Products selected for the quote -->
-                    <div class="col-lg-7">
-                        <div class="glass-card p-4 h-100">
+                <div class="kb-quote-layout">
 
-                            <div
-                                class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2 mb-4"
-                            >
+                    <!-- =====================================
+                         LEFT: PRODUCTS
+                         ===================================== -->
+                    <div class="kb-quote-card kb-quote-products-card">
+
+                        <div class="kb-quote-card-header">
+
+                            <div class="kb-quote-card-heading">
+                                <div class="kb-quote-heading-icon is-blue">
+                                    <i class="bi bi-cart3"></i>
+                                </div>
+
                                 <div>
-                                    <span class="section-kicker">
+                                    <span class="kb-quote-card-kicker">
                                         Selected Products
                                     </span>
 
-                                    <h2 class="h3 mb-1">
-                                        Products Included in This Quote
-                                    </h2>
+                                    <h2>Your Quote Items</h2>
 
-                                    <p class="mb-0">
-                                        Products saved in your Quote Cart
+                                    <p>
+                                        Products saved from your Quote Cart
                                         or Compare Cart will appear below.
                                     </p>
                                 </div>
-
-                                <span
-                                    id="savedProductsCount"
-                                    class="quote-cart-page-count"
-                                    aria-live="polite"
-                                >
-                                    0 selected products
-                                </span>
                             </div>
 
-                            <!-- Combined Quote Cart and Compare Cart preview -->
-                            <div
-                                id="savedProductsPreview"
-                                class="saved-products-preview mb-4"
+                            <span
+                                id="savedProductsCount"
+                                class="kb-quote-count"
                                 aria-live="polite"
-                            ></div>
-
-                            <!-- Interactive quantity controls -->
-                            <div
-                                id="quoteBuilderItems"
-                                class="quote-builder-items"
-                                aria-live="polite"
-                            ></div>
-
-                            <div
-                                id="quoteBuilderEmpty"
-                                class="mini-card text-center"
-                                hidden
                             >
-                                <h4>No products selected yet.</h4>
+                                0 selected products
+                            </span>
+
+                        </div>
+
+
+                        <!-- Compact combined preview -->
+                        <div
+                            id="savedProductsPreview"
+                            class="saved-products-preview kb-quote-preview"
+                            aria-live="polite"
+                        ></div>
+
+
+                        <!-- Interactive items generated by quote_builder.js -->
+                        <div
+                            id="quoteBuilderItems"
+                            class="quote-builder-items kb-quote-items"
+                            aria-live="polite"
+                        ></div>
+
+
+                        <!-- Empty state -->
+                        <div
+                            id="quoteBuilderEmpty"
+                            class="kb-quote-empty"
+                            hidden
+                        >
+                            <div class="kb-quote-empty-icon">
+                                <i class="bi bi-bag-plus"></i>
+                            </div>
+
+                            <h3>No products selected yet</h3>
+
+                            <p>
+                                Browse the marketplace and save products
+                                to your Quote Cart or Compare Cart.
+                            </p>
+
+                            <a
+                                href="{% url 'products:home' %}"
+                                class="btn btn-kb-primary"
+                            >
+                                Browse Products
+                            </a>
+                        </div>
+
+
+                        <!-- Pricing information -->
+                        <div class="kb-quote-pricing-note">
+                            <div class="kb-quote-info-icon">
+                                <i class="bi bi-info-lg"></i>
+                            </div>
+
+                            <div>
+                                <strong>Pricing Information</strong>
 
                                 <p>
-                                    Browse the marketplace and save products
-                                    to your Quote Cart or Compare Cart.
+                                    Displayed product prices are starting
+                                    prices. Final pricing may vary based on
+                                    quantity, decoration method, setup,
+                                    product options, shipping, and project
+                                    requirements.
                                 </p>
+                            </div>
+                        </div>
 
-                                <a
-                                    href="{% url 'products:home' %}"
-                                    class="btn btn-kb-primary"
-                                >
-                                    Browse Products
-                                </a>
+
+                        <!-- Benefits -->
+                        <div class="kb-quote-feature-grid">
+
+                            <div class="kb-quote-feature">
+                                <div class="kb-quote-feature-icon">
+                                    <i class="bi bi-tags"></i>
+                                </div>
+
+                                <div>
+                                    <strong>Volume Discounts</strong>
+                                    <span>
+                                        Better pricing at higher quantities
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="kb-quote-feature">
+                                <div class="kb-quote-feature-icon">
+                                    <i class="bi bi-palette"></i>
+                                </div>
+
+                                <div>
+                                    <strong>Custom Branding</strong>
+                                    <span>
+                                        Multiple decoration options
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="kb-quote-feature">
+                                <div class="kb-quote-feature-icon">
+                                    <i class="bi bi-truck"></i>
+                                </div>
+
+                                <div>
+                                    <strong>Flexible Shipping</strong>
+                                    <span>
+                                        Delivery coordinated for your project
+                                    </span>
+                                </div>
                             </div>
 
                         </div>
+
+
+                        <div class="kb-quote-product-footer">
+                            <a
+                                href="{% url 'products:home' %}"
+                                class="kb-quote-secondary-action"
+                            >
+                                <i class="bi bi-arrow-left"></i>
+                                Continue Shopping
+                            </a>
+                        </div>
+
                     </div>
 
-                    <!-- Customer quote information -->
-                    <div class="col-lg-5">
-                        <div class="glass-card p-4 quote-builder-sidebar">
 
-                            <div class="mb-4">
-                                <span class="section-kicker">
+                    <!-- =====================================
+                         RIGHT: PROJECT DETAILS
+                         ===================================== -->
+                    <div class="kb-quote-card kb-quote-project-card">
+
+                        <div class="kb-quote-card-heading kb-project-heading">
+
+                            <div class="kb-quote-heading-icon is-red">
+                                <i class="bi bi-file-earmark-text"></i>
+                            </div>
+
+                            <div>
+                                <span class="kb-quote-card-kicker">
                                     Request Details
                                 </span>
 
-                                <h2 class="h3 mb-2">
-                                    Tell Us About Your Project
-                                </h2>
+                                <h2>Tell Us About Your Project</h2>
 
-                                <p class="mb-0">
-                                    Provide your contact information,
-                                    preferred quantities, customization
-                                    requirements, and deadline.
+                                <p>
+                                    Provide your contact information and
+                                    project details so we can prepare your
+                                    personalized quote.
                                 </p>
                             </div>
 
-                            {% if form.non_field_errors %}
-                                <div
-                                    class="alert alert-danger"
-                                    role="alert"
-                                >
-                                    {{ form.non_field_errors }}
-                                </div>
-                            {% endif %}
-
-                            <div class="quote-builder-fields">
-                                {{ form.as_p }}
-                            </div>
-
-                            <button
-                                type="submit"
-                                class="btn btn-kb-primary w-100 btn-lg"
-                                id="submitQuoteButton"
-                            >
-                                Submit Quote Request
-                            </button>
-
-                            <p class="small text-center mt-3 mb-0">
-                                Submitting this form does not require
-                                payment or commit you to an order.
-                            </p>
-
                         </div>
+
+
+                        {% if form.non_field_errors %}
+                            <div
+                                class="alert alert-danger"
+                                role="alert"
+                            >
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+
+                        <div class="quote-builder-fields kb-quote-fields">
+                            {{ form.as_p }}
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="kb-quote-submit"
+                            id="submitQuoteButton"
+                        >
+                            <i class="bi bi-send-fill"></i>
+                            <span>Submit Quote Request</span>
+                        </button>
+
+
+                        <div class="kb-quote-submit-note">
+                            <i class="bi bi-shield-check"></i>
+
+                            <p>
+                                No payment is required. Submitting a quote
+                                request does not commit you to an order.
+                                Our team will review your project and confirm
+                                final pricing and production details.
+                            </p>
+                        </div>
+
                     </div>
 
                 </div>
+
             </form>
 
-            <!-- Recommended products -->
-            <div class="section-heading text-center mt-5 pt-5 reveal">
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         RECOMMENDATIONS
+         ===================================================== -->
+    <section class="kb-quote-recommendations">
+        <div class="container">
+
+            <div class="section-heading text-center reveal">
                 <span>Helpful Add-Ons</span>
 
                 <h2>Recommended Products for This Quote</h2>
@@ -189,15 +368,23 @@
                 </p>
             </div>
 
+
             <div class="row g-4 mt-3">
+
                 {% for product in recommended_products %}
                     <div class="col-md-6 col-lg-3 reveal">
                         {% include "products/partials/product_card.html" %}
                     </div>
+
                 {% empty %}
                     <div class="col-12">
-                        <div class="mini-card text-center">
-                            <h4>No recommendations yet.</h4>
+
+                        <div class="kb-quote-empty">
+                            <div class="kb-quote-empty-icon">
+                                <i class="bi bi-stars"></i>
+                            </div>
+
+                            <h3>No recommendations yet</h3>
 
                             <p>
                                 Browse products to discover suggested
@@ -211,23 +398,27 @@
                                 Browse Products
                             </a>
                         </div>
+
                     </div>
                 {% endfor %}
+
             </div>
 
         </div>
     </section>
+
 </main>
 {% endblock %}
 
+
 {% block scripts %}
-    <!-- Combines Quote Cart and Compare Cart for this request -->
+
     <script
-        src="{% static 'products/js/quote_request_products.js' %}?v=1"
+        src="{% static 'products/js/quote_request_products.js' %}?v=2"
     ></script>
 
-    <!-- Builds quantities and structured quote_items JSON -->
     <script
-        src="{% static 'products/js/quote_builder.js' %}?v=2"
+        src="{% static 'products/js/quote_builder.js' %}?v=4gtyy65"
     ></script>
+
 {% endblock %}

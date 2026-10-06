@@ -14,10 +14,12 @@ from pathlib import Path
 import os
 import dj_database_url
 from decouple import config, Csv
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -88,6 +90,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "products.context_processors.marketplace_brands",
             ],
         },
     },
@@ -156,7 +159,9 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -209,23 +214,41 @@ LOGIN_REDIRECT_URL = "customers:dashboard"
 LOGOUT_REDIRECT_URL = "brands:home"
 
 
-STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY", default="")
-STRIPE_PUBLISHABLE_KEY = config("STRIPE_PUBLISHABLE_KEY", default="")
-STRIPE_WEBHOOK_SECRET = config("STRIPE_WEBHOOK_SECRET", default="")
-DEFAULT_CURRENCY = config("DEFAULT_CURRENCY", default="usd",)
+STRIPE_SECRET_KEY = config(
+    "STRIPE_SECRET_KEY", 
+    default="",
+)
+
+STRIPE_PUBLISHABLE_KEY = config(
+    "STRIPE_PUBLISHABLE_KEY", 
+    default="",
+)
+
+STRIPE_WEBHOOK_SECRET = config(
+    "STRIPE_WEBHOOK_SECRET", 
+    default="",
+)
+
+STRIPE_CURRENCY = config(
+    "STRIPE_CURRENCY",
+    default="usd",
+)
 
 SUPPLIER_SYNC_FILE = config("SUPPLIER_SYNC_FILE", default="data/sample_kaeser_blair_products.csv",)
-SUPPLIER_ALERT_EMAIL = config("SUPPLIER_ALERT_EMAIL", default="sales@kaleidobrands.com",)
+SUPPLIER_ALERT_EMAIL = config(
+    "SUPPLIER_ALERT_EMAIL", 
+    default="sales@kaleidobrands.com",
+)
 
-SUPPORT_NOTIFICATION_EMAIL = os.getenv(
+SUPPORT_NOTIFICATION_EMAIL = config(
     "SUPPORT_NOTIFICATION_EMAIL",
-    "sales@kaleidobrands.com",
+    default="support@kaleidobrands.com",
 )
 
 
-RETURN_NOTIFICATION_EMAIL = os.getenv(
+RETURN_NOTIFICATION_EMAIL = config(
     "RETURN_NOTIFICATION_EMAIL",
-    "sales@kaleidobrands.com",
+    default="sales@kaleidobrands.com",
 )
 
 KAESER_BLAIR_CSV_PATH = (
@@ -233,3 +256,8 @@ KAESER_BLAIR_CSV_PATH = (
     / "data"
     / "sample_kaeser_blair_products.csv"
 )
+
+
+
+
+

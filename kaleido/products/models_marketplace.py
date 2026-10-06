@@ -518,6 +518,9 @@ class ProductVariant(models.Model):
 
     @property
     def effective_price(self):
+        if self.source_payload.get("pricing_available") is False:
+            return None
+
         if self.product.starting_price is None:
             return None
 

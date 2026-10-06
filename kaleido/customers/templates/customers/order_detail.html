@@ -75,21 +75,43 @@
                             <span>Shipping Cost</span>
                             <strong>${{ order.shipping }}</strong>
                         </div>
-                            {% if order.payment_status == "paid" %}
-                            <div class="alert alert-success mt-4">
-                                Payment confirmed.
+                        {% if order.payment_status == "paid" %}
+
+                            <div class="alert alert-success">
+                                <strong>Payment completed</strong>
+
+                                {% if order.paid_at %}
+                                    <div>
+                                        Paid on {{ order.paid_at|date:"F j, Y, g:i a" }}
+                                    </div>
+                                {% endif %}
                             </div>
-                        {% elif order.total > 0 %}
-                            <div class="mt-4">
-                                <a href="{% url 'customers:start_payment' order.id %}" class="btn btn-kb-primary w-100">
-                                    Pay Now
+
+                        {% elif order.payment_status == "pending" %}
+
+                            <div class="alert alert-warning">
+                                <strong>Payment pending</strong>
+
+                                <p class="mb-2">
+                                    Your payment has not yet been confirmed.
+                                </p>
+
+                                <a
+                                    href="{% url 'customers:start_payment' order.id %}"
+                                    class="btn btn-primary">
+                                    Continue Payment
                                 </a>
                             </div>
+
                         {% else %}
-                            <div class="alert alert-info mt-4">
-                                No payment is required for this order.
-                            </div>
-                        {% endif %}
+
+                            <a
+                                href="{% url 'customers:start_payment' order.id %}"
+                                class="btn btn-primary">
+                                Pay Now
+                            </a>
+
+{% endif %}
                         {% if order.invoice_pdf %}
                         <div class="mt-4">
                             <a href="{{ order.invoice_pdf.url }}" target="_blank" class="btn btn-kb-primary w-100">

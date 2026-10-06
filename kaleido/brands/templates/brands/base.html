@@ -202,148 +202,100 @@
         </a>
     </li>
 
-    <!-- PRODUCTS -->
-    <li class="nav-item dropdown">
-        <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            id="productsDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-        >
-            Products
-        </a>
+    <!-- =====================================================
+     SHOP
+====================================================== -->
+<li class="nav-item dropdown">
 
-        <ul
-                class="dropdown-menu kb-dropdown"
-                aria-labelledby="productsDropdown"
-            >
-                <li>
-                    <a
-                        class="dropdown-item"
-                        href="{% url 'products:home' %}"
-                    >
-                        All Products
-                    </a>
-                </li>
+    <a
+        class="nav-link dropdown-toggle"
+        href="#"
+        id="shopDropdown"
+        role="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+    >
+        Shop
+    </a>
 
-                <li>
-                    <a
-                        class="dropdown-item"
-                        href="{% url 'products:home' %}#categories"
-                    >
-                        Shop by Category
-                    </a>
-                </li>
+    <ul
+        class="dropdown-menu kb-dropdown"
+        aria-labelledby="shopDropdown"
+    >
 
-                <li>
-                    <a
-                        class="dropdown-item"
-                        href="{% url 'products:home' %}#industries"
-                    >
-                        Shop by Industry
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        class="dropdown-item"
-                        href="{% url 'products:home' %}#collections"
-                    >
-                        Curated Collections
-                    </a>
-                </li>
-
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-
-                <li>
-                    <a
-                        class="dropdown-item"
-                        href="{% url 'products:compare' %}"
-                    >
-                        Compare Products
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        class="dropdown-item"
-                        href="{% url 'products:search' %}"
-                    >
-                        Search Products
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-
-        <!-- SHOP BY -->
-        <li class="nav-item dropdown">
+        <!-- ALL PRODUCTS -->
+        <li>
             <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                id="shopByDropdown"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+                class="dropdown-item"
+                href="{% url 'products:home' %}"
             >
-                Shop By
+                All Products
             </a>
-
-            <ul
-                class="dropdown-menu kb-dropdown"
-                aria-labelledby="shopByDropdown"
-            >
-                <li>
-                    <a
-                        class="dropdown-item"
-                        href="{% url 'brands:home' %}#categories"
-                    >
-                        Product Category
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        class="dropdown-item"
-                        href="{% url 'brands:home' %}#industries"
-                    >
-                        Industry
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        class="dropdown-item"
-                        href="{% url 'brands:home' %}#collections"
-                    >
-                        Curated Collection
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        class="dropdown-item"
-                        href="{% url 'brands:home' %}#new-arrivals"
-                    >
-                        New Arrivals
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        class="dropdown-item"
-                        href="{% url 'brands:home' %}#featured"
-                    >
-                        Featured Products
-                    </a>
-                </li>
-            </ul>
         </li>
 
+
+        <!-- PRODUCT CATEGORY -->
+        <li>
+            <a
+                class="dropdown-item"
+                href="{% url 'products:category_list' %}"
+            >
+                Product Category
+            </a>
+        </li>
+
+
+        <!-- PRODUCT BRANDS -->
+        <li>
+            <a
+                class="dropdown-item"
+                href="{% url 'products:brand_list' %}"
+            >
+                Product Brands
+            </a>
+        </li>
+
+
+        <!-- PRODUCT INDUSTRY -->
+        <li>
+            <a
+                class="dropdown-item"
+                href="{% url 'products:industry_list' %}"
+            >
+                Product Industry
+            </a>
+        </li>
+
+
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+
+
+        <!-- FEATURED PRODUCTS -->
+        <li>
+            <a
+                class="dropdown-item"
+                href="{% url 'products:featured' %}"
+            >
+                Featured Products
+            </a>
+        </li>
+
+
+        <!-- NEW ARRIVALS -->
+        <li>
+            <a
+                class="dropdown-item"
+                href="{% url 'products:new_arrivals' %}"
+            >
+                New Arrivals
+            </a>
+        </li>
+
+    </ul>
+
+</li>
 
         <!-- QUOTES -->
         <li class="nav-item dropdown">
@@ -715,112 +667,273 @@
         {% block body %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="kb-footer">
-        <div class="container">
-            <div class="row g-4 py-5">
+  <!-- Premium Marketplace Footer -->
+<footer class="kb-footer">
 
-                <div class="col-md-3">
-                    <h5>About KaleidoBrands</h5>
+    <!-- ==========================================
+         BRAND SHOWCASE
+    =========================================== -->
+    <section
+        class="kb-brand-showcase"
+        aria-labelledby="kbBrandShowcaseTitle"
+    >
+        <div class="container">
+
+            <div class="kb-brand-showcase-header">
+
+                <div class="kb-brand-showcase-heading">
+
+                    <span class="kb-brand-eyebrow">
+                        <span class="kb-brand-eyebrow-line"></span>
+                        Trusted brands. Endless possibilities.
+                    </span>
+
+                    <h2 id="kbBrandShowcaseTitle">
+                        Brands we <span>carry.</span>
+                    </h2>
 
                     <p>
-                        We help businesses create memorable brand
-                        impressions through curated promotional
-                        products, apparel, gifts, and custom branding
-                        solutions.
+                        Discover trusted names across promotional products,
+                        branded merchandise, corporate gifts, apparel,
+                        technology, drinkware and more.
                     </p>
+
                 </div>
-                <div class="col-md-3">
-    <h5>Shop</h5>
 
-    <a href="{% url 'products:home' %}">
-        All Products
-    </a>
-
-    <a href="{% url 'products:home' %}#categories">
-        Shop by Category
-    </a>
-
-    <a href="{% url 'products:home' %}#industries">
-        Shop by Industry
-    </a>
-
-    <a href="{% url 'products:home' %}#collections">
-        Curated Collections
-    </a>
-
-    <a href="{% url 'products:compare' %}">
-        Compare Products
-    </a>
-
-    <a href="{% url 'products:search' %}">
-        Search Products
-    </a>
-</div>
-
-<div class="col-md-3">
-    <h5>Resources</h5>
-
-    <a href="{% url 'brands:home' %}#process">
-        How It Works
-    </a>
-
-    <a href="{% url 'products:supplier_detail' 'kaeser-blair' %}">
-        Supplier Catalogs
-    </a>
-
-    <a href="{% url 'products:quote_builder' %}">
-        Build a Quote
-    </a>
-
-    <a href="{% url 'products:quote_cart' %}">
-        Quote Cart
-    </a>
-
-    <a href="{% url 'products:quote_history' %}">
-        Quote History
-    </a>
-
-    <a href="{% url 'customers:dashboard' %}">
-        Customer Portal
-    </a>
-
-    <a href="{% url 'brands:home' %}#contact">
-        Contact
-    </a>
-</div>
-                <div class="col-md-3">
-                    <h5>Get in Touch</h5>
-
-                    <a href="tel:+15135109397">
-                        +1 (513) 510-9397
-                    </a>
-
-                    <a href="mailto:sales@kaleidobrands.com">
-                        sales@kaleidobrands.com
-                    </a>
-
-                    <a href="mailto:helpdesk@kaleidobrands.com">
-                        helpdesk@kaleidobrands.com
-                    </a>
-
-                    <a
-                        href="https://www.google.com/maps/search/Palmyra,+PA+17078"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Palmyra, PA 17078
-                    </a>
+                <div class="kb-brand-showcase-stat">
+                    <strong>{{ showcase_brands|length }}+</strong>
+                    <span>Featured Brands</span>
                 </div>
+
             </div>
 
-            <div class="footer-bottom">
-                <div>
-                    © {% now "Y" %} KaleidoBrands.
-                    All rights reserved.
+
+            {% if showcase_brands %}
+
+                <div class="kb-brand-logo-grid">
+
+                    {% for brand in showcase_brands %}
+
+                        <article
+                            class="kb-brand-logo-card"
+                            style="--brand-index: {{ forloop.counter0 }};"
+                        >
+                            <div class="kb-brand-logo-inner">
+
+                                <div class="kb-brand-logo-media
+                                    {% if brand.slug == 'denwell' or brand.slug == 'hub-pen' or brand.slug == 'sugarspot' or brand.slug == 'beacon' or brand.slug == 'best' or brand.slug == 'handstands' or brand.slug == 'mixie' or brand.slug == 'origaudio' %}
+                                        kb-brand-logo-media-dark
+                                    {% endif %}
+                                ">
+
+                                    {% if brand.logo %}
+
+                                        <img
+                                            src="{{ brand.logo.url }}"
+                                            alt="{{ brand.name }} logo"
+                                            loading="lazy"
+                                        >
+
+                                    {% else %}
+
+                                        <span class="kb-brand-wordmark">
+                                            {{ brand.name }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+                        </article>
+
+                    {% endfor %}
+
+
+                    <!-- Locked-design final discovery tile -->
+                    <article class="kb-brand-logo-card kb-brand-more-card">
+
+                        <div class="kb-brand-logo-inner">
+
+                            <div class="kb-brand-more-inner">
+
+                                <span class="kb-brand-more-plus">
+                                    +
+                                </span>
+
+                                <strong>
+                                    And More
+                                </strong>
+
+                                <small>
+                                    Great Brands
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
                 </div>
 
-                <div class="footer-socials">
+            {% endif %}
+
+
+            <!-- ==================================
+                 VALUE STRIP
+            =================================== -->
+            <div class="kb-brand-value-row">
+
+                <div class="kb-brand-value">
+                    <span class="kb-brand-value-icon">
+                        <i class="bi bi-patch-check-fill"></i>
+                    </span>
+
+                    <span>
+                        <strong>Trusted Brands</strong>
+                        <small>Names you know and trust</small>
+                    </span>
+                </div>
+
+
+                <div class="kb-brand-value">
+                    <span class="kb-brand-value-icon">
+                        <i class="bi bi-gem"></i>
+                    </span>
+
+                    <span>
+                        <strong>Premium Quality</strong>
+                        <small>Products made to impress</small>
+                    </span>
+                </div>
+
+
+                <div class="kb-brand-value">
+                    <span class="kb-brand-value-icon">
+                        <i class="bi bi-grid-3x3-gap-fill"></i>
+                    </span>
+
+                    <span>
+                        <strong>Endless Categories</strong>
+                        <small>Something for every idea</small>
+                    </span>
+                </div>
+
+
+                <div class="kb-brand-value">
+                    <span class="kb-brand-value-icon">
+                        <i class="bi bi-stars"></i>
+                    </span>
+
+                    <span>
+                        <strong>Custom Branding</strong>
+                        <small>Made for your identity</small>
+                    </span>
+                </div>
+
+
+                <div class="kb-brand-value">
+                    <span class="kb-brand-value-icon">
+                        <i class="bi bi-headset"></i>
+                    </span>
+
+                    <span>
+                        <strong>Expert Support</strong>
+                        <small>From idea to delivery</small>
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+
+    <!-- KaleidoBrands color transition -->
+    <div class="kb-footer-wave" aria-hidden="true">
+        <div class="kb-footer-wave-blue"></div>
+        <div class="kb-footer-wave-red"></div>
+        <div class="kb-footer-wave-gold"></div>
+    </div>
+    <div class="kb-footer-ribbon" aria-hidden="true">
+    <div class="kb-footer-ribbon-blue"></div>
+    <div class="kb-footer-ribbon-gold"></div>
+    <div class="kb-footer-ribbon-red"></div>
+</div>
+
+   
+    <!-- ==========================================
+         DARK KALEIDOBRANDS FOOTER
+    =========================================== -->
+    <div class="kb-footer-main">
+    <div class="container">
+
+        <div class="kb-footer-main-grid">
+
+            <!-- LEFT: KALEIDOBRANDS -->
+            <div class="kb-footer-brand">
+
+                <a
+                    href="{% url 'brands:home' %}"
+                    class="kb-footer-brand-logo"
+                    aria-label="KaleidoBrands home"
+                >
+                    <img
+                        src="{% static 'brands/images/kb-k.png' %}"
+                        alt="KaleidoBrands K logo"
+                        class="kb-footer-k-logo"
+                    >
+
+                    <span class="kb-footer-brand-name">
+                        <span class="kb-footer-kaleido">Kaleido</span><span class="kb-footer-brands">Brands</span>
+                    </span>
+                </a>
+
+                <p class="kb-footer-tagline">
+                    Branding That Inspires.Impressions That Last.
+                </p>
+
+            </div>
+
+
+            <!-- CENTER: NAVIGATION -->
+            <nav
+                class="kb-footer-nav"
+                aria-label="Footer navigation"
+            >
+                <div class="kb-footer-nav-column">
+                    <a href="{% url 'brands:home' %}">
+                        Home
+                    </a>
+
+                    <a href="{% url 'products:home' %}">
+                        Shop
+                    </a>
+                </div>
+
+                <div class="kb-footer-nav-column">
+                    <a href="{% url 'brands:home' %}#about">
+                        About
+                    </a>
+
+                    <a href="{% url 'brands:home' %}#contact">
+                        Contact
+                    </a>
+                </div>
+            </nav>
+
+
+            <!-- RIGHT: SOCIAL -->
+            <div class="kb-footer-connect">
+
+                <span class="kb-footer-connect-title">
+                    Connect With Us
+                </span>
+
+                <div class="kb-footer-socials">
+
                     <a
                         href="https://www.facebook.com/kaleidobrands/"
                         target="_blank"
@@ -829,7 +942,7 @@
                     >
                         <img
                             src="{% static 'brands/images/facebook.png' %}"
-                            alt="Facebook"
+                            alt=""
                         >
                     </a>
 
@@ -841,7 +954,7 @@
                     >
                         <img
                             src="{% static 'brands/images/linkedin.png' %}"
-                            alt="LinkedIn"
+                            alt=""
                         >
                     </a>
 
@@ -849,17 +962,43 @@
                         href="https://www.google.com/maps/search/Palmyra,+PA+17078"
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label="Location"
+                        aria-label="KaleidoBrands location"
                     >
                         <img
                             src="{% static 'brands/images/location.png' %}"
-                            alt="Location"
+                            alt=""
                         >
                     </a>
+
                 </div>
+
+
             </div>
+
         </div>
-    </footer>
+
+
+        <!-- BOTTOM -->
+        <div class="kb-footer-bottom">
+
+            <span>
+                © {% now "Y" %} KaleidoBrands. All rights reserved.
+            </span>
+
+            <div class="kb-footer-legal">
+                <a href="#">Privacy Policy</a>
+
+                <span>•</span>
+
+                <a href="#">Terms of Service</a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</footer>
 
     <!-- Floating Quote Cart -->
     <div class="floating-cart-wrap">
@@ -911,6 +1050,14 @@
         aria-atomic="true"
     ></div>
 
+    <form
+    id="comparisonCsrfForm"
+    style="display: none;"
+    aria-hidden="true"
+>
+    {% csrf_token %}
+</form>
+
     <!-- Bootstrap -->
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -920,9 +1067,9 @@
     <script src="{% static 'brands/js/main.js' %}"></script>
 
     <!-- Quote Cart JavaScript: load exactly once -->
-    <script
-        src="{% static 'products/js/quote_cart.js' %}?v=16"
-    ></script>
+
+    <script src="{% static 'products/js/quote_cart.js' %}"></script>
+    <script src="{% static 'products/js/compare.js' %}?v=2"></script>
 
     <!-- Page-specific scripts -->
     {% block scripts %}{% endblock %}

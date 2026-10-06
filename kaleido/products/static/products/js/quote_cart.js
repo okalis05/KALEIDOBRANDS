@@ -102,9 +102,9 @@ document.addEventListener("DOMContentLoaded", function () {
             item.name = name;
             item.url = normalizeValue(item.url);
             item.image = normalizeValue(item.image);
-            item.category =
-                normalizeValue(item.category) || "Product";
+            item.category = normalizeValue(item.category) || "Product";
             item.price = normalizeValue(item.price);
+            item.min_quantity = normalizeValue(item.min_quantity) || "1";
 
             return true;
         });
@@ -174,6 +174,8 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             dispatchCartUpdated(cleanItems);
+
+            return true;
         } catch (error) {
             console.error(
                 "Unable to save quote cart:",
@@ -183,6 +185,8 @@ document.addEventListener("DOMContentLoaded", function () {
             showToast(
                 "Unable to save this product."
             );
+
+            return false;
         }
     }
 
@@ -448,43 +452,67 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function refreshSaveButtons() {
-        const items = getCart();
+    const items = getCart();
 
-        document
-            .querySelectorAll(
-                ".save-product-btn"
-            )
-            .forEach(function (button) {
-                const productId =
-                    normalizeId(
-                        button.dataset.productId ||
-                        button.dataset.id
+    document
+        .querySelectorAll(".save-product-btn")
+        .forEach(function (button) {
+            const productId =
+                normalizeId(
+                    button.dataset.productId ||
+                    button.dataset.id
+                );
+
+            const exists = items.some(
+                function (item) {
+                    return (
+                        normalizeId(item.id) ===
+                        productId
                     );
+                }
+            );
 
-                const exists = items.some(
-                    function (item) {
-                        return (
-                            normalizeId(item.id) ===
-                            productId
-                        );
-                    }
-                );
+            /*
+             * Keep icon-only product-card buttons intact.
+             * Switch between outline and filled heart.
+             */
+            const icon = button.querySelector("i.bi");
 
-                button.textContent = exists
-                    ? "Saved ✓"
-                    : "Save Product";
+            if (icon) {
+                icon.classList.toggle("bi-heart", !exists);
+                icon.classList.toggle("bi-heart-fill", exists);
+            }
 
-                button.classList.toggle(
-                    "saved",
-                    exists
-                );
+            button.classList.toggle(
+                "is-saved",
+                exists
+            );
 
-                button.setAttribute(
-                    "aria-pressed",
-                    exists ? "true" : "false"
-                );
-            });
-    }
+            button.classList.toggle(
+                "saved",
+                exists
+            );
+
+            button.setAttribute(
+                "aria-pressed",
+                exists ? "true" : "false"
+            );
+
+            button.setAttribute(
+                "title",
+                exists
+                    ? "Product saved"
+                    : "Save product"
+            );
+
+            button.setAttribute(
+                "aria-label",
+                exists
+                    ? "Product saved"
+                    : "Save product"
+            );
+        });
+}
 
     function refreshQuoteCart() {
         renderCart();
@@ -525,6 +553,10 @@ document.addEventListener("DOMContentLoaded", function () {
             price: normalizeValue(
                 button.dataset.productPrice ||
                 button.dataset.price
+            ),
+
+            min_quantity: normalizeValue(
+                button.dataset.minQuantity || 1
             ),
         };
     }
@@ -583,7 +615,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (alreadySaved) {
                     showToast(
-                        "Product is already saved"
+                        "Product is already in your Quote Cart"
                     );
 
                     refreshQuoteCart();
@@ -591,11 +623,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 cart.push(item);
-                saveCart(cart);
 
-                showToast(
-                    "Product saved to Quote Cart"
-                );
+                const saved = saveCart(cart);
+
+                if (saved) {
+                    showToast(
+                        "Product saved to Quote Cart"
+                    );
+                }
 
                 return;
             }

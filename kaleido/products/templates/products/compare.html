@@ -368,7 +368,9 @@ availability, material, imprint methods, and production details.
                                                 data-product-name="{{ product.name|escape }}"
                                                 data-product-url="{% url 'products:detail' product.slug %}"
                                                 data-product-category="{% if product.category %}{{ product.category.name|escape }}{% else %}Product{% endif %}"
-                                                data-product-price="{% if product.starting_price %}{{ product.starting_price }}{% endif %}"
+                                                data-product-price="{% if product.starting_price %}${{ product.starting_price }}{% endif %}"
+                                                data-product-image="{% if product.image %}{{ product.image.url }}{% elif product.external_image_url %}{{ product.external_image_url }}{% endif %}"
+                                                data-min-quantity="{{ product.min_quantity|default:1 }}"
                                             >
                                                 Save Product
                                             </button>
@@ -430,5 +432,4 @@ availability, material, imprint methods, and production details.
 
 {% block scripts %}
 <script src="{% static 'products/js/compare.js' %}"></script>
-<script src="{% static 'products/js/quote_cart.js' %}"></script>
 {% endblock %}

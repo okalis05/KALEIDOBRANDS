@@ -122,7 +122,9 @@
         data-product-url="{{ product.get_absolute_url }}"
         data-product-category="{% if product.category %}{{ product.category.name|escape }}{% else %}Product{% endif %}"
         data-product-price="{% if product.starting_price is not None %}{{ product.starting_price }}{% endif %}"
+        data-product-image="{% if product.image %}{{ product.image.url }}{% elif product.external_image_url %}{{ product.external_image_url }}{% endif %}"
         aria-label="Save {{ product.name }}"
+        data-min-quantity="{{ product.min_quantity|default:1 }}"
         aria-pressed="false"
         title="Save product"
     >

@@ -3,163 +3,1286 @@
 {% block title %}Checkout | KaleidoBrands{% endblock %}
 
 {% block body %}
-<main class="inner-page">
-    <section class="section-panel">
+
+<main class="inner-page kb-checkout-page">
+
+    <section class="section-panel kb-checkout-section">
+
         <div class="container">
-            <div class="section-heading text-center reveal">
+
+
+            <!-- =====================================================
+                 HERO
+                 ===================================================== -->
+
+            <div class="section-heading text-center reveal kb-checkout-hero">
+
                 <span>Checkout</span>
+
                 <h1>Complete Your Order</h1>
-                <p class="mx-auto mt-3" style="max-width:720px;">
-                    Review your cart and enter shipping details.
+
+                <p>
+                    Confirm your shipping details and review your
+                    order before placing it.
                 </p>
+
             </div>
 
-            <div class="row g-4 mt-5">
-                <div class="col-lg-7">
-                    <div class="auth-card glass-card">
-                        <h3>Shipping Details</h3>
 
-                        <form method="post" class="auth-form">
+            <div class="row g-4 kb-checkout-grid">
+
+
+                <!-- =================================================
+                     LEFT — SHIPPING
+                     ================================================= -->
+
+                <div class="col-lg-7">
+
+                    <div class="kb-checkout-card kb-shipping-card">
+
+
+                        <!-- CARD HEADER -->
+
+                        <div class="kb-checkout-card-heading">
+
+                            <div class="kb-checkout-heading-icon is-blue">
+                                <i class="bi bi-truck"></i>
+                            </div>
+
+                            <div>
+
+                                <span class="kb-checkout-kicker">
+                                    Shipping Details
+                                </span>
+
+                                <h2>Where should we send it?</h2>
+
+                                <p>
+                                    Choose a saved address or enter
+                                    the delivery information below.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <form
+                            method="post"
+                            class="auth-form kb-checkout-form"
+                        >
+
                             {% csrf_token %}
 
+
                             {% if form.non_field_errors %}
+
                                 <div class="alert alert-danger">
                                     {{ form.non_field_errors }}
                                 </div>
+
                             {% endif %}
 
-                            <div class="mb-3">
-                                <label for="{{ form.saved_address.id_for_label }}">
-                                    Saved Address
-                                </label>
-                                {{ form.saved_address }}
-                                {{ form.saved_address.errors }}
-                            </div>
 
-                            <div class="mb-3">
-                                <label for="{{ form.shipping_method.id_for_label }}">
-                                    Shipping Method
-                                </label>
-                                {{ form.shipping_method }}
-                                {{ form.shipping_method.errors }}
-                            </div>
+                            <!-- =====================================
+                                 DELIVERY OPTIONS
+                                 ===================================== -->
 
-                            <div class="mb-3">
-                                <label for="{{ form.company.id_for_label }}">Company</label>
-                                {{ form.company }}
-                                {{ form.company.errors }}
-                            </div>
+                            <div class="kb-checkout-form-section">
 
-                            <div class="mb-3">
-                                <label for="{{ form.shipping_name.id_for_label }}">
-                                    Shipping Name
-                                </label>
-                                {{ form.shipping_name }}
-                                {{ form.shipping_name.errors }}
-                            </div>
+                                <div class="kb-checkout-section-title">
 
-                            <div class="mb-3">
-                                <label for="{{ form.shipping_address.id_for_label }}">
-                                    Address
-                                </label>
-                                {{ form.shipping_address }}
-                                {{ form.shipping_address.errors }}
-                            </div>
+                                    <div>
+                                        <i class="bi bi-geo-alt"></i>
+                                    </div>
 
-                            <div class="row g-3">
-                                <div class="col-md-5">
-                                    <label for="{{ form.shipping_city.id_for_label }}">
-                                        City
-                                    </label>
-                                    {{ form.shipping_city }}
-                                    {{ form.shipping_city.errors }}
+                                    <span>
+                                        Delivery Options
+                                    </span>
+
                                 </div>
 
-                                <div class="col-md-4">
-                                    <label for="{{ form.shipping_state.id_for_label }}">
-                                        State
-                                    </label>
-                                    {{ form.shipping_state }}
-                                    {{ form.shipping_state.errors }}
+
+                                <div class="row g-3">
+
+                                    <div class="col-md-6">
+
+                                        <div class="kb-field">
+
+                                            <label
+                                                for="{{ form.saved_address.id_for_label }}"
+                                            >
+                                                Saved Address
+                                            </label>
+
+                                            {{ form.saved_address }}
+
+                                            {{ form.saved_address.errors }}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+
+                                        <div class="kb-field">
+
+                                            <label
+                                                for="{{ form.shipping_method.id_for_label }}"
+                                            >
+                                                Shipping Method
+                                            </label>
+
+                                            {{ form.shipping_method }}
+
+                                            {{ form.shipping_method.errors }}
+
+                                        </div>
+
+                                    </div>
+
                                 </div>
 
-                                <div class="col-md-3">
-                                    <label for="{{ form.shipping_postal_code.id_for_label }}">
-                                        ZIP Code
-                                    </label>
-                                    {{ form.shipping_postal_code }}
-                                    {{ form.shipping_postal_code.errors }}
+                            </div>
+
+
+                            <!-- =====================================
+                                 RECIPIENT
+                                 ===================================== -->
+
+                            <div class="kb-checkout-form-section">
+
+                                <div class="kb-checkout-section-title">
+
+                                    <div>
+                                        <i class="bi bi-person"></i>
+                                    </div>
+
+                                    <span>
+                                        Recipient
+                                    </span>
+
                                 </div>
+
+
+                                <div class="row g-3">
+
+                                    <div class="col-md-6">
+
+                                        <div class="kb-field">
+
+                                            <label
+                                                for="{{ form.company.id_for_label }}"
+                                            >
+                                                Company
+                                                <small>Optional</small>
+                                            </label>
+
+                                            {{ form.company }}
+
+                                            {{ form.company.errors }}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+
+                                        <div class="kb-field">
+
+                                            <label
+                                                for="{{ form.shipping_name.id_for_label }}"
+                                            >
+                                                Shipping Name
+                                            </label>
+
+                                            {{ form.shipping_name }}
+
+                                            {{ form.shipping_name.errors }}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
                             </div>
 
-                            <div class="mb-3 mt-3">
-                                <label for="{{ form.shipping_notes.id_for_label }}">
-                                    Shipping Notes
-                                </label>
-                                {{ form.shipping_notes }}
-                                {{ form.shipping_notes.errors }}
+
+                            <!-- =====================================
+                                 SHIPPING ADDRESS
+                                 ===================================== -->
+
+                            <div class="kb-checkout-form-section">
+
+                                <div class="kb-checkout-section-title">
+
+                                    <div>
+                                        <i class="bi bi-house-door"></i>
+                                    </div>
+
+                                    <span>
+                                        Shipping Address
+                                    </span>
+
+                                </div>
+
+
+                                <div class="kb-field">
+
+                                    <label
+                                        for="{{ form.shipping_address.id_for_label }}"
+                                    >
+                                        Street Address
+                                    </label>
+
+                                    {{ form.shipping_address }}
+
+                                    {{ form.shipping_address.errors }}
+
+                                </div>
+
+
+                                <div class="row g-3 mt-1">
+
+                                    <div class="col-md-5">
+
+                                        <div class="kb-field">
+
+                                            <label
+                                                for="{{ form.shipping_city.id_for_label }}"
+                                            >
+                                                City
+                                            </label>
+
+                                            {{ form.shipping_city }}
+
+                                            {{ form.shipping_city.errors }}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="col-md-4">
+
+                                        <div class="kb-field">
+
+                                            <label
+                                                for="{{ form.shipping_state.id_for_label }}"
+                                            >
+                                                State
+                                            </label>
+
+                                            {{ form.shipping_state }}
+
+                                            {{ form.shipping_state.errors }}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="col-md-3">
+
+                                        <div class="kb-field">
+
+                                            <label
+                                                for="{{ form.shipping_postal_code.id_for_label }}"
+                                            >
+                                                ZIP Code
+                                            </label>
+
+                                            {{ form.shipping_postal_code }}
+
+                                            {{ form.shipping_postal_code.errors }}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
                             </div>
 
-                            <div class="form-check mb-4">
+
+                            <!-- =====================================
+                                 NOTES
+                                 ===================================== -->
+
+                            <div class="kb-checkout-form-section">
+
+                                <div class="kb-checkout-section-title">
+
+                                    <div>
+                                        <i class="bi bi-chat-left-text"></i>
+                                    </div>
+
+                                    <span>
+                                        Delivery Notes
+                                    </span>
+
+                                </div>
+
+
+                                <div class="kb-field">
+
+                                    <label
+                                        for="{{ form.shipping_notes.id_for_label }}"
+                                    >
+                                        Shipping Notes
+                                        <small>Optional</small>
+                                    </label>
+
+                                    {{ form.shipping_notes }}
+
+                                    {{ form.shipping_notes.errors }}
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- =====================================
+                                 SAVE ADDRESS
+                                 ===================================== -->
+
+                            <div class="kb-save-address">
+
                                 {{ form.save_address }}
+
                                 <label
-                                    class="form-check-label"
                                     for="{{ form.save_address.id_for_label }}"
                                 >
-                                    Save this address for future orders
+
+                                    <strong>
+                                        Save this address
+                                    </strong>
+
+                                    <span>
+                                        Keep it available for future
+                                        KaleidoBrands orders.
+                                    </span>
+
                                 </label>
+
                             </div>
+
+
+                            <!-- =====================================
+                                 SUBMIT
+                                 ===================================== -->
 
                             <button
-                                class="btn btn-kb-primary w-100 btn-lg"
+                                class="kb-place-order"
                                 type="submit"
                             >
-                                Place Order
+
+                                <span>
+                                    Place Order
+                                </span>
+
+                                <i class="bi bi-arrow-right"></i>
+
                             </button>
-</form>
 
 
+                            <div class="kb-checkout-submit-security">
+
+                                <i class="bi bi-shield-check"></i>
+
+                                <span>
+                                    Your order and delivery information
+                                    are handled securely.
+                                </span>
+
+                            </div>
 
 
-
-
+                        </form>
 
                     </div>
+
                 </div>
+
+
+                <!-- =================================================
+                     RIGHT — ORDER SUMMARY
+                     ================================================= -->
 
                 <div class="col-lg-5">
-                    <div class="supplier-admin-panel">
-                        <h3>Order Summary</h3>
 
-                        {% for item in cart.items.all %}
-                            <div class="supplier-admin-row">
-                                <div>
-                                    <strong>{{ item.product_name }}</strong>
-                                    <span>Qty {{ item.quantity }} · ${{ item.line_total }}</span>
-                                </div>
+                    <aside class="kb-checkout-card kb-checkout-summary">
+
+
+                        <!-- SUMMARY HEADER -->
+
+                        <div class="kb-checkout-card-heading">
+
+                            <div class="kb-checkout-heading-icon is-red">
+                                <i class="bi bi-receipt"></i>
                             </div>
-                        {% endfor %}
 
-                        <div class="supplier-metric-row mt-4">
-                            <span>Subtotal</span>
-                            <strong>${{ cart.subtotal }}</strong>
+                            <div>
+
+                                <span class="kb-checkout-kicker">
+                                    Order Summary
+                                </span>
+
+                                <h2>Your Order</h2>
+
+                                <p>
+                                    Review pricing before placing
+                                    your order.
+                                </p>
+
+                            </div>
+
                         </div>
 
-                        <div class="supplier-metric-row">
-                            <span>Shipping</span>
+
+                        <!-- =========================================
+                             PRODUCTS
+                             ========================================= -->
+
+                        <div class="kb-checkout-products">
+
+                            {% for item in cart.items.all %}
+
+                                <div class="kb-checkout-product">
+
+
+                                    <!-- IMAGE -->
+
+                                    <a
+                                        href="{{ item.product.get_absolute_url }}"
+                                        class="kb-checkout-product-image"
+                                        aria-label="View {{ item.product_name }}"
+                                    >
+
+                                        {% if item.product.image %}
+
+                                            <img
+                                                src="{{ item.product.image.url }}"
+                                                alt="{{ item.product_name }}"
+                                            >
+
+                                        {% elif item.product.external_image_url %}
+
+                                            <img
+                                                src="{{ item.product.external_image_url }}"
+                                                alt="{{ item.product_name }}"
+                                            >
+
+                                        {% else %}
+
+                                            <div class="kb-checkout-image-placeholder">
+                                                <i class="bi bi-image"></i>
+                                            </div>
+
+                                        {% endif %}
+
+                                    </a>
+
+
+                                    <!-- PRODUCT DETAILS -->
+
+                                    <div class="kb-checkout-product-info">
+
+                                        <strong>
+                                            {{ item.product_name }}
+                                        </strong>
+
+                                        <span class="kb-checkout-product-math">
+                                            {{ item.quantity }}
+                                            ×
+                                            ${{ item.unit_price|floatformat:2 }}
+                                        </span>
+
+                                        {% if item.product.sku %}
+
+                                            <small>
+                                                SKU {{ item.product.sku }}
+                                            </small>
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <!-- LINE TOTAL -->
+
+                                    <strong class="kb-checkout-line-total">
+                                        ${{ item.line_total|floatformat:2 }}
+                                    </strong>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- =========================================
+                             COSTS
+                             ========================================= -->
+
+                        <div class="kb-checkout-costs">
+
+                            <div>
+
+                                <span>
+                                    Merchandise Subtotal
+                                </span>
+
+                                <strong>
+                                    ${{ cart.subtotal|floatformat:2 }}
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    Shipping
+                                </span>
+
+                                <strong class="is-pending">
+                                    Select a method
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    Estimated Tax
+                                </span>
+
+                                <strong class="is-pending">
+                                    Calculated later
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =========================================
+                             ESTIMATED TOTAL
+                             ========================================= -->
+
+                        <div class="kb-checkout-total">
+
+                            <div>
+
+                                <span>
+                                    Estimated Total
+                                </span>
+
+                                <small>
+                                    Before shipping and applicable taxes
+                                </small>
+
+                            </div>
+
                             <strong>
-                                Select a method on the left
+                                ${{ cart.subtotal|floatformat:2 }}
                             </strong>
+
                         </div>
 
-                        <div class="supplier-metric-row">
-                            <span>Tax</span>
-                            <strong>Calculated later</strong>
+
+                        <!-- =========================================
+                             REASSURANCE
+                             ========================================= -->
+
+                        <div class="kb-checkout-reassurance">
+
+                            <div>
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Secure checkout
+                                </strong>
+
+                                <span>
+                                    Final shipping and applicable taxes
+                                    are confirmed during checkout.
+                                </span>
+
+                            </div>
+
                         </div>
-                    </div>
+
+
+                    </aside>
+
                 </div>
+
             </div>
+
         </div>
+
     </section>
+
 </main>
+
+
+<style>
+
+/* =========================================================
+   CHECKOUT PAGE
+   ========================================================= */
+
+.kb-checkout-page {
+    position: relative;
+}
+
+.kb-checkout-section {
+    position: relative;
+    overflow: visible;
+}
+
+.kb-checkout-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(
+            circle at 12% 30%,
+            rgba(255, 66, 89, 0.055),
+            transparent 31%
+        ),
+        radial-gradient(
+            circle at 88% 18%,
+            rgba(13, 110, 253, 0.075),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at 55% 90%,
+            rgba(255, 174, 0, 0.04),
+            transparent 30%
+        );
+}
+
+.kb-checkout-section > .container {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.kb-checkout-hero {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.kb-checkout-hero p {
+    max-width: 620px;
+    margin: 14px auto 0;
+    color: #68778c;
+}
+
+.kb-checkout-grid {
+    margin-top: 44px;
+    align-items: flex-start;
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.kb-checkout-card {
+    position: relative;
+    border: 1px solid rgba(15, 23, 42, 0.07);
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow:
+        0 22px 55px rgba(15, 23, 42, 0.07),
+        0 3px 10px rgba(15, 23, 42, 0.025);
+}
+
+.kb-shipping-card {
+    padding: 28px;
+}
+
+.kb-checkout-summary {
+    padding: 26px;
+    position: sticky;
+    top: 110px;
+}
+
+
+/* =========================================================
+   HEADERS
+   ========================================================= */
+
+.kb-checkout-card-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 27px;
+}
+
+.kb-checkout-heading-icon {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 1rem;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+}
+
+.kb-checkout-heading-icon.is-blue {
+    background:
+        linear-gradient(
+            135deg,
+            #1684f8,
+            #0066df
+        );
+    box-shadow:
+        0 10px 22px rgba(13, 110, 253, 0.22);
+}
+
+.kb-checkout-heading-icon.is-red {
+    background:
+        linear-gradient(
+            135deg,
+            #ff3e57,
+            #ff5a45
+        );
+    box-shadow:
+        0 10px 22px rgba(255, 62, 87, 0.20);
+}
+
+.kb-checkout-kicker {
+    display: block;
+    margin-bottom: 3px;
+    color: #5e7088;
+    font-size: 0.66rem;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.kb-checkout-card-heading h2 {
+    margin: 0;
+    color: #172231;
+    font-size: 1.18rem;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.kb-checkout-card-heading p {
+    margin: 5px 0 0;
+    color: #748399;
+    font-size: 0.76rem;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   FORM SECTIONS
+   ========================================================= */
+
+.kb-checkout-form-section {
+    padding: 20px 0;
+    border-top: 1px solid rgba(15, 23, 42, 0.065);
+}
+
+.kb-checkout-section-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 15px;
+}
+
+.kb-checkout-section-title > div {
+    width: 27px;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    color: #0d6efd;
+    background: rgba(13, 110, 253, 0.08);
+    font-size: 0.76rem;
+}
+
+.kb-checkout-section-title > span {
+    color: #29384d;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.025em;
+}
+
+
+/* =========================================================
+   FORM FIELDS
+   ========================================================= */
+
+.kb-field label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 7px;
+    color: #344257;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.kb-field label small {
+    color: #9aa5b5;
+    font-size: 0.62rem;
+    font-weight: 700;
+}
+
+.kb-checkout-form input:not([type="checkbox"]),
+.kb-checkout-form select,
+.kb-checkout-form textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 11px 13px;
+    border: 1px solid #dde5ee;
+    border-radius: 12px;
+    outline: none;
+    color: #26354a;
+    background: #fbfcfe;
+    box-shadow: none;
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
+}
+
+.kb-checkout-form textarea {
+    min-height: 105px;
+    resize: vertical;
+}
+
+.kb-checkout-form input:not([type="checkbox"]):focus,
+.kb-checkout-form select:focus,
+.kb-checkout-form textarea:focus {
+    border-color: rgba(13, 110, 253, 0.55);
+    background: #fff;
+    box-shadow:
+        0 0 0 4px rgba(13, 110, 253, 0.075);
+}
+
+.kb-checkout-form .errorlist {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    color: #e63946;
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   CHECKOUT CHECKBOX NORMALIZATION
+   Prevent global/auth form styles from stretching checkbox
+   ========================================================= */
+
+.kb-checkout-form .kb-save-address {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+}
+
+.kb-checkout-form .kb-save-address input[type="checkbox"] {
+    appearance: auto;
+    -webkit-appearance: checkbox;
+
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    min-height: 16px !important;
+    max-width: 16px !important;
+
+    flex: 0 0 16px;
+
+    margin: 3px 0 0 !important;
+    padding: 0 !important;
+
+    border-radius: 3px;
+    box-shadow: none !important;
+
+    cursor: pointer;
+}
+
+.kb-checkout-form .kb-save-address label {
+    display: block;
+    flex: 1;
+    width: auto;
+    min-width: 0;
+    margin: 0;
+}
+
+.kb-checkout-form .kb-save-address label strong {
+    display: block;
+}
+
+.kb-checkout-form .kb-save-address label span {
+    display: block;
+    margin-top: 3px;
+}
+
+
+
+/* =========================================================
+   SAVE ADDRESS
+   ========================================================= */
+
+.kb-save-address {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    margin: 6px 0 20px;
+    padding: 14px 15px;
+    border: 1px solid #e5ebf2;
+    border-radius: 14px;
+    background: #fafcff;
+}
+
+.kb-save-address input {
+    margin-top: 3px;
+}
+
+.kb-save-address label {
+    cursor: pointer;
+}
+
+.kb-save-address strong,
+.kb-save-address span {
+    display: block;
+}
+
+.kb-save-address strong {
+    color: #26354a;
+    font-size: 0.75rem;
+    font-weight: 850;
+}
+
+.kb-save-address span {
+    margin-top: 2px;
+    color: #7a8798;
+    font-size: 0.67rem;
+}
+
+
+/* =========================================================
+   PLACE ORDER
+   ========================================================= */
+
+.kb-place-order {
+    width: 100%;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: 0;
+    border-radius: 14px;
+    color: #fff;
+    background:
+        linear-gradient(
+            100deg,
+            #ff334f 0%,
+            #ff5b2f 48%,
+            #ffad00 100%
+        );
+    box-shadow:
+        0 12px 25px rgba(255, 87, 51, 0.18);
+    font-size: 0.82rem;
+    font-weight: 900;
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.kb-place-order:hover {
+    transform: translateY(-1px);
+    box-shadow:
+        0 15px 30px rgba(255, 87, 51, 0.24);
+}
+
+.kb-checkout-submit-security {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 11px;
+    color: #7a8798;
+    font-size: 0.66rem;
+}
+
+.kb-checkout-submit-security i {
+    color: #23b26d;
+}
+
+
+/* =========================================================
+   SUMMARY PRODUCTS
+   ========================================================= */
+
+.kb-checkout-products {
+    margin-bottom: 18px;
+}
+
+.kb-checkout-product {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    padding: 13px;
+    border: 1px solid #e7ecf2;
+    border-radius: 15px;
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #fafcff
+        );
+}
+
+.kb-checkout-product + .kb-checkout-product {
+    margin-top: 10px;
+}
+
+.kb-checkout-product-image {
+    width: 58px;
+    height: 58px;
+    overflow: hidden;
+    display: block;
+    border: 1px solid #edf0f4;
+    border-radius: 12px;
+    background: #f6f8fb;
+}
+
+.kb-checkout-product-image img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+}
+
+.kb-checkout-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a4afbd;
+    font-size: 1.15rem;
+}
+
+.kb-checkout-product-info {
+    min-width: 0;
+}
+
+.kb-checkout-product-info > strong {
+    display: block;
+    overflow: hidden;
+    color: #253449;
+    font-size: 0.75rem;
+    font-weight: 850;
+    line-height: 1.35;
+}
+
+.kb-checkout-product-math {
+    display: block;
+    margin-top: 4px;
+    color: #0a64c5;
+    font-size: 0.70rem;
+    font-weight: 800;
+}
+
+.kb-checkout-product-info small {
+    display: block;
+    margin-top: 3px;
+    color: #8a96a6;
+    font-size: 0.62rem;
+}
+
+.kb-checkout-line-total {
+    align-self: start;
+    color: #172231;
+    font-size: 0.78rem;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   COST SUMMARY
+   ========================================================= */
+
+.kb-checkout-costs {
+    padding: 13px 0;
+    border-top: 1px solid #edf0f4;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.kb-checkout-costs > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 8px 0;
+}
+
+.kb-checkout-costs span {
+    color: #6d7c91;
+    font-size: 0.72rem;
+    font-weight: 750;
+}
+
+.kb-checkout-costs strong {
+    color: #26354a;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-align: right;
+}
+
+.kb-checkout-costs strong.is-pending {
+    color: #748399;
+    font-size: 0.68rem;
+}
+
+
+/* =========================================================
+   TOTAL
+   ========================================================= */
+
+.kb-checkout-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 18px 0;
+}
+
+.kb-checkout-total span {
+    display: block;
+    color: #172231;
+    font-size: 0.9rem;
+    font-weight: 900;
+}
+
+.kb-checkout-total small {
+    display: block;
+    margin-top: 3px;
+    color: #8a96a6;
+    font-size: 0.62rem;
+}
+
+.kb-checkout-total > strong {
+    color: #0758ae;
+    font-size: 1.15rem;
+    font-weight: 950;
+}
+
+
+/* =========================================================
+   REASSURANCE
+   ========================================================= */
+
+.kb-checkout-reassurance {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 13px;
+    border: 1px solid rgba(35, 178, 109, 0.14);
+    border-radius: 14px;
+    background: rgba(35, 178, 109, 0.035);
+}
+
+.kb-checkout-reassurance > div:first-child {
+    color: #23b26d;
+    font-size: 0.9rem;
+}
+
+.kb-checkout-reassurance strong,
+.kb-checkout-reassurance span {
+    display: block;
+}
+
+.kb-checkout-reassurance strong {
+    color: #385266;
+    font-size: 0.70rem;
+    font-weight: 850;
+}
+
+.kb-checkout-reassurance span {
+    margin-top: 2px;
+    color: #7c8999;
+    font-size: 0.64rem;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .kb-checkout-summary {
+        position: static;
+    }
+
+    .kb-checkout-grid {
+        margin-top: 32px;
+    }
+
+}
+
+@media (max-width: 767.98px) {
+
+    .kb-shipping-card,
+    .kb-checkout-summary {
+        padding: 20px;
+        border-radius: 19px;
+    }
+
+    .kb-checkout-card-heading {
+        margin-bottom: 20px;
+    }
+
+    .kb-checkout-product {
+        grid-template-columns: 50px minmax(0, 1fr);
+    }
+
+    .kb-checkout-product-image {
+        width: 50px;
+        height: 50px;
+    }
+
+    .kb-checkout-line-total {
+        grid-column: 2;
+    }
+
+}
+
+</style>
+
 {% endblock %}

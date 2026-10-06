@@ -17,6 +17,31 @@ urlpatterns = [
         name="home",
     ),
     path(
+        "categories/",
+        views.category_list,
+        name="category_list",
+    ),
+    path(
+        "brands/",
+        views.brand_list,
+        name="brand_list",
+    ),
+    path(
+        "industries/",
+        views.industry_list,
+        name="industry_list",
+    ),
+    path(
+        "featured/",
+        views.featured_products,
+        name="featured",
+    ),
+    path(
+        "new-arrivals/",
+        views.new_arrivals,
+        name="new_arrivals",
+    ),
+    path(
         "search/",
         views.product_search,
         name="search",

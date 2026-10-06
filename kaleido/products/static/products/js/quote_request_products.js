@@ -1,73 +1,52 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const quoteUser =
-        document.body.dataset.quoteUser || "guest";
-
-    const quoteCartKey =
-        `kbQuoteCart:${quoteUser}`;
+(function () {
+    "use strict";
 
     /*
-     * Change this only if your compare-cart JavaScript
-     * uses a different key name.
+     * Use the SAME user-scoped Quote Cart key as
+     * quote_cart.js.
+     *
+     * This prevents carts from leaking between users
+     * and ensures Build a Quote reads the exact cart
+     * shown by the customer-facing Quote Cart UI.
      */
-    const compareCartKey =
-        `kbCompareCart:${quoteUser}`;
+    const quoteUser =
+        document.body.dataset.quoteUser ||
+        "guest";
 
-    const savedProductsField =
-        document.getElementById("savedProductsField");
+    const QUOTE_CART_KEY =
+        `kbQuoteCart:${quoteUser}`;
 
-    const savedProductsPreview =
-        document.getElementById("savedProductsPreview");
+    const COMPARE_CART_KEY =
+        window.KB_COMPARE_CART_KEY ||
+        "kb_compare_cart";
 
-    const savedProductsCount =
-        document.getElementById("savedProductsCount");
+    window.KB_QUOTE_CART_KEY =
+        QUOTE_CART_KEY;
 
-    function normalizeValue(value) {
-        return String(value ?? "").trim();
-    }
+    window.KB_COMPARE_CART_KEY =
+        COMPARE_CART_KEY;
 
-    function normalizeId(value) {
-        return normalizeValue(value).toLowerCase();
-    }
 
-    function escapeHtml(value) {
-        const element =
-            document.createElement("div");
-
-        element.textContent =
-            normalizeValue(value);
-
-        return element.innerHTML;
-    }
-
-    function readStorageCart(storageKey) {
+    function readArray(key) {
         try {
-            const storedValue =
-                localStorage.getItem(storageKey);
+            const raw =
+                localStorage.getItem(key);
 
-            if (!storedValue) {
+            if (!raw) {
                 return [];
             }
 
-            const parsedItems =
-                JSON.parse(storedValue);
+            const parsed =
+                JSON.parse(raw);
 
-            if (!Array.isArray(parsedItems)) {
-                return [];
-            }
+            return Array.isArray(parsed)
+                ? parsed
+                : [];
 
-            return parsedItems.filter(
-                function (item) {
-                    return (
-                        item &&
-                        typeof item === "object" &&
-                        normalizeValue(item.id) &&
-                        normalizeValue(item.name)
-                    );
-                }
-            );
         } catch (error) {
             console.error(
-                `Unable to read ${storageKey}:`,
+                "Unable to read localStorage:",
+                key,
                 error
             );
 
@@ -75,224 +54,262 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+
+    function productId(item) {
+        if (!item) {
+            return "";
+        }
+
+        return String(
+            item.id ??
+            item.product_id ??
+            item.productId ??
+            ""
+        ).trim();
+    }
+
+
+    function normalizeProduct(item) {
+        if (
+            !item ||
+            typeof item !== "object"
+        ) {
+            return null;
+        }
+
+        const id =
+            productId(item);
+
+        if (!id) {
+            return null;
+        }
+
+        let minimum =
+            parseInt(
+                item.min_quantity ??
+                item.minimum_quantity ??
+                item.moq ??
+                1,
+                10
+            );
+
+        if (
+            Number.isNaN(minimum) ||
+            minimum < 1
+        ) {
+            minimum = 1;
+        }
+
+        let quantity =
+            parseInt(
+                item.quantity ??
+                minimum,
+                10
+            );
+
+        if (
+            Number.isNaN(quantity) ||
+            quantity < minimum
+        ) {
+            quantity = minimum;
+        }
+
+        return {
+            ...item,
+
+            id: id,
+
+            name:
+                item.name ||
+                item.product_name ||
+                item.title ||
+                "Promotional Product",
+
+            category:
+                item.category ||
+                item.category_name ||
+                "Promotional Product",
+
+            url:
+                item.url ||
+                item.product_url ||
+                "",
+
+            image:
+                item.image ||
+                item.image_url ||
+                item.external_image_url ||
+                "",
+
+            min_quantity:
+                minimum,
+
+            minimum_quantity:
+                minimum,
+
+            quantity:
+                quantity,
+
+            notes:
+                item.notes ||
+                "",
+        };
+    }
+
+
     function mergeProducts() {
-        const quoteProducts =
-            readStorageCart(quoteCartKey);
+        const compareCart =
+            readArray(
+                COMPARE_CART_KEY
+            );
 
-        const compareProducts =
-            readStorageCart(compareCartKey);
+        const quoteCart =
+            readArray(
+                QUOTE_CART_KEY
+            );
 
-        const productsById = new Map();
+        const merged =
+            new Map();
 
-        quoteProducts.forEach(function (item) {
-            const id = normalizeId(item.id);
+        /*
+         * Compare products may enter the quote workflow,
+         * but Quote Cart entries override them because
+         * Quote Cart represents explicit quote intent.
+         */
+        compareCart.forEach(
+            function (rawItem) {
+                const item =
+                    normalizeProduct(
+                        rawItem
+                    );
 
-            if (!id) {
-                return;
+                if (item) {
+                    merged.set(
+                        item.id,
+                        item
+                    );
+                }
             }
+        );
 
-            productsById.set(id, {
-                ...item,
-                source: "Quote Cart",
-            });
-        });
+        quoteCart.forEach(
+            function (rawItem) {
+                const item =
+                    normalizeProduct(
+                        rawItem
+                    );
 
-        compareProducts.forEach(function (item) {
-            const id = normalizeId(item.id);
+                if (!item) {
+                    return;
+                }
 
-            if (!id) {
-                return;
+                const previous =
+                    merged.get(
+                        item.id
+                    ) || {};
+
+                merged.set(
+                    item.id,
+                    {
+                        ...previous,
+                        ...item,
+                    }
+                );
             }
-
-            if (!productsById.has(id)) {
-                productsById.set(id, {
-                    ...item,
-                    source: "Compare Cart",
-                });
-            }
-        });
+        );
 
         return Array.from(
-            productsById.values()
+            merged.values()
         );
     }
 
-    function updateRequestQuoteProducts() {
-        const products = mergeProducts();
 
-        if (savedProductsCount) {
-            savedProductsCount.textContent =
-                products.length === 1
-                    ? "1 selected product"
-                    : `${products.length} selected products`;
-        }
+    function removeProduct(productIdValue) {
+        const target =
+            String(
+                productIdValue
+            );
 
-        if (savedProductsField) {
-            savedProductsField.value =
-                products
-                    .map(function (item) {
-                        const name =
-                            normalizeValue(item.name) ||
-                            "Unnamed product";
+        [
+            QUOTE_CART_KEY,
+            COMPARE_CART_KEY,
+        ].forEach(
+            function (key) {
+                const updated =
+                    readArray(key)
+                        .filter(
+                            function (item) {
+                                return (
+                                    productId(item)
+                                    !== target
+                                );
+                            }
+                        );
 
-                        const category =
-                            normalizeValue(
-                                item.category
-                            ) || "Product";
+                localStorage.setItem(
+                    key,
+                    JSON.stringify(
+                        updated
+                    )
+                );
+            }
+        );
 
-                        const url =
-                            normalizeValue(item.url);
+        /*
+         * Notify the existing global Quote Cart UI.
+         *
+         * quote_cart.js already listens for this event
+         * and refreshes the navbar/floating cart count.
+         */
+        document.dispatchEvent(
+            new CustomEvent(
+                "quoteCartUpdated",
+                {
+                    detail: {
+                        items: readArray(
+                            QUOTE_CART_KEY
+                        ),
+                    },
+                }
+            )
+        );
 
-                        const source =
-                            normalizeValue(
-                                item.source
-                            );
-
-                        return [
-                            `Product: ${name}`,
-                            `Category: ${category}`,
-                            `Source: ${source}`,
-                            url
-                                ? `URL: ${url}`
-                                : "",
-                        ]
-                            .filter(Boolean)
-                            .join(" | ");
-                    })
-                    .join("\n");
-        }
-
-        if (!savedProductsPreview) {
-            return;
-        }
-
-        if (!products.length) {
-            savedProductsPreview.innerHTML = `
-                <div class="mini-card text-center">
-                    <h4>
-                        No products selected
-                    </h4>
-
-                    <p>
-                        Save products to your Quote Cart
-                        or Compare Cart before submitting
-                        your request.
-                    </p>
-
-                    <a
-                        href="/products/"
-                        class="btn btn-kb-primary"
-                    >
-                        Browse Products
-                    </a>
-                </div>
-            `;
-
-            return;
-        }
-
-        savedProductsPreview.innerHTML = `
-            <div class="saved-products-heading">
-                <strong>
-                    Products included in this request
-                </strong>
-
-                <span>
-                    ${products.length}
-                </span>
-            </div>
-
-            <div class="saved-products-list">
-                ${products
-                    .map(function (item) {
-                        const name =
-                            escapeHtml(
-                                item.name ||
-                                "Unnamed product"
-                            );
-
-                        const category =
-                            escapeHtml(
-                                item.category ||
-                                "Product"
-                            );
-
-                        const source =
-                            escapeHtml(
-                                item.source ||
-                                "Saved Products"
-                            );
-
-                        const url =
-                            normalizeValue(item.url);
-
-                        const viewLink =
-                            url.startsWith("/") ||
-                            url.startsWith("http://") ||
-                            url.startsWith("https://")
-                                ? `
-                                    <a
-                                        href="${escapeHtml(url)}"
-                                        class="saved-product-view"
-                                    >
-                                        View
-                                    </a>
-                                `
-                                : "";
-
-                        return `
-                            <div
-                                class="saved-product-preview-item"
-                            >
-                                <div>
-                                    <strong>
-                                        ${name}
-                                    </strong>
-
-                                    <span>
-                                        ${category}
-                                    </span>
-
-                                    <small>
-                                        From ${source}
-                                    </small>
-                                </div>
-
-                                ${viewLink}
-                            </div>
-                        `;
-                    })
-                    .join("")}
-            </div>
-        `;
+        /*
+         * Notify the Quote Builder so its product rows
+         * and hidden submission state refresh immediately.
+         */
+        window.dispatchEvent(
+            new CustomEvent(
+                "kbQuoteProductsChanged"
+            )
+        );
     }
 
-    document.addEventListener(
-        "quoteCartUpdated",
-        updateRequestQuoteProducts
-    );
 
-    document.addEventListener(
-        "compareCartUpdated",
-        updateRequestQuoteProducts
-    );
+    /*
+     * Public API only.
+     *
+     * This module owns quote-product STORAGE.
+     * It intentionally does NOT render the
+     * Quote Builder DOM.
+     */
+    window.getKBQuoteRequestProducts =
+        mergeProducts;
 
-    window.addEventListener(
-        "storage",
-        function (event) {
-            if (
-                event.key === quoteCartKey ||
-                event.key === compareCartKey
-            ) {
-                updateRequestQuoteProducts();
-            }
-        }
-    );
+    window.removeKBQuoteRequestProduct =
+        removeProduct;
 
-    window.addEventListener(
-        "pageshow",
-        updateRequestQuoteProducts
-    );
+    window.refreshKBQuoteRequestProducts =
+        function () {
+            const products =
+                mergeProducts();
 
-    updateRequestQuoteProducts();
-});
+            window.dispatchEvent(
+                new CustomEvent(
+                    "kbQuoteProductsChanged"
+                )
+            );
+
+            return products;
+        };
+})();

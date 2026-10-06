@@ -42,7 +42,7 @@ Explore promotional apparel, drinkware, healthcare products, technology accessor
                     type="search"
                     name="q"
                     class="catalog-search-input"
-                    placeholder="Search polos, hats, scrubs, tumblers, gifts..."
+                    placeholder="Search products..."
                     autocomplete="off"
                 >
 
@@ -64,49 +64,136 @@ Explore promotional apparel, drinkware, healthcare products, technology accessor
     </section>
 
 
-    {% if categories %}
-        <section class="section-panel">
-            <div class="container">
+    {% if category_cards %}
+    <section class="section-panel marketplace-category-section">
+        <div class="container">
 
-                <div class="section-heading text-center reveal">
-                    <span>Browse by Category</span>
-                    <h2>Find the right product type.</h2>
-                </div>
+            <div class="section-heading text-center reveal">
+                <span>Browse by Category</span>
+                <h2>Find the right product type.</h2>
+            </div>
 
-                <div class="row g-4 mt-4">
-                    {% for category in categories %}
-                        <div class="col-md-6 col-lg-3 reveal">
+            <div class="row g-4 mt-4">
+
+                {% for card in category_cards %}
+                    {% with category=card.category product=card.representative_product %}
+
+                        <div class="col-md-6 col-lg-4 reveal">
+
                             <a
                                 href="{% url 'products:category' category.slug %}"
-                                class="product-category-card h-100"
+                                class="product-category-card kb-category-card h-100"
                             >
-                                <div class="product-category-icon">
-                                    {{ category.icon|default:"✦" }}
+
+                                <div class="kb-category-card-media">
+
+                                    {% if product %}
+
+                                        {% if product.image %}
+                                            <img
+                                                src="{{ product.image.url }}"
+                                                alt="{{ category.name }}"
+                                                loading="lazy"
+                                            >
+
+                                        {% elif product.external_image_url %}
+                                            <img
+                                                src="{{ product.external_image_url }}"
+                                                alt="{{ category.name }}"
+                                                loading="lazy"
+                                            >
+
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        <div class="kb-category-card-fallback">
+                                            {{ category.icon|default:"✦" }}
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <div class="kb-category-card-overlay"></div>
+
+
+                                    <div class="kb-category-card-count">
+                                        <strong>
+                                            {{ card.product_count }}
+                                        </strong>
+
+                                        <span>
+                                            product{{ card.product_count|pluralize }}
+                                        </span>
+                                    </div>
+
                                 </div>
 
-                                <h3>{{ category.name }}</h3>
 
-                                <p>
-                                    {{ category.description|default:"Explore products in this category."|truncatechars:125 }}
-                                </p>
+                                <div class="kb-category-card-content">
 
-                                {% if category.children.all %}
-                                    <div class="product-category-subcategories">
-                                        {% for child in category.children.all|slice:":3" %}
-                                            {% if child.is_active %}
-                                                <span>{{ child.name }}</span>
-                                            {% endif %}
-                                        {% endfor %}
+                                    <div class="kb-category-card-heading">
+
+                                        <div class="kb-category-card-icon">
+                                            {{ category.icon|default:"✦" }}
+                                        </div>
+
+                                        <h3>
+                                            {{ category.name }}
+                                        </h3>
+
                                     </div>
-                                {% endif %}
+
+
+                                    <p>
+                                        {{ category.description|default:"Explore products in this category."|truncatechars:125 }}
+                                    </p>
+
+
+                                    {% if category.children.all %}
+                                        <div class="product-category-subcategories">
+
+                                            {% for child in category.children.all|slice:":3" %}
+
+                                                {% if child.is_active %}
+                                                    <span>
+                                                        {{ child.name }}
+                                                    </span>
+                                                {% endif %}
+
+                                            {% endfor %}
+
+                                        </div>
+                                    {% endif %}
+
+
+                                    <div class="kb-category-card-action">
+
+                                        <span>
+                                            Explore {{ category.name }}
+                                        </span>
+
+                                        <i
+                                            class="bi bi-arrow-up-right"
+                                            aria-hidden="true"
+                                        ></i>
+
+                                    </div>
+
+                                </div>
+
                             </a>
+
                         </div>
-                    {% endfor %}
-                </div>
+
+                    {% endwith %}
+                {% endfor %}
 
             </div>
-        </section>
-    {% endif %}
+
+        </div>
+    </section>
+{% endif %}
 
 
     {% if industries %}
@@ -278,5 +365,4 @@ Explore promotional apparel, drinkware, healthcare products, technology accessor
 
 {% block scripts %}
 <script src="{% static 'products/js/search.js' %}"></script>
-<script src="{% static 'products/js/quote_cart.js' %}"></script>
 {% endblock %}

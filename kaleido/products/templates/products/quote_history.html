@@ -1,71 +1,374 @@
 {% extends "brands/base.html" %}
+{% load static %}
 
-{% block title %}Quote History | KaleidoBrands{% endblock %}
+{% block title %}
+    Quote History | KaleidoBrands
+{% endblock %}
+
+{% block meta_description %}
+    Find and review your submitted KaleidoBrands custom quote requests.
+{% endblock %}
+
+{% block head %}
+<link
+    rel="stylesheet"
+    href="{% static 'products/css/marketplace.css' %}?v=7"
+>
+{% endblock %}
 
 {% block body %}
-<main class="inner-page">
-    <section class="section-panel">
+
+<main class="kb-quote-history-page">
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+    <section class="kb-history-hero">
+
         <div class="container">
-            <div class="section-heading text-center reveal">
-                <span>Quote History</span>
-                <h1>View Quote Requests</h1>
-                <p class="mx-auto mt-3" style="max-width:720px;">
-                    Enter the email used on your quote request to view submitted quote details.
+
+            <div class="kb-history-hero-inner">
+
+                <span class="kb-history-eyebrow">
+                    <i class="bi bi-clock-history"></i>
+                    Quote History
+                </span>
+
+                <h1>
+                    Your Quote
+                    <span>Requests</span>
+                </h1>
+
+                <p>
+                    Find your submitted quote requests and review
+                    the project information you've shared with
+                    KaleidoBrands.
                 </p>
+
             </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CONTENT
+         ===================================================== -->
+    <section class="kb-history-content">
+
+        <div class="container">
 
             {% if not request.user.is_staff %}
-                <form method="get" class="product-filter-panel reveal">
-                    <div class="row g-3 align-items-end">
-                        <div class="col-lg-9">
-                            <label>Email Address</label>
-                            <input
-                                type="email"
-                                name="email"
-                                value="{{ email }}"
-                                class="form-control"
-                                placeholder="you@example.com"
-                                required>
+
+                <!-- =========================================
+                     CUSTOMER LOOKUP
+                     ========================================= -->
+                <div class="kb-history-search-card reveal">
+
+                    <div class="kb-history-search-heading">
+
+                        <div class="kb-history-search-icon">
+                            <i class="bi bi-envelope"></i>
                         </div>
 
-                        <div class="col-lg-3">
-                            <button class="btn btn-kb-primary w-100" type="submit">
-                                Search Quotes
-                            </button>
+                        <div>
+                            <span>Find Your Requests</span>
+
+                            <h2>Look Up Your Quotes</h2>
+
+                            <p>
+                                Enter the email address used when
+                                submitting your quote request.
+                            </p>
                         </div>
+
                     </div>
-                </form>
+
+
+                    <form
+                        method="get"
+                        class="kb-history-search-form"
+                    >
+
+                        <div class="kb-history-email-field">
+
+                            <label for="quoteHistoryEmail">
+                                Email Address
+                            </label>
+
+                            <div class="kb-history-input-wrap">
+
+                                <i class="bi bi-envelope"></i>
+
+                                <input
+                                    id="quoteHistoryEmail"
+                                    type="email"
+                                    name="email"
+                                    value="{{ email }}"
+                                    placeholder="you@example.com"
+                                    autocomplete="email"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <button
+                            class="kb-history-search-button"
+                            type="submit"
+                        >
+                            <i class="bi bi-search"></i>
+
+                            <span>
+                                Search Quotes
+                            </span>
+                        </button>
+
+                    </form>
+
+
+                    <div class="kb-history-privacy-note">
+                        <i class="bi bi-shield-check"></i>
+
+                        <span>
+                            Use the same email address associated
+                            with your original quote request.
+                        </span>
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <!-- =========================================
+                     STAFF INDICATOR
+                     ========================================= -->
+                <div class="kb-history-staff-banner reveal">
+
+                    <div>
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+
+                    <span>
+                        <strong>Staff View</strong>
+                        You are viewing submitted customer quote requests.
+                    </span>
+
+                </div>
+
             {% endif %}
 
-            <div class="supplier-admin-panel mt-5 reveal">
-                <h3>Submitted Quotes</h3>
 
-                {% for quote in quotes %}
-                    <div class="supplier-admin-row">
-                        <div>
-                            <strong>{{ quote.project_name|default:"Quote Request" }}</strong>
-                            <span>
-                                {{ quote.customer_name }} · {{ quote.email }} · {{ quote.created_at }}
-                            </span>
+            <!-- =============================================
+                 QUOTES
+                 ============================================= -->
+            <div class="kb-history-quotes reveal">
+
+                <div class="kb-history-list-heading">
+
+                    <div>
+                        <span class="kb-history-list-kicker">
+                            Quote Requests
+                        </span>
+
+                        <h2>Submitted Quotes</h2>
+
+                        <p>
+                            Review project and customer information
+                            for each submitted request.
+                        </p>
+                    </div>
+
+
+                    {% if quotes %}
+                        <div class="kb-history-result-count">
+                            <i class="bi bi-file-earmark-text"></i>
+
+                            {{ quotes|length }}
+                            quote{{ quotes|length|pluralize }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                {% if quotes %}
+
+                    <div class="kb-history-list">
+
+                        {% for quote in quotes %}
+
+                            <article class="kb-history-quote-card">
+
+                                <div class="kb-history-quote-icon">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                </div>
+
+
+                                <div class="kb-history-quote-main">
+
+                                    <div class="kb-history-quote-top">
+
+                                        <div>
+                                            <span class="kb-history-reference">
+                                                Quote #{{ quote.id }}
+                                            </span>
+
+                                            <h3>
+                                                {{ quote.project_name|default:"Quote Request" }}
+                                            </h3>
+                                        </div>
+
+
+                                        <span class="kb-history-submitted-badge">
+                                            <i class="bi bi-check-circle"></i>
+                                            Submitted
+                                        </span>
+
+                                    </div>
+
+
+                                    <div class="kb-history-meta">
+
+                                        <div>
+                                            <i class="bi bi-person"></i>
+
+                                            <span>
+                                                {{ quote.customer_name }}
+                                            </span>
+                                        </div>
+
+
+                                        <div>
+                                            <i class="bi bi-envelope"></i>
+
+                                            <span>
+                                                {{ quote.email }}
+                                            </span>
+                                        </div>
+
+
+                                        <div>
+                                            <i class="bi bi-calendar3"></i>
+
+                                            <span>
+                                                {{ quote.created_at|date:"M j, Y" }}
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="kb-history-quote-footer">
+
+                                        <span class="kb-history-created">
+                                            Submitted
+                                            {{ quote.created_at|date:"M j, Y \a\t g:i A" }}
+                                        </span>
+
+
+                                        {% if request.user.is_staff %}
+
+                                            <a
+                                                href="{% url 'products:quote_detail' quote.id %}"
+                                                class="kb-history-view-button"
+                                            >
+                                                View Quote
+
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+
+                                        {% else %}
+
+                                            <a
+                                                href="{% url 'products:quote_detail' quote.id %}?email={{ email|urlencode }}"
+                                                class="kb-history-view-button"
+                                            >
+                                                View Quote
+
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                {% else %}
+
+                    <!-- =====================================
+                         EMPTY STATE
+                         ===================================== -->
+                    <div class="kb-history-empty">
+
+                        <div class="kb-history-empty-icon">
+
+                            {% if email %}
+                                <i class="bi bi-search"></i>
+                            {% else %}
+                                <i class="bi bi-envelope-open"></i>
+                            {% endif %}
+
                         </div>
 
-                        {% if request.user.is_staff %}
-                            <a href="{% url 'products:quote_detail' quote.id %}">View</a>
-                        {% else %}
-                            <a href="{% url 'products:quote_detail' quote.id %}?email={{ email }}">View</a>
-                        {% endif %}
-                    </div>
-                {% empty %}
-                    <p class="text-muted">
+
                         {% if email %}
-                            No quote requests found for this email.
+
+                            <h3>No Quote Requests Found</h3>
+
+                            <p>
+                                We couldn't find quote requests associated
+                                with <strong>{{ email }}</strong>.
+                                Check the email address and try again.
+                            </p>
+
                         {% else %}
-                            Enter your email to search quote requests.
+
+                            <h3>Find Your Quote Requests</h3>
+
+                            <p>
+                                Enter the email address you used when
+                                submitting your quote to see your
+                                request history.
+                            </p>
+
                         {% endif %}
-                    </p>
-                {% endfor %}
+
+
+                        <a
+                            href="{% url 'products:home' %}"
+                            class="kb-history-browse-button"
+                        >
+                            <i class="bi bi-bag"></i>
+                            Browse Products
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
             </div>
+
         </div>
+
     </section>
+
 </main>
+
+<link
+    rel="stylesheet"
+    href="{% static 'products/css/marketplace.css' %}?v=8"
+>
+
 {% endblock %}

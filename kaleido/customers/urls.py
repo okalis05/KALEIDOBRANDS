@@ -8,14 +8,42 @@ from . import views
 app_name = "customers"
 
 urlpatterns = [
-    path("signup/", views.signup, name="signup"),
-    path("dashboard/", views.dashboard, name="dashboard"),
-    path("settings/", views.profile_settings, name="profile_settings"),
-    path("assets/", views.asset_library, name="asset_library"),
+    path(
+        "signup/", 
+        views.signup, 
+        name="signup"
+        ),
+    path(
+        "dashboard/", 
+        views.dashboard, 
+        name="dashboard"
+        ),
+    path(
+        "settings/", 
+        views.profile_settings, 
+        name="profile_settings"
+        ),
+    path(
+        "assets/", 
+        views.asset_library, 
+        name="asset_library"
+        ),
 
-    path("orders/", views.order_list, name="order_list"),
-    path("orders/<int:order_id>/", views.order_detail, name="order_detail"),
-    path("orders/<int:order_id>/reorder/", views.reorder_order, name="reorder_order"),
+    path(
+        "orders/", 
+        views.order_list, 
+        name="order_list"
+        ),
+    path(
+        "orders/<int:order_id>/", 
+        views.order_detail, 
+        name="order_detail"
+        ),
+    path(
+        "orders/<int:order_id>/reorder/", 
+        views.reorder_order, 
+        name="reorder_order"
+        ),
 
     path(
         "login/",
@@ -62,10 +90,10 @@ urlpatterns = [
     path("shipments/", views.shipment_list, name="shipment_list"),
     path("shipments/<int:shipment_id>/update/", views.update_shipment, name="update_shipment"),
     path(
-    "shipments/<int:shipment_id>/packing-slip/generate/",
-    views.generate_packing_slip,
-    name="generate_packing_slip",
-),
+        "shipments/<int:shipment_id>/packing-slip/generate/",
+        views.generate_packing_slip,
+        name="generate_packing_slip",
+    ),
 
     path(
         "shipments/<int:shipment_id>/packing-slip/download/",
@@ -93,10 +121,10 @@ urlpatterns = [
     ),
 
     path(
-    "staff/support/",
-    views.staff_ticket_list,
-    name="staff_ticket_list",
-    ),
+        "staff/support/",
+        views.staff_ticket_list,
+        name="staff_ticket_list",
+        ),
 
     path(
         "staff/support/<int:ticket_id>/",
@@ -184,15 +212,10 @@ urlpatterns = [
         name="printable_refund_report",
     ),
     path(
-        "admin/refunds/dashboard/",
-        views.refund_dashboard,
-        name="refund_dashboard",
+        "admin/refunds/<int:refund_id>/",
+        views.refund_detail,
+        name="refund_detail",
     ),
-    path(
-    "admin/refunds/<int:refund_id>/",
-    views.refund_detail,
-    name="refund_detail",
-),
 
 
             

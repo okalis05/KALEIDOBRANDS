@@ -69,6 +69,159 @@ FEATURED_PRODUCTS = [
 ]
 
 
+HOME_INDUSTRIES = [
+    {
+        "name": "Healthcare",
+        "icon": "bi-hospital",
+        "description": "Uniforms, wellness campaigns and employee essentials",
+        "product_ids": [1056],
+        "category_slugs": ["healthcare"],
+    },
+    {
+        "name": "Corporate",
+        "icon": "bi-buildings",
+        "description": "Employee kits, executive gifts and client appreciation",
+        "product_ids": [2023, 280, 148],
+        "category_slugs": ["corporate-gifts", "food-candy", "office"],
+    },
+    {
+        "name": "Education",
+        "icon": "bi-mortarboard",
+        "description": "Campus events, student programs and school spirit",
+        "product_ids": [148],
+        "category_slugs": ["office", "apparel", "bags"],
+    },
+    {
+        "name": "Hospitality",
+        "icon": "bi-building",
+        "description": "Guest experiences, uniforms and branded amenities",
+        "product_ids": [585, 74],
+        "category_slugs": ["drinkware", "apparel", "bags"],
+    },
+    {
+        "name": "Events",
+        "icon": "bi-calendar-event",
+        "description": "Trade shows, conferences and memorable giveaways",
+        "product_ids": [311, 599],
+        "category_slugs": ["trade-shows", "bags"],
+    },
+    {
+        "name": "Teams",
+        "icon": "bi-trophy",
+        "description": "Polos, hats, shirts, spirit wear and recognition",
+        "product_ids": [13083],
+        "category_slugs": ["apparel"],
+    },
+    {
+        "name": "Nonprofits",
+        "icon": "bi-people",
+        "description": "Fundraisers, volunteer programs and community events",
+        "product_ids": [599, 148],
+        "category_slugs": ["bags", "office", "drinkware"],
+    },
+    {
+        "name": "Construction",
+        "icon": "bi-tools",
+        "description": "Worksite apparel, safety campaigns and durable giveaways",
+        "product_ids": [13082, 13083],
+        "category_slugs": ["apparel"],
+    },
+]
+
+
+def build_home_industry_cards():
+    """
+    Build the Brands homepage industry cards using real active
+    marketplace products.
+
+    Read-only: no Product records are modified.
+    """
+
+    cards = []
+
+    for config in HOME_INDUSTRIES:
+
+        products = (
+            Product.objects
+            .filter(
+                is_active=True,
+                category__slug__in=config["category_slugs"],
+            )
+            .filter(
+                image__isnull=False
+            )
+            .select_related(
+                "category",
+                "catalog",
+            )
+            .distinct()
+        )
+
+        # Also allow externally hosted supplier imagery.
+        external_products = (
+            Product.objects
+            .filter(
+                is_active=True,
+                category__slug__in=config["category_slugs"],
+            )
+            .exclude(external_image_url="")
+            .select_related(
+                "category",
+                "catalog",
+            )
+            .distinct()
+        )
+
+        # Prefer our deliberately selected representative product.
+        representative = None
+
+        for product_id in config["product_ids"]:
+            representative = (
+                Product.objects
+                .filter(
+                    pk=product_id,
+                    is_active=True,
+                )
+                .filter(
+                    category__slug__in=config["category_slugs"],
+                )
+                .first()
+            )
+
+            if representative and (
+                representative.image
+                or representative.external_image_url
+            ):
+                break
+
+            representative = None
+
+        # Safe database fallback.
+        if representative is None:
+            representative = products.first()
+
+        if representative is None:
+            representative = external_products.first()
+
+        cards.append(
+            {
+                **config,
+                "product": representative,
+                "product_count": (
+                    Product.objects
+                    .filter(
+                        is_active=True,
+                        category__slug__in=config["category_slugs"],
+                    )
+                    .distinct()
+                    .count()
+                ),
+            }
+        )
+
+    return cards
+
+
 def send_business_email(subject, body, reply_to_email=None, receiver=None):
     email = EmailMessage(
         subject=subject,
@@ -221,6 +374,7 @@ Project Details:
             "featured_products": FEATURED_PRODUCTS,
             "featured_marketplace_products": featured_marketplace_products,
             "newest_marketplace_products": newest_marketplace_products,
+            "home_industry_cards": build_home_industry_cards(),
             
         },
     )

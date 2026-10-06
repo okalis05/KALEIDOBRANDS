@@ -172,6 +172,7 @@ class CheckoutForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
+                "placeholder": "Optional",
             }
         ),
     )
@@ -182,6 +183,7 @@ class CheckoutForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
+                "placeholder": "Enter recipient name",
             }
         ),
     )
@@ -192,6 +194,7 @@ class CheckoutForm(forms.Form):
             attrs={
                 "class": "form-control",
                 "rows": 3,
+                "placeholder": "Enter street address",
             }
         ),
     )
@@ -202,6 +205,7 @@ class CheckoutForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
+                "placeholder": "Enter city",
             }
         ),
     )
@@ -212,6 +216,7 @@ class CheckoutForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
+                "placeholder": "Enter state",
             }
         ),
     )
@@ -222,6 +227,7 @@ class CheckoutForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
+                "placeholder": "Enter ZIP code",
             }
         ),
     )
@@ -232,6 +238,7 @@ class CheckoutForm(forms.Form):
             attrs={
                 "class": "form-control",
                 "rows": 4,
+                "placeholder": "Optional",
             }
         ),
     )

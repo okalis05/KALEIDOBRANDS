@@ -72,10 +72,6 @@ https://kaleidobrands.com/static/brands/images/kb.png
     "name": "{{ product.name|escapejs }}",
     "description": "{{ product.short_description|default:product.description|escapejs }}",
     "sku": "{{ product.sku|default:product.slug|escapejs }}",
-    "brand": {
-        "@type": "Brand",
-        "name": "{% if product.supplier_record %}{{ product.supplier_record.name|escapejs }}{% else %}KaleidoBrands{% endif %}"
-    },
     "category": "{% if product.category %}{{ product.category.name|escapejs }}{% else %}Promotional Products{% endif %}",
     "image": "{% if product.image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% elif product.external_image_url %}{{ product.external_image_url }}{% else %}https://kaleidobrands.com/static/brands/images/kb.png{% endif %}",
     "offers": {
@@ -83,7 +79,7 @@ https://kaleidobrands.com/static/brands/images/kb.png
         "url": "{{ request.build_absolute_uri }}",
         "priceCurrency": "USD",
         "price": "{% if product.starting_price is not None %}{{ product.starting_price }}{% else %}0{% endif %}",
-        "availability": "{% if product.inventory_status == 'out_of_stock' %}https://schema.org/OutOfStock{% else %}https://schema.org/InStock{% endif %}"
+        "availability": "{% if product.inventory_status == 'in_stock' %}https://schema.org/InStock{% elif product.inventory_status == 'low_stock' %}https://schema.org/LimitedAvailability{% elif product.inventory_status == 'out_of_stock' %}https://schema.org/OutOfStock{% elif product.inventory_status == 'discontinued' %}https://schema.org/Discontinued{% else %}https://schema.org/OnlineOnly{% endif %}"
     }
 }
 </script>
@@ -250,7 +246,11 @@ https://kaleidobrands.com/static/brands/images/kb.png
                             <div>
                                 <small>Availability</small>
                                 <strong>
-                                    {{ product.get_inventory_status_display|default:"Contact us" }}
+                                    {% if product.inventory_status and product.inventory_status != "unknown" %}
+                                        {{ product.get_inventory_status_display }}
+                                    {% else %}
+                                        Contact us
+                                    {% endif %}
                                 </strong>
                             </div>
 
@@ -399,16 +399,9 @@ https://kaleidobrands.com/static/brands/images/kb.png
                         <div class="product-spec-grid">
 
                             <div>
-                                <strong>Supplier</strong>
-
+                                <strong>Product Type</strong>
                                 <span>
-                                    {% if product.supplier_record %}
-                                        <a href="{% url 'products:supplier_detail' product.supplier_record.slug %}">
-                                            {{ product.supplier_record.name }}
-                                        </a>
-                                    {% else %}
-                                        {{ product.supplier|default:"KaleidoBrands" }}
-                                    {% endif %}
+                                    {{ product.category.name|default:"Promotional Product" }}
                                 </span>
                             </div>
 
@@ -453,9 +446,13 @@ https://kaleidobrands.com/static/brands/images/kb.png
                             <button
                                 type="button"
                                 class="save-product-btn"
-                                data-name="{{ product.name }}"
-                                data-url="{{ product.get_absolute_url }}"
-                                data-category="{{ product.category.name|default:'Product' }}"
+                                data-product-id="{{ product.id }}"
+                                data-product-name="{{ product.name }}"
+                                data-product-url="{{ product.get_absolute_url }}"
+                                data-product-category="{{ product.category.name|default:'Product' }}"
+                                data-product-price="{% if product.starting_price %}${{ product.starting_price }}{% endif %}"
+                                data-product-image="{% if product.image %}{{ product.image.url }}{% elif product.external_image_url %}{{ product.external_image_url }}{% endif %}"
+                                data-min-quantity="{{ product.min_quantity|default:1 }}"
                             >
                                 Save to Quote Cart
                             </button>
@@ -475,17 +472,6 @@ https://kaleidobrands.com/static/brands/images/kb.png
                             >
                                 Build a Quote
                             </a>
-
-                            {% if product.supplier_url %}
-                                <a
-                                    href="{{ product.supplier_url }}"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="btn btn-kb-outline btn-lg w-100"
-                                >
-                                    Supplier Details
-                                </a>
-                            {% endif %}
 
                             {% if request.user.is_authenticated %}
                                 <a
@@ -532,57 +518,6 @@ https://kaleidobrands.com/static/brands/images/kb.png
                     {% endfor %}
                 </div>
             {% endif %}
-
-
-            {% if supplier_listings %}
-                <div class="section-heading text-center mt-5 pt-5 reveal">
-                    <span>Supplier Availability</span>
-                    <h2>Available supplier listings.</h2>
-                </div>
-
-                <div class="table-responsive reveal">
-                    <table class="table align-middle">
-                        <thead>
-                            <tr>
-                                <th>Supplier</th>
-                                <th>Supplier SKU</th>
-                                <th>Minimum</th>
-                                <th>Availability</th>
-                                <th>Preferred</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {% for listing in supplier_listings %}
-                                <tr>
-                                    <td>{{ listing.supplier.name }}</td>
-
-                                    <td>
-                                        {{ listing.supplier_sku|default:"—" }}
-                                    </td>
-
-                                    <td>
-                                        {{ listing.minimum_order_quantity }}
-                                    </td>
-
-                                    <td>
-                                        {{ listing.get_inventory_status_display }}
-                                    </td>
-
-                                    <td>
-                                        {% if listing.is_preferred %}
-                                            Yes
-                                        {% else %}
-                                            —
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% endif %}
-
 
             {% if related_products %}
                 <div class="section-heading text-center mt-5 pt-5 reveal">
@@ -636,7 +571,6 @@ https://kaleidobrands.com/static/brands/images/kb.png
 {% block scripts %}
 <script src="{% static 'products/js/gallery.js' %}"></script>
 <script src="{% static 'products/js/product_detail.js' %}"></script>
-<script src="{% static 'products/js/quote_cart.js' %}"></script>
 <script src="{% static 'products/js/recently_viewed.js' %}"></script>
 <script src="{% static 'products/js/share_product.js' %}"></script>
 {% endblock %}

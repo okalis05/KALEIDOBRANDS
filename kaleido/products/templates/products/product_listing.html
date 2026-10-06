@@ -1,0 +1,86 @@
+{% extends "brands/base.html" %}
+
+{% block title %}{{ page_title }} | KaleidoBrands{% endblock %}
+
+{% block content %}
+
+<section class="section-panel">
+
+    <div class="container">
+
+        <div class="section-heading text-center mb-5">
+
+            <span>KaleidoBrands Marketplace</span>
+
+            <h1>
+                {{ page_title }}
+            </h1>
+
+            {% if page_subtitle %}
+                <p
+                    class="mx-auto"
+                    style="max-width: 720px;"
+                >
+                    {{ page_subtitle }}
+                </p>
+            {% endif %}
+
+        </div>
+
+
+        {% if products %}
+
+            <div class="row g-4">
+
+                {% for product in products %}
+
+                    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+
+                        {% include "products/partials/product_card.html" %}
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            {% if page_obj.has_other_pages %}
+
+                <div class="mt-5">
+
+                    {% include "products/partials/pagination.html" %}
+
+                </div>
+
+            {% endif %}
+
+
+        {% else %}
+
+            <div class="text-center py-5">
+
+                <h3>
+                    No products available.
+                </h3>
+
+                <p>
+                    Check back soon for new marketplace products.
+                </p>
+
+                <a
+                    href="{% url 'products:home' %}"
+                    class="btn btn-kb-primary mt-3"
+                >
+                    Browse All Products
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

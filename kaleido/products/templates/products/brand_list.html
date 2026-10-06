@@ -1,0 +1,80 @@
+{% extends "brands/base.html" %}
+
+{% block title %}Shop by Brand | KaleidoBrands{% endblock %}
+
+{% block content %}
+
+<section class="section-panel">
+    <div class="container">
+
+        <div class="section-heading text-center mb-5">
+            <span>Shop by Brand</span>
+            <h1>Explore our product brands.</h1>
+            <p class="mx-auto" style="max-width: 720px;">
+                Browse promotional products from the trusted brands
+                and supplier catalogs available through KaleidoBrands.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            {% for brand in brands %}
+
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+
+                    <a
+                        href="{% url 'products:supplier_detail' brand.slug %}"
+                        class="text-decoration-none text-dark"
+                    >
+
+                        <article class="product-card h-100">
+
+                            <div class="product-card-content">
+
+                                <div class="product-card-meta">
+                                    Product Brand
+                                </div>
+
+                                <h3 class="product-card-title">
+                                    {{ brand.name }}
+                                </h3>
+
+                                <p class="product-card-description">
+                                    Explore promotional products from
+                                    {{ brand.name }}.
+                                </p>
+
+                                <div class="mt-auto pt-3">
+
+                                    <strong>
+                                        {{ brand.product_count }}
+                                    </strong>
+
+                                    product{{ brand.product_count|pluralize }}
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    </a>
+
+                </div>
+
+            {% empty %}
+
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <h3>No brands available yet.</h3>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

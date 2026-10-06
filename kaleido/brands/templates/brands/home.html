@@ -290,71 +290,95 @@
 
             <div class="trust-grid mt-5">
 
-                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
-                     <div class="home-industry-icon">
-                        <i class="bi bi-hospital"></i>
-                    </div>
-                    <strong>Healthcare</strong>
-                    <span>Uniforms, wellness campaigns and employee essentials</span>
-                </a>
+    {% for item in home_industry_cards %}
 
-                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
-                    <div class="home-industry-icon">
-                        <i class="bi bi-buildings"></i>
-                    </div>
-                    <strong>Corporate</strong>
-                    <span>Employee kits, executive gifts and client appreciation</span>
-                </a>
+        <a
+            href="{% url 'products:home' %}?q={{ item.name|urlencode }}"
+            class="home-industry-card home-industry-product-card"
+        >
 
-                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
-                    <div class="home-industry-icon">
-                        <i class="bi bi-mortarboard"></i>
-                    </div>
-                    <strong>Education</strong>
-                    <span>Campus events, student programs and school spirit</span>
-                </a>
+            <div class="home-industry-product-media">
 
-                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
-                    <div class="home-industry-icon">
-                        <i class="bi bi-building"></i>
-                    </div>
-                    <strong>Hospitality</strong>
-                    <span>Guest experiences, uniforms and branded amenities</span>
-                </a>
+                {% if item.product %}
 
-                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
-                    <div class="home-industry-icon">
-                        <i class="bi bi-calendar-event"></i>
-                    </div>
-                    <strong>Events</strong>
-                    <span>Trade shows, conferences and memorable giveaways</span>
-                </a>
+                    {% if item.product.image %}
+                        <img
+                            src="{{ item.product.image.url }}"
+                            alt="{{ item.product.name }}"
+                            loading="lazy"
+                        >
 
-                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
-                    <div class="home-industry-icon">
-                        <i class="bi bi-trophy"></i>
-                    </div>
-                    <strong>Teams</strong>
-                    <span>Polos, hats, shirts, spirit wear and recognition</span>
-                </a>
+                    {% elif item.product.external_image_url %}
+                        <img
+                            src="{{ item.product.external_image_url }}"
+                            alt="{{ item.product.name }}"
+                            loading="lazy"
+                        >
+                    {% endif %}
 
-                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
-                    <div class="home-industry-icon">
-                        <i class="bi bi-people"></i>
-                    </div>
-                    <strong>Nonprofits</strong>
-                    <span>Fundraisers, volunteer programs and community events</span>
-                </a>
+                {% else %}
 
-                <a href="{% url 'products:home' %}#industries" class="home-industry-card">
-                    <div class="home-industry-icon">
-                        <i class="bi bi-tools"></i>
+                    <div class="home-industry-product-placeholder">
+                        <i class="bi {{ item.icon }}"></i>
                     </div>
-                    <strong>Construction</strong>
-                    <span>Worksite apparel, safety campaigns and durable giveaways</span>
-                </a>
+
+                {% endif %}
+
+                <div class="home-industry-product-badge">
+                    <i class="bi {{ item.icon }}"></i>
+                    <span>{{ item.name }}</span>
+                </div>
 
             </div>
+
+
+            <div class="home-industry-product-content">
+
+                <strong>{{ item.name }}</strong>
+
+                <span>
+                    {{ item.description }}
+                </span>
+
+                {% if item.product %}
+                    <small class="home-industry-featured-product">
+                        Featuring {{ item.product.name|truncatechars:42 }}
+                    </small>
+                {% endif %}
+
+                <div class="home-industry-product-footer">
+
+                    <small>
+                        {{ item.product_count }}
+                        product{{ item.product_count|pluralize }}
+                    </small>
+
+                    <span>
+                        Explore
+                        <i class="bi bi-arrow-up-right"></i>
+                    </span>
+
+                </div>
+
+            </div>
+
+        </a>
+
+    {% empty %}
+
+        {# Defensive fallback so the section never disappears unexpectedly. #}
+
+        <a
+            href="{% url 'products:home' %}"
+            class="home-industry-card"
+        >
+            <strong>Explore Products</strong>
+            <span>Browse the KaleidoBrands marketplace.</span>
+        </a>
+
+    {% endfor %}
+
+</div>
 
         </div>
     </section>

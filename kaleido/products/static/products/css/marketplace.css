@@ -1071,3 +1071,3871 @@
         width: 100%;
     }
 }
+
+/* =========================================================
+   KALEIDOBRANDS — PREMIUM QUOTE BUILDER
+   Scoped intentionally to avoid affecting marketplace pages
+   ========================================================= */
+
+.kb-quote-builder {
+    --quote-navy: #0f172a;
+    --quote-blue: #1267e5;
+    --quote-blue-dark: #0755c9;
+    --quote-muted: #64748b;
+    --quote-border: rgba(148, 163, 184, 0.22);
+    --quote-soft-blue: #eff6ff;
+    --quote-red: #ff334d;
+    --quote-orange: #ffab13;
+    --quote-white: #ffffff;
+
+    overflow: hidden;
+    background:
+        linear-gradient(
+            180deg,
+            #f8fbff 0%,
+            #ffffff 38%,
+            #f8fafc 100%
+        );
+    color: var(--quote-navy);
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.kb-quote-builder .kb-quote-hero {
+    position: relative;
+    padding: 4.25rem 0 3.75rem;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+    background:
+        radial-gradient(
+            circle at 8% 35%,
+            rgba(37, 99, 235, 0.15),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 92% 40%,
+            rgba(244, 63, 94, 0.12),
+            transparent 28%
+        ),
+        linear-gradient(
+            115deg,
+            #eef7ff 0%,
+            #f7fbff 50%,
+            #fff5f7 100%
+        );
+}
+
+.kb-quote-builder .kb-quote-hero::before {
+    content: "";
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    top: -190px;
+    left: 50%;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.09);
+    filter: blur(10px);
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.kb-quote-builder .kb-quote-hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1050px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.kb-quote-builder .kb-quote-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    margin-bottom: 1rem;
+    padding: 0.35rem 0.85rem;
+    border: 1px solid rgba(37, 99, 235, 0.14);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    color: #2563eb;
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+.kb-quote-builder .kb-quote-hero h1 {
+    max-width: 900px;
+    margin: 0 auto;
+    color: var(--quote-navy);
+    font-size: clamp(2.5rem, 5vw, 4.7rem);
+    font-weight: 900;
+    letter-spacing: -0.055em;
+    line-height: 0.98;
+}
+
+.kb-quote-builder .kb-quote-hero h1 span {
+    background:
+        linear-gradient(
+            90deg,
+            #1674ef 0%,
+            #7449f5 45%,
+            #ef3158 72%,
+            #ff9d0a 100%
+        );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.kb-quote-builder .kb-quote-hero-copy > p {
+    max-width: 760px;
+    margin: 1.35rem auto 0;
+    color: #52647d;
+    font-size: 1.04rem;
+    line-height: 1.75;
+}
+
+.kb-quote-builder .kb-quote-benefits {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 880px;
+    margin: 2.35rem auto 0;
+    gap: 1.25rem;
+}
+
+.kb-quote-builder .kb-quote-benefit {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    text-align: left;
+}
+
+.kb-quote-builder .kb-quote-benefit-icon {
+    display: inline-flex;
+    flex: 0 0 44px;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 1.05rem;
+    box-shadow: 0 9px 20px rgba(15, 23, 42, 0.09);
+}
+
+.kb-quote-builder .kb-quote-benefit-icon.is-green {
+    background: #d9fbe5;
+    color: #16a34a;
+}
+
+.kb-quote-builder .kb-quote-benefit-icon.is-purple {
+    background: #e8e2ff;
+    color: #6941e8;
+}
+
+.kb-quote-builder .kb-quote-benefit-icon.is-pink {
+    background: #ffe1e8;
+    color: #ef3158;
+}
+
+.kb-quote-builder .kb-quote-benefit strong,
+.kb-quote-builder .kb-quote-benefit span {
+    display: block;
+}
+
+.kb-quote-builder .kb-quote-benefit strong {
+    margin-bottom: 0.15rem;
+    color: var(--quote-navy);
+    font-size: 0.9rem;
+}
+
+.kb-quote-builder .kb-quote-benefit span {
+    color: var(--quote-muted);
+    font-size: 0.78rem;
+}
+
+
+/* =========================================================
+   WORKSPACE
+   ========================================================= */
+
+.kb-quote-builder .kb-quote-workspace {
+    position: relative;
+    z-index: 5;
+    padding: 2rem 0 4.5rem;
+}
+
+.kb-quote-builder .kb-quote-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.65fr) minmax(360px, 0.95fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.kb-quote-builder .kb-quote-card {
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.97);
+    box-shadow:
+        0 22px 60px rgba(15, 23, 42, 0.08),
+        0 3px 10px rgba(15, 23, 42, 0.03);
+}
+
+.kb-quote-builder .kb-quote-products-card,
+.kb-quote-builder .kb-quote-project-card {
+    padding: 1.65rem;
+}
+
+.kb-quote-builder .kb-quote-project-card {
+    position: sticky;
+    top: 1.25rem;
+}
+
+.kb-quote-builder .kb-quote-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.35rem;
+}
+
+.kb-quote-builder .kb-quote-card-heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.kb-quote-builder .kb-quote-heading-icon {
+    display: flex;
+    flex: 0 0 52px;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    font-size: 1.25rem;
+}
+
+.kb-quote-builder .kb-quote-heading-icon.is-blue {
+    background:
+        linear-gradient(
+            145deg,
+            #1b86ff,
+            #0757d7
+        );
+    color: #ffffff;
+    box-shadow: 0 12px 26px rgba(37, 99, 235, 0.24);
+}
+
+.kb-quote-builder .kb-quote-heading-icon.is-red {
+    background:
+        linear-gradient(
+            145deg,
+            #ff5b70,
+            #e91f45
+        );
+    color: #ffffff;
+    box-shadow: 0 12px 26px rgba(239, 49, 88, 0.22);
+}
+
+.kb-quote-builder .kb-quote-card-kicker {
+    display: block;
+    margin-bottom: 0.15rem;
+    color: #64748b;
+    font-size: 0.67rem;
+    font-weight: 900;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.kb-quote-builder .kb-quote-card-heading h2 {
+    margin: 0;
+    color: var(--quote-navy);
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: -0.025em;
+}
+
+.kb-quote-builder .kb-quote-card-heading p {
+    margin: 0.3rem 0 0;
+    color: var(--quote-muted);
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.kb-quote-builder .kb-quote-count {
+    flex-shrink: 0;
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    background: #eaf3ff;
+    color: #0863da;
+    font-size: 0.76rem;
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   SAVED PRODUCT PREVIEW
+   ========================================================= */
+
+.kb-quote-builder .kb-quote-preview {
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(59, 130, 246, 0.12);
+    border-radius: 1rem;
+    background:
+        linear-gradient(
+            120deg,
+            #f5f9ff,
+            #f8fbff
+        );
+}
+
+
+/* =========================================================
+   GENERATED QUOTE ITEMS
+   Preserve JS-generated markup while restyling it
+   ========================================================= */
+
+.kb-quote-builder .kb-quote-items {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.kb-quote-builder .kb-quote-items > * {
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 1rem;
+    background: #ffffff;
+    box-shadow: 0 7px 20px rgba(15, 23, 42, 0.035);
+}
+
+.kb-quote-builder .kb-quote-items input,
+.kb-quote-builder .kb-quote-items textarea,
+.kb-quote-builder .kb-quote-items select {
+    border: 1px solid #dce4ee;
+    border-radius: 0.7rem;
+    background: #ffffff;
+    color: var(--quote-navy);
+}
+
+.kb-quote-builder .kb-quote-items input:focus,
+.kb-quote-builder .kb-quote-items textarea:focus,
+.kb-quote-builder .kb-quote-items select:focus {
+    border-color: #4c94ef;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+
+/* =========================================================
+   PRICING NOTE
+   ========================================================= */
+
+.kb-quote-builder .kb-quote-pricing-note {
+    display: flex;
+    gap: 0.9rem;
+    margin-top: 1.35rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    border-radius: 1rem;
+    background:
+        linear-gradient(
+            110deg,
+            #eef6ff,
+            #f5f9ff
+        );
+}
+
+.kb-quote-builder .kb-quote-info-icon {
+    display: flex;
+    flex: 0 0 34px;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #3b82f6;
+    color: #ffffff;
+    font-weight: 900;
+}
+
+.kb-quote-builder .kb-quote-pricing-note strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #075bc7;
+    font-size: 0.85rem;
+}
+
+.kb-quote-builder .kb-quote-pricing-note p {
+    margin: 0;
+    color: #4f6682;
+    font-size: 0.78rem;
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   FEATURE TILES
+   ========================================================= */
+
+.kb-quote-builder .kb-quote-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.kb-quote-builder .kb-quote-feature {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-height: 74px;
+    padding: 0.8rem;
+    border: 1px solid var(--quote-border);
+    border-radius: 0.9rem;
+    background: #ffffff;
+}
+
+.kb-quote-builder .kb-quote-feature-icon {
+    display: flex;
+    flex: 0 0 34px;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #f3e8ff;
+    color: #7c3aed;
+    font-size: 0.9rem;
+}
+
+.kb-quote-builder .kb-quote-feature strong,
+.kb-quote-builder .kb-quote-feature span {
+    display: block;
+}
+
+.kb-quote-builder .kb-quote-feature strong {
+    color: var(--quote-navy);
+    font-size: 0.76rem;
+}
+
+.kb-quote-builder .kb-quote-feature span {
+    margin-top: 0.1rem;
+    color: var(--quote-muted);
+    font-size: 0.67rem;
+    line-height: 1.35;
+}
+
+
+/* =========================================================
+   PRODUCT FOOTER
+   ========================================================= */
+
+.kb-quote-builder .kb-quote-product-footer {
+    display: flex;
+    margin-top: 1.15rem;
+}
+
+.kb-quote-builder .kb-quote-secondary-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 42px;
+    padding: 0.65rem 1rem;
+    border-radius: 0.75rem;
+    background: #edf5ff;
+    color: #075bc7;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+.kb-quote-builder .kb-quote-secondary-action:hover {
+    background: #deedff;
+    color: #064ca5;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   PROJECT FORM
+   ========================================================= */
+
+.kb-quote-builder .kb-project-heading {
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.kb-quote-builder .kb-quote-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.95rem 0.85rem;
+}
+
+.kb-quote-builder .kb-quote-fields p {
+    min-width: 0;
+    margin: 0;
+}
+
+.kb-quote-builder .kb-quote-fields p:has(textarea) {
+    grid-column: 1 / -1;
+}
+
+.kb-quote-builder .kb-quote-fields label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #1e293b;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.kb-quote-builder .kb-quote-fields input,
+.kb-quote-builder .kb-quote-fields select,
+.kb-quote-builder .kb-quote-fields textarea {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    padding: 0.72rem 0.8rem;
+    border: 1px solid #d8e0e9;
+    border-radius: 0.65rem;
+    outline: none;
+    background: #ffffff;
+    color: var(--quote-navy);
+    font: inherit;
+    font-size: 0.82rem;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.kb-quote-builder .kb-quote-fields textarea {
+    min-height: 118px;
+    resize: vertical;
+}
+
+.kb-quote-builder .kb-quote-fields input:focus,
+.kb-quote-builder .kb-quote-fields select:focus,
+.kb-quote-builder .kb-quote-fields textarea:focus {
+    border-color: #4d91ea;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.09);
+}
+
+.kb-quote-builder .kb-quote-fields .helptext {
+    display: block;
+    margin-top: 0.3rem;
+    color: var(--quote-muted);
+    font-size: 0.65rem;
+}
+
+.kb-quote-builder .kb-quote-fields .errorlist {
+    margin: 0.35rem 0 0;
+    padding: 0;
+    color: #dc2626;
+    font-size: 0.68rem;
+    list-style: none;
+}
+
+
+/* =========================================================
+   SUBMIT
+   ========================================================= */
+
+.kb-quote-builder .kb-quote-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    width: 100%;
+    min-height: 52px;
+    margin-top: 1.3rem;
+    padding: 0.85rem 1.2rem;
+    border: 0;
+    border-radius: 999px;
+    background:
+        linear-gradient(
+            90deg,
+            #ff334d 0%,
+            #ff5a24 48%,
+            #ffae13 100%
+        );
+    color: #ffffff;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 13px 28px rgba(255, 80, 55, 0.2);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.kb-quote-builder .kb-quote-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 17px 34px rgba(255, 80, 55, 0.27);
+}
+
+.kb-quote-builder .kb-quote-submit:focus-visible {
+    outline: 3px solid rgba(255, 77, 72, 0.25);
+    outline-offset: 3px;
+}
+
+.kb-quote-builder .kb-quote-submit-note {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.45rem;
+    margin-top: 0.9rem;
+    color: #718096;
+}
+
+.kb-quote-builder .kb-quote-submit-note i {
+    margin-top: 0.1rem;
+    color: #16a34a;
+}
+
+.kb-quote-builder .kb-quote-submit-note p {
+    max-width: 390px;
+    margin: 0;
+    font-size: 0.66rem;
+    line-height: 1.55;
+    text-align: center;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.kb-quote-builder .kb-quote-empty {
+    padding: 2rem 1.25rem;
+    border: 1px dashed rgba(148, 163, 184, 0.4);
+    border-radius: 1rem;
+    background: #fbfdff;
+    text-align: center;
+}
+
+.kb-quote-builder .kb-quote-empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 0.8rem;
+    border-radius: 50%;
+    background: #eaf3ff;
+    color: #1267e5;
+    font-size: 1.1rem;
+}
+
+.kb-quote-builder .kb-quote-empty h3 {
+    margin: 0 0 0.4rem;
+    color: var(--quote-navy);
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.kb-quote-builder .kb-quote-empty p {
+    max-width: 500px;
+    margin: 0 auto 1rem;
+    color: var(--quote-muted);
+    font-size: 0.8rem;
+}
+
+
+/* =========================================================
+   RECOMMENDATIONS
+   ========================================================= */
+
+.kb-quote-builder .kb-quote-recommendations {
+    padding: 4rem 0 5rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.14);
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1199.98px) {
+    .kb-quote-builder .kb-quote-layout {
+        grid-template-columns:
+            minmax(0, 1.4fr)
+            minmax(340px, 1fr);
+    }
+
+    .kb-quote-builder .kb-quote-feature-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .kb-quote-builder .kb-quote-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .kb-quote-builder .kb-quote-project-card {
+        position: static;
+    }
+
+    .kb-quote-builder .kb-quote-benefits {
+        grid-template-columns: 1fr;
+        max-width: 420px;
+    }
+
+    .kb-quote-builder .kb-quote-benefit {
+        justify-content: flex-start;
+    }
+
+    .kb-quote-builder .kb-quote-feature-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767.98px) {
+    .kb-quote-builder .kb-quote-hero {
+        padding: 3.25rem 0 2.75rem;
+    }
+
+    .kb-quote-builder .kb-quote-card-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .kb-quote-builder .kb-quote-count {
+        align-self: flex-start;
+    }
+
+    .kb-quote-builder .kb-quote-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .kb-quote-builder .kb-quote-fields p:has(textarea) {
+        grid-column: auto;
+    }
+
+    .kb-quote-builder .kb-quote-feature-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .kb-quote-builder .kb-quote-hero h1 {
+        font-size: 2.55rem;
+    }
+
+    .kb-quote-builder .kb-quote-hero-copy > p {
+        font-size: 0.9rem;
+    }
+
+    .kb-quote-builder .kb-quote-products-card,
+    .kb-quote-builder .kb-quote-project-card {
+        padding: 1.15rem;
+        border-radius: 1.15rem;
+    }
+
+    .kb-quote-builder .kb-quote-card-heading {
+        align-items: flex-start;
+    }
+
+    .kb-quote-builder .kb-quote-heading-icon {
+        flex-basis: 44px;
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* =========================================================
+   PREMIUM QUOTE BUILDER — PRODUCT ROW
+   ========================================================= */
+
+.kb-quote-builder .kb-quote-items {
+    display: grid;
+    gap: 1rem;
+}
+
+.kb-quote-builder .kb-quote-product-row {
+    overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 1.1rem;
+    background: #ffffff;
+    box-shadow:
+        0 8px 24px rgba(15, 23, 42, 0.045);
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.kb-quote-builder .kb-quote-product-row:hover {
+    border-color: rgba(59, 130, 246, 0.24);
+    box-shadow:
+        0 14px 32px rgba(15, 23, 42, 0.07);
+    transform: translateY(-1px);
+}
+
+
+/* Product identity */
+
+.kb-quote-builder .kb-quote-product-main {
+    display: grid;
+    grid-template-columns:
+        62px
+        minmax(0, 1fr)
+        auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+}
+
+.kb-quote-builder .kb-quote-product-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 62px;
+    height: 62px;
+    border-radius: 1rem;
+    background:
+        linear-gradient(
+            145deg,
+            #edf6ff,
+            #e5efff
+        );
+    color: #2877e8;
+    font-size: 1.35rem;
+}
+
+.kb-quote-builder .kb-quote-product-copy {
+    min-width: 0;
+}
+
+.kb-quote-builder .kb-quote-product-category {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: #ef3158;
+    font-size: 0.66rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.kb-quote-builder .kb-quote-product-name {
+    display: block;
+    overflow: hidden;
+    margin-bottom: 0.35rem;
+    color: #0f172a;
+    font-size: 0.96rem;
+    font-weight: 900;
+    line-height: 1.35;
+    text-decoration: none;
+    text-overflow: ellipsis;
+}
+
+.kb-quote-builder .kb-quote-product-name:hover {
+    color: #1267e5;
+}
+
+.kb-quote-builder .kb-quote-product-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    color: #718096;
+    font-size: 0.7rem;
+}
+
+.kb-quote-builder .kb-quote-product-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.kb-quote-builder .kb-quote-product-meta i {
+    color: #8494a8;
+}
+
+.kb-quote-builder .kb-quote-product-meta strong {
+    color: #334155;
+}
+
+
+/* Remove */
+
+.kb-quote-builder .kb-quote-remove-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 38px;
+    padding: 0.55rem 0.8rem;
+    border: 1px solid #ffd8de;
+    border-radius: 0.7rem;
+    background: #fff7f8;
+    color: #e12c49;
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.kb-quote-builder .kb-quote-remove-btn:hover {
+    border-color: #ffb8c4;
+    background: #ffecef;
+    color: #c91e3b;
+    transform: translateY(-1px);
+}
+
+
+/* Controls */
+
+.kb-quote-builder .kb-quote-product-controls {
+    display: grid;
+    grid-template-columns:
+        minmax(130px, 0.34fr)
+        minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.15);
+    background:
+        linear-gradient(
+            180deg,
+            #fbfdff,
+            #f8fbff
+        );
+}
+
+.kb-quote-builder .kb-quote-control-group {
+    min-width: 0;
+}
+
+.kb-quote-builder .kb-quote-control-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #334155;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.kb-quote-builder .kb-quote-control-group small {
+    display: block;
+    margin-top: 0.3rem;
+    color: #94a3b8;
+    font-size: 0.62rem;
+}
+
+
+/* Quantity */
+
+.kb-quote-builder .kb-quote-quantity-wrap {
+    position: relative;
+}
+
+.kb-quote-builder
+.kb-quote-quantity-wrap
+.qty {
+    width: 100%;
+    height: 43px;
+    padding: 0 0.8rem;
+    border: 1px solid #d8e1ec;
+    border-radius: 0.7rem;
+    outline: none;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.kb-quote-builder
+.kb-quote-quantity-wrap
+.qty:focus {
+    border-color: #4d91ea;
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.09);
+}
+
+
+/* Notes */
+
+.kb-quote-builder .kb-quote-note-wrap {
+    position: relative;
+}
+
+.kb-quote-builder
+.kb-quote-note-wrap
+i {
+    position: absolute;
+    top: 50%;
+    left: 0.8rem;
+    z-index: 2;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.kb-quote-builder
+.kb-quote-note-wrap
+.note {
+    width: 100%;
+    height: 43px;
+    padding:
+        0
+        0.85rem
+        0
+        2.25rem;
+    border: 1px solid #d8e1ec;
+    border-radius: 0.7rem;
+    outline: none;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 0.78rem;
+}
+
+.kb-quote-builder
+.kb-quote-note-wrap
+.note::placeholder {
+    color: #a2adba;
+}
+
+.kb-quote-builder
+.kb-quote-note-wrap
+.note:focus {
+    border-color: #4d91ea;
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.09);
+}
+
+
+/* Mobile */
+
+@media (max-width: 575.98px) {
+
+    .kb-quote-builder
+    .kb-quote-product-main {
+        grid-template-columns:
+            52px
+            minmax(0, 1fr);
+    }
+
+    .kb-quote-builder
+    .kb-quote-product-avatar {
+        width: 52px;
+        height: 52px;
+    }
+
+    .kb-quote-builder
+    .kb-quote-remove-btn {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .kb-quote-builder
+    .kb-quote-product-controls {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   KALEIDOBRANDS — PREMIUM QUOTE SUCCESS
+   ========================================================= */
+
+.kb-quote-success-page {
+    --success-navy: #0f172a;
+    --success-muted: #64748b;
+    --success-blue: #1674ef;
+    --success-green: #16a34a;
+    --success-red: #ef3158;
+    --success-orange: #ff9d0a;
+
+    min-height: calc(100vh - 80px);
+    overflow: hidden;
+    background:
+        radial-gradient(
+            circle at 10% 15%,
+            rgba(59, 130, 246, 0.12),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 20%,
+            rgba(244, 63, 94, 0.1),
+            transparent 28%
+        ),
+        linear-gradient(
+            145deg,
+            #f3f9ff 0%,
+            #ffffff 48%,
+            #fff7f8 100%
+        );
+}
+
+.kb-quote-success-page .kb-success-section {
+    padding: 4.5rem 0 5rem;
+}
+
+.kb-quote-success-page .kb-success-card {
+    position: relative;
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 3rem;
+    overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 2rem;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow:
+        0 30px 80px rgba(15, 23, 42, 0.1),
+        0 4px 14px rgba(15, 23, 42, 0.04);
+}
+
+
+/* Success icon */
+
+.kb-quote-success-page .kb-success-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.kb-quote-success-page .kb-success-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.14);
+    filter: blur(16px);
+    transform: translate(-50%, -50%);
+}
+
+.kb-quote-success-page .kb-success-check {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 82px;
+    height: 82px;
+    border: 8px solid #dcfce7;
+    border-radius: 50%;
+    background:
+        linear-gradient(
+            145deg,
+            #22c55e,
+            #16a34a
+        );
+    color: #ffffff;
+    font-size: 2.1rem;
+    box-shadow:
+        0 14px 30px rgba(22, 163, 74, 0.24);
+}
+
+
+/* Heading */
+
+.kb-quote-success-page .kb-success-heading {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.kb-quote-success-page .kb-success-eyebrow {
+    display: inline-flex;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: #ecfdf3;
+    color: #15803d;
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.kb-quote-success-page .kb-success-heading h1 {
+    margin: 0.9rem 0 0;
+    color: var(--success-navy);
+    font-size: clamp(2.3rem, 5vw, 4rem);
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    line-height: 1.02;
+}
+
+.kb-quote-success-page .kb-success-heading h1 span {
+    display: block;
+    background:
+        linear-gradient(
+            90deg,
+            #1674ef,
+            #7348ef,
+            #ef3158,
+            #ff9d0a
+        );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.kb-quote-success-page .kb-success-heading > p {
+    margin: 1.15rem auto 0;
+    color: var(--success-muted);
+    font-size: 0.98rem;
+    line-height: 1.7;
+}
+
+
+/* Submitted status */
+
+.kb-quote-success-page .kb-success-status {
+    display: flex;
+    align-items: center;
+    max-width: 620px;
+    margin: 1.8rem auto 0;
+    padding: 0.9rem 1.1rem;
+    gap: 0.85rem;
+    border: 1px solid #bbf7d0;
+    border-radius: 1rem;
+    background: #f0fdf4;
+    text-align: left;
+}
+
+.kb-quote-success-page .kb-success-status-icon {
+    display: flex;
+    flex: 0 0 40px;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #dcfce7;
+    color: #16a34a;
+    font-size: 1rem;
+}
+
+.kb-quote-success-page .kb-success-status strong,
+.kb-quote-success-page .kb-success-status span {
+    display: block;
+}
+
+.kb-quote-success-page .kb-success-status strong {
+    color: #166534;
+    font-size: 0.82rem;
+}
+
+.kb-quote-success-page .kb-success-status span {
+    margin-top: 0.1rem;
+    color: #4d7c5b;
+    font-size: 0.74rem;
+}
+
+
+/* What's next */
+
+.kb-quote-success-page .kb-success-next {
+    margin-top: 2.75rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.kb-quote-success-page .kb-success-next-heading {
+    text-align: center;
+}
+
+.kb-quote-success-page .kb-success-next-heading span {
+    color: #ef3158;
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.kb-quote-success-page .kb-success-next-heading h2 {
+    margin: 0.25rem 0 0;
+    color: var(--success-navy);
+    font-size: 1.6rem;
+    font-weight: 900;
+}
+
+.kb-quote-success-page .kb-success-steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.kb-quote-success-page .kb-success-step {
+    position: relative;
+    padding: 1.35rem 1.1rem;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 1.1rem;
+    background: #fbfdff;
+    text-align: center;
+}
+
+.kb-quote-success-page .kb-success-step-number {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.8rem;
+    color: #cbd5e1;
+    font-size: 0.7rem;
+    font-weight: 900;
+}
+
+.kb-quote-success-page .kb-success-step-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    margin: 0 auto 0.8rem;
+    border-radius: 50%;
+}
+
+.kb-quote-success-page .kb-success-step-icon.is-blue {
+    background: #e6f1ff;
+    color: #1674ef;
+}
+
+.kb-quote-success-page .kb-success-step-icon.is-purple {
+    background: #eee9ff;
+    color: #7047e8;
+}
+
+.kb-quote-success-page .kb-success-step-icon.is-orange {
+    background: #fff0d9;
+    color: #f58a00;
+}
+
+.kb-quote-success-page .kb-success-step strong {
+    display: block;
+    color: var(--success-navy);
+    font-size: 0.85rem;
+}
+
+.kb-quote-success-page .kb-success-step p {
+    margin: 0.45rem 0 0;
+    color: var(--success-muted);
+    font-size: 0.72rem;
+    line-height: 1.55;
+}
+
+
+/* Reassurance */
+
+.kb-quote-success-page .kb-success-reassurance {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+.kb-quote-success-page .kb-success-reassurance > div {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.85rem;
+}
+
+.kb-quote-success-page .kb-success-reassurance i {
+    margin-top: 0.1rem;
+    color: #1674ef;
+}
+
+.kb-quote-success-page .kb-success-reassurance span {
+    color: var(--success-muted);
+    font-size: 0.68rem;
+    line-height: 1.45;
+}
+
+.kb-quote-success-page .kb-success-reassurance strong {
+    display: block;
+    margin-bottom: 0.1rem;
+    color: var(--success-navy);
+    font-size: 0.72rem;
+}
+
+
+/* Actions */
+
+.kb-quote-success-page .kb-success-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 2rem;
+}
+
+.kb-quote-success-page .kb-success-primary,
+.kb-quote-success-page .kb-success-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 48px;
+    padding: 0.75rem 1.25rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 900;
+    text-decoration: none;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.kb-quote-success-page .kb-success-primary {
+    background:
+        linear-gradient(
+            90deg,
+            #1674ef,
+            #7047e8
+        );
+    color: #ffffff;
+    box-shadow:
+        0 12px 25px rgba(37, 99, 235, 0.2);
+}
+
+.kb-quote-success-page .kb-success-secondary {
+    border: 1px solid #dbe3ec;
+    background: #ffffff;
+    color: #334155;
+}
+
+.kb-quote-success-page .kb-success-primary:hover,
+.kb-quote-success-page .kb-success-secondary:hover {
+    transform: translateY(-2px);
+}
+
+.kb-quote-success-page .kb-success-primary:hover {
+    color: #ffffff;
+    box-shadow:
+        0 16px 30px rgba(37, 99, 235, 0.27);
+}
+
+.kb-quote-success-page .kb-success-secondary:hover {
+    border-color: #b9c8da;
+    color: #0f172a;
+}
+
+.kb-quote-success-page .kb-success-footer-note {
+    margin: 1rem 0 0;
+    color: #94a3b8;
+    font-size: 0.68rem;
+    text-align: center;
+}
+
+
+/* Responsive */
+
+@media (max-width: 767.98px) {
+
+    .kb-quote-success-page .kb-success-section {
+        padding: 2.5rem 0 3rem;
+    }
+
+    .kb-quote-success-page .kb-success-card {
+        padding: 2rem 1.25rem;
+        border-radius: 1.4rem;
+    }
+
+    .kb-quote-success-page .kb-success-steps,
+    .kb-quote-success-page .kb-success-reassurance {
+        grid-template-columns: 1fr;
+    }
+
+    .kb-quote-success-page .kb-success-actions {
+        flex-direction: column;
+    }
+
+    .kb-quote-success-page .kb-success-primary,
+    .kb-quote-success-page .kb-success-secondary {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   Quote Success — Step Card Hover Animation
+   ========================================================= */
+
+.kb-quote-success-page .kb-success-step {
+    transition:
+        transform 0.28s ease,
+        box-shadow 0.28s ease,
+        border-color 0.28s ease;
+}
+
+
+/* Card 1 — Project Review */
+
+.kb-quote-success-page
+.kb-success-step:nth-child(1):hover {
+    transform: translateY(-8px);
+    border-color: rgba(22, 116, 239, 0.4);
+
+    box-shadow:
+        0 18px 38px rgba(22, 116, 239, 0.14),
+        0 5px 15px rgba(15, 23, 42, 0.05);
+}
+
+
+/* Card 2 — Custom Pricing */
+
+.kb-quote-success-page
+.kb-success-step:nth-child(2):hover {
+    transform: translateY(-8px);
+    border-color: rgba(112, 71, 232, 0.4);
+
+    box-shadow:
+        0 18px 38px rgba(112, 71, 232, 0.14),
+        0 5px 15px rgba(15, 23, 42, 0.05);
+}
+
+
+/* Card 3 — Personal Follow-Up */
+
+.kb-quote-success-page
+.kb-success-step:nth-child(3):hover {
+    transform: translateY(-8px);
+    border-color: rgba(245, 138, 0, 0.42);
+
+    box-shadow:
+        0 18px 38px rgba(245, 138, 0, 0.14),
+        0 5px 15px rgba(15, 23, 42, 0.05);
+}
+
+
+/* =========================================================
+   Icon animation
+   ========================================================= */
+
+.kb-quote-success-page
+.kb-success-step-icon {
+    transition:
+        transform 0.28s cubic-bezier(
+            0.34,
+            1.56,
+            0.64,
+            1
+        ),
+        box-shadow 0.28s ease;
+}
+
+
+.kb-quote-success-page
+.kb-success-step:hover
+.kb-success-step-icon {
+    transform:
+        translateY(-3px)
+        scale(1.12);
+}
+
+
+/* Blue icon glow */
+
+.kb-quote-success-page
+.kb-success-step:hover
+.kb-success-step-icon.is-blue {
+    box-shadow:
+        0 10px 24px rgba(22, 116, 239, 0.2);
+}
+
+
+/* Purple icon glow */
+
+.kb-quote-success-page
+.kb-success-step:hover
+.kb-success-step-icon.is-purple {
+    box-shadow:
+        0 10px 24px rgba(112, 71, 232, 0.2);
+}
+
+
+/* Orange icon glow */
+
+.kb-quote-success-page
+.kb-success-step:hover
+.kb-success-step-icon.is-orange {
+    box-shadow:
+        0 10px 24px rgba(245, 138, 0, 0.22);
+}
+
+
+/* =========================================================
+   Step number animation
+   ========================================================= */
+
+.kb-quote-success-page
+.kb-success-step-number {
+    transition:
+        transform 0.25s ease,
+        color 0.25s ease,
+        background 0.25s ease;
+}
+
+
+.kb-quote-success-page
+.kb-success-step:hover
+.kb-success-step-number {
+    transform: scale(1.18);
+}
+
+
+.kb-quote-success-page
+.kb-success-step:nth-child(1):hover
+.kb-success-step-number {
+    color: #1674ef;
+}
+
+
+.kb-quote-success-page
+.kb-success-step:nth-child(2):hover
+.kb-success-step-number {
+    color: #7047e8;
+}
+
+
+.kb-quote-success-page
+.kb-success-step:nth-child(3):hover
+.kb-success-step-number {
+    color: #f58a00;
+}
+
+
+/* =========================================================
+   Accessibility — disable motion when requested
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .kb-quote-success-page .kb-success-step,
+    .kb-quote-success-page .kb-success-step-icon,
+    .kb-quote-success-page .kb-success-step-number {
+        transition: none;
+    }
+
+    .kb-quote-success-page
+    .kb-success-step:hover {
+        transform: none;
+    }
+
+    .kb-quote-success-page
+    .kb-success-step:hover
+    .kb-success-step-icon {
+        transform: none;
+    }
+}
+
+/* =========================================================
+   KALEIDOBRANDS — PREMIUM QUOTE HISTORY
+   ========================================================= */
+
+.kb-quote-history-page {
+    --history-navy: #0f172a;
+    --history-muted: #64748b;
+    --history-blue: #1674ef;
+    --history-purple: #7047e8;
+    --history-red: #ef3158;
+    --history-orange: #ff9d0a;
+
+    min-height: calc(100vh - 80px);
+
+    background:
+        linear-gradient(
+            180deg,
+            #f7fbff 0%,
+            #ffffff 45%,
+            #f8fafc 100%
+        );
+
+    color: var(--history-navy);
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.kb-quote-history-page .kb-history-hero {
+    position: relative;
+    padding: 4rem 0 3.5rem;
+    overflow: hidden;
+
+    border-bottom:
+        1px solid rgba(148, 163, 184, 0.14);
+
+    background:
+        radial-gradient(
+            circle at 10% 30%,
+            rgba(37, 99, 235, 0.14),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 30%,
+            rgba(239, 49, 88, 0.1),
+            transparent 28%
+        ),
+        linear-gradient(
+            115deg,
+            #eef7ff,
+            #f9fbff 50%,
+            #fff5f7
+        );
+}
+
+.kb-quote-history-page .kb-history-hero-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.kb-quote-history-page .kb-history-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+
+    padding: 0.4rem 0.85rem;
+    margin-bottom: 1rem;
+
+    border:
+        1px solid rgba(37, 99, 235, 0.14);
+
+    border-radius: 999px;
+
+    background:
+        rgba(255, 255, 255, 0.8);
+
+    color: #2563eb;
+
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.kb-quote-history-page .kb-history-hero h1 {
+    margin: 0;
+
+    color: var(--history-navy);
+
+    font-size:
+        clamp(2.6rem, 5vw, 4.5rem);
+
+    font-weight: 900;
+    letter-spacing: -0.055em;
+    line-height: 1;
+}
+
+.kb-quote-history-page .kb-history-hero h1 span {
+    background:
+        linear-gradient(
+            90deg,
+            #1674ef,
+            #7047e8,
+            #ef3158,
+            #ff9d0a
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+.kb-quote-history-page
+.kb-history-hero-inner > p {
+    max-width: 650px;
+
+    margin:
+        1.15rem
+        auto
+        0;
+
+    color: #5e7088;
+
+    font-size: 0.98rem;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.kb-quote-history-page .kb-history-content {
+    padding: 2.5rem 0 5rem;
+}
+
+
+/* =========================================================
+   SEARCH CARD
+   ========================================================= */
+
+.kb-quote-history-page
+.kb-history-search-card {
+    max-width: 900px;
+
+    margin:
+        0
+        auto
+        2rem;
+
+    padding: 1.6rem;
+
+    border:
+        1px solid rgba(148, 163, 184, 0.2);
+
+    border-radius: 1.4rem;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 18px 50px rgba(15, 23, 42, 0.07);
+}
+
+.kb-quote-history-page
+.kb-history-search-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 1rem;
+
+    margin-bottom: 1.25rem;
+}
+
+.kb-quote-history-page
+.kb-history-search-icon {
+    display: flex;
+    flex: 0 0 50px;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 50px;
+    height: 50px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1b86ff,
+            #0757d7
+        );
+
+    color: #ffffff;
+
+    font-size: 1.15rem;
+
+    box-shadow:
+        0 12px 25px rgba(37, 99, 235, 0.22);
+}
+
+.kb-quote-history-page
+.kb-history-search-heading span {
+    color: #ef3158;
+
+    font-size: 0.65rem;
+    font-weight: 900;
+
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.kb-quote-history-page
+.kb-history-search-heading h2 {
+    margin: 0.15rem 0 0;
+
+    color: var(--history-navy);
+
+    font-size: 1.3rem;
+    font-weight: 900;
+}
+
+.kb-quote-history-page
+.kb-history-search-heading p {
+    margin: 0.2rem 0 0;
+
+    color: var(--history-muted);
+
+    font-size: 0.78rem;
+}
+
+
+/* Search form */
+
+.kb-quote-history-page
+.kb-history-search-form {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto;
+
+    align-items: end;
+
+    gap: 0.8rem;
+}
+
+.kb-quote-history-page
+.kb-history-email-field label {
+    display: block;
+
+    margin-bottom: 0.4rem;
+
+    color: #334155;
+
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.kb-quote-history-page
+.kb-history-input-wrap {
+    position: relative;
+}
+
+.kb-quote-history-page
+.kb-history-input-wrap > i {
+    position: absolute;
+
+    top: 50%;
+    left: 0.9rem;
+
+    color: #94a3b8;
+
+    transform: translateY(-50%);
+
+    pointer-events: none;
+}
+
+.kb-quote-history-page
+.kb-history-input-wrap input {
+    width: 100%;
+    height: 48px;
+
+    padding:
+        0
+        1rem
+        0
+        2.6rem;
+
+    border: 1px solid #d8e1ec;
+    border-radius: 0.75rem;
+
+    outline: none;
+
+    background: #fbfdff;
+
+    color: var(--history-navy);
+
+    font: inherit;
+    font-size: 0.82rem;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.kb-quote-history-page
+.kb-history-input-wrap input:focus {
+    border-color: #4d91ea;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(37, 99, 235, 0.09);
+}
+
+.kb-quote-history-page
+.kb-history-search-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.5rem;
+
+    min-width: 155px;
+    height: 48px;
+
+    padding: 0 1.2rem;
+
+    border: 0;
+    border-radius: 0.75rem;
+
+    background:
+        linear-gradient(
+            90deg,
+            #1674ef,
+            #7047e8
+        );
+
+    color: #ffffff;
+
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 900;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 22px
+        rgba(37, 99, 235, 0.18);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.kb-quote-history-page
+.kb-history-search-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 28px
+        rgba(37, 99, 235, 0.24);
+}
+
+.kb-quote-history-page
+.kb-history-privacy-note {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.4rem;
+
+    margin-top: 0.75rem;
+
+    color: #94a3b8;
+
+    font-size: 0.66rem;
+}
+
+.kb-quote-history-page
+.kb-history-privacy-note i {
+    color: #16a34a;
+}
+
+
+/* =========================================================
+   STAFF BANNER
+   ========================================================= */
+
+.kb-quote-history-page
+.kb-history-staff-banner {
+    display: flex;
+
+    align-items: center;
+
+    max-width: 900px;
+
+    margin:
+        0
+        auto
+        2rem;
+
+    gap: 0.8rem;
+
+    padding: 1rem 1.2rem;
+
+    border: 1px solid #bfdbfe;
+    border-radius: 1rem;
+
+    background: #eff6ff;
+}
+
+.kb-quote-history-page
+.kb-history-staff-banner > div {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    background: #dbeafe;
+
+    color: #2563eb;
+}
+
+.kb-quote-history-page
+.kb-history-staff-banner span {
+    color: #5b6f8c;
+
+    font-size: 0.75rem;
+}
+
+.kb-quote-history-page
+.kb-history-staff-banner strong {
+    display: block;
+
+    color: #1d4ed8;
+}
+
+
+/* =========================================================
+   QUOTE LIST CONTAINER
+   ========================================================= */
+
+.kb-quote-history-page
+.kb-history-quotes {
+    max-width: 1000px;
+
+    margin: 0 auto;
+
+    padding: 1.7rem;
+
+    border:
+        1px solid rgba(148, 163, 184, 0.2);
+
+    border-radius: 1.5rem;
+
+    background:
+        rgba(255, 255, 255, 0.98);
+
+    box-shadow:
+        0 20px 55px
+        rgba(15, 23, 42, 0.07);
+}
+
+.kb-quote-history-page
+.kb-history-list-heading {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-bottom: 1.4rem;
+}
+
+.kb-quote-history-page
+.kb-history-list-kicker {
+    color: #ef3158;
+
+    font-size: 0.65rem;
+    font-weight: 900;
+
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.kb-quote-history-page
+.kb-history-list-heading h2 {
+    margin: 0.15rem 0 0;
+
+    color: var(--history-navy);
+
+    font-size: 1.45rem;
+    font-weight: 900;
+}
+
+.kb-quote-history-page
+.kb-history-list-heading p {
+    margin: 0.25rem 0 0;
+
+    color: var(--history-muted);
+
+    font-size: 0.76rem;
+}
+
+.kb-quote-history-page
+.kb-history-result-count {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.4rem;
+
+    padding: 0.5rem 0.75rem;
+
+    border-radius: 999px;
+
+    background: #eef6ff;
+
+    color: #1267e5;
+
+    font-size: 0.7rem;
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   INDIVIDUAL QUOTE CARD
+   ========================================================= */
+
+.kb-quote-history-page
+.kb-history-list {
+    display: grid;
+
+    gap: 0.85rem;
+}
+
+.kb-quote-history-page
+.kb-history-quote-card {
+    display: grid;
+
+    grid-template-columns:
+        56px
+        minmax(0, 1fr);
+
+    gap: 1rem;
+
+    padding: 1.1rem;
+
+    border:
+        1px solid rgba(148, 163, 184, 0.18);
+
+    border-radius: 1rem;
+
+    background:
+        linear-gradient(
+            110deg,
+            #ffffff,
+            #fbfdff
+        );
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.kb-quote-history-page
+.kb-history-quote-card:hover {
+    transform: translateY(-4px);
+
+    border-color:
+        rgba(37, 99, 235, 0.25);
+
+    box-shadow:
+        0 14px 32px
+        rgba(37, 99, 235, 0.09);
+}
+
+.kb-quote-history-page
+.kb-history-quote-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 56px;
+    height: 56px;
+
+    border-radius: 1rem;
+
+    background:
+        linear-gradient(
+            145deg,
+            #eaf4ff,
+            #e7edff
+        );
+
+    color: #2563eb;
+
+    font-size: 1.2rem;
+
+    transition:
+        transform 0.25s ease;
+}
+
+.kb-quote-history-page
+.kb-history-quote-card:hover
+.kb-history-quote-icon {
+    transform:
+        rotate(-4deg)
+        scale(1.08);
+}
+
+
+/* Quote content */
+
+.kb-quote-history-page
+.kb-history-quote-main {
+    min-width: 0;
+}
+
+.kb-quote-history-page
+.kb-history-quote-top {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 1rem;
+}
+
+.kb-quote-history-page
+.kb-history-reference {
+    color: #2563eb;
+
+    font-size: 0.64rem;
+    font-weight: 900;
+
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.kb-quote-history-page
+.kb-history-quote-top h3 {
+    margin: 0.15rem 0 0;
+
+    color: var(--history-navy);
+
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.kb-quote-history-page
+.kb-history-submitted-badge {
+    display: inline-flex;
+
+    flex-shrink: 0;
+
+    align-items: center;
+
+    gap: 0.3rem;
+
+    padding: 0.35rem 0.6rem;
+
+    border-radius: 999px;
+
+    background: #ecfdf3;
+
+    color: #15803d;
+
+    font-size: 0.65rem;
+    font-weight: 800;
+}
+
+
+/* Metadata */
+
+.kb-quote-history-page
+.kb-history-meta {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap:
+        0.6rem
+        1.2rem;
+
+    margin-top: 0.8rem;
+
+    color: var(--history-muted);
+
+    font-size: 0.72rem;
+}
+
+.kb-quote-history-page
+.kb-history-meta > div {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.35rem;
+}
+
+.kb-quote-history-page
+.kb-history-meta i {
+    color: #94a3b8;
+}
+
+
+/* Quote footer */
+
+.kb-quote-history-page
+.kb-history-quote-footer {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-top: 0.9rem;
+
+    padding-top: 0.8rem;
+
+    border-top:
+        1px solid rgba(148, 163, 184, 0.13);
+}
+
+.kb-quote-history-page
+.kb-history-created {
+    color: #94a3b8;
+
+    font-size: 0.65rem;
+}
+
+.kb-quote-history-page
+.kb-history-view-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.45rem;
+
+    padding: 0.55rem 0.8rem;
+
+    border-radius: 0.65rem;
+
+    background: #edf5ff;
+
+    color: #1267e5;
+
+    font-size: 0.7rem;
+    font-weight: 900;
+
+    text-decoration: none;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.kb-quote-history-page
+.kb-history-view-button:hover {
+    background: #dfeeff;
+
+    color: #0755c9;
+
+    transform: translateX(2px);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.kb-quote-history-page
+.kb-history-empty {
+    padding: 3rem 1.25rem;
+
+    border:
+        1px dashed rgba(148, 163, 184, 0.4);
+
+    border-radius: 1rem;
+
+    background: #fbfdff;
+
+    text-align: center;
+}
+
+.kb-quote-history-page
+.kb-history-empty-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 58px;
+    height: 58px;
+
+    margin:
+        0
+        auto
+        1rem;
+
+    border-radius: 50%;
+
+    background: #eaf3ff;
+
+    color: #1674ef;
+
+    font-size: 1.3rem;
+}
+
+.kb-quote-history-page
+.kb-history-empty h3 {
+    margin: 0;
+
+    color: var(--history-navy);
+
+    font-size: 1.15rem;
+    font-weight: 900;
+}
+
+.kb-quote-history-page
+.kb-history-empty p {
+    max-width: 520px;
+
+    margin:
+        0.6rem
+        auto
+        1.2rem;
+
+    color: var(--history-muted);
+
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.kb-quote-history-page
+.kb-history-browse-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.45rem;
+
+    padding: 0.65rem 1rem;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #1674ef,
+            #7047e8
+        );
+
+    color: #ffffff;
+
+    font-size: 0.75rem;
+    font-weight: 900;
+
+    text-decoration: none;
+}
+
+.kb-quote-history-page
+.kb-history-browse-button:hover {
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .kb-quote-history-page
+    .kb-history-hero {
+        padding: 3rem 0 2.75rem;
+    }
+
+    .kb-quote-history-page
+    .kb-history-content {
+        padding: 1.5rem 0 3rem;
+    }
+
+    .kb-quote-history-page
+    .kb-history-search-form {
+        grid-template-columns: 1fr;
+    }
+
+    .kb-quote-history-page
+    .kb-history-search-button {
+        width: 100%;
+    }
+
+    .kb-quote-history-page
+    .kb-history-list-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .kb-quote-history-page
+    .kb-history-quote-card {
+        grid-template-columns: 1fr;
+    }
+
+    .kb-quote-history-page
+    .kb-history-quote-top {
+        flex-direction: column;
+    }
+
+    .kb-quote-history-page
+    .kb-history-quote-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .kb-quote-history-page
+    .kb-history-view-button {
+        width: 100%;
+    }
+}
+
+
+/* Respect reduced-motion preference */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .kb-quote-history-page
+    .kb-history-quote-card,
+
+    .kb-quote-history-page
+    .kb-history-quote-icon,
+
+    .kb-quote-history-page
+    .kb-history-search-button,
+
+    .kb-quote-history-page
+    .kb-history-view-button {
+        transition: none;
+    }
+
+    .kb-quote-history-page
+    .kb-history-quote-card:hover,
+
+    .kb-quote-history-page
+    .kb-history-search-button:hover {
+        transform: none;
+    }
+}
+
+
+/* =========================================================
+   KALEIDOBRANDS — PREMIUM QUOTE DETAIL
+   ========================================================= */
+
+.kb-quote-detail-page {
+    --detail-navy: #0f172a;
+    --detail-muted: #64748b;
+    --detail-blue: #1674ef;
+    --detail-purple: #7047e8;
+    --detail-red: #ef3158;
+    --detail-orange: #ff9d0a;
+
+    min-height: calc(100vh - 80px);
+
+    background:
+        linear-gradient(
+            180deg,
+            #f7fbff 0%,
+            #ffffff 45%,
+            #f8fafc 100%
+        );
+
+    color: var(--detail-navy);
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.kb-quote-detail-page .kb-detail-hero {
+    position: relative;
+    overflow: hidden;
+
+    padding: 3rem 0 3.25rem;
+
+    border-bottom:
+        1px solid rgba(148, 163, 184, 0.14);
+
+    background:
+        radial-gradient(
+            circle at 10% 25%,
+            rgba(37, 99, 235, 0.13),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 30%,
+            rgba(239, 49, 88, 0.1),
+            transparent 30%
+        ),
+        linear-gradient(
+            115deg,
+            #eef7ff,
+            #fafcff 52%,
+            #fff5f7
+        );
+}
+
+.kb-quote-detail-page .kb-detail-hero-inner {
+    max-width: 1050px;
+    margin: 0 auto;
+}
+
+.kb-quote-detail-page .kb-detail-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+
+    margin-bottom: 1.5rem;
+
+    color: #52647d;
+
+    font-size: 0.72rem;
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.kb-quote-detail-page
+.kb-detail-back-link:hover {
+    color: #1674ef;
+    transform: translateX(-3px);
+}
+
+.kb-quote-detail-page .kb-detail-heading {
+    text-align: center;
+}
+
+.kb-quote-detail-page .kb-detail-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    padding: 0.4rem 0.8rem;
+
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.8);
+
+    color: #2563eb;
+
+    font-size: 0.68rem;
+    font-weight: 900;
+
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.kb-quote-detail-page .kb-detail-heading h1 {
+    max-width: 800px;
+
+    margin:
+        0.8rem
+        auto
+        0;
+
+    color: var(--detail-navy);
+
+    font-size:
+        clamp(2.2rem, 4.5vw, 3.8rem);
+
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    line-height: 1.05;
+}
+
+.kb-quote-detail-page
+.kb-detail-heading > p {
+    margin: 0.9rem 0 0;
+
+    color: var(--detail-muted);
+
+    font-size: 0.9rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-heading > p strong {
+    color: #334155;
+}
+
+.kb-quote-detail-page
+.kb-detail-hero-status {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    gap: 0.65rem;
+
+    margin-top: 1.25rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-submitted,
+.kb-quote-detail-page
+.kb-detail-date {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 0.4rem;
+
+    padding: 0.45rem 0.7rem;
+
+    border-radius: 999px;
+
+    font-size: 0.68rem;
+    font-weight: 800;
+}
+
+.kb-quote-detail-page
+.kb-detail-submitted {
+    background: #ecfdf3;
+    color: #15803d;
+}
+
+.kb-quote-detail-page
+.kb-detail-date {
+    background: rgba(255, 255, 255, 0.8);
+    color: #64748b;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.kb-quote-detail-page .kb-detail-content {
+    padding: 2.5rem 0 5rem;
+}
+
+.kb-quote-detail-page .kb-detail-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(280px, 0.72fr)
+        minmax(0, 1.55fr);
+
+    gap: 1.5rem;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   SHARED CARD
+   ========================================================= */
+
+.kb-quote-detail-page .kb-detail-card {
+    padding: 1.5rem;
+
+    border:
+        1px solid rgba(148, 163, 184, 0.2);
+
+    border-radius: 1.4rem;
+
+    background:
+        rgba(255, 255, 255, 0.98);
+
+    box-shadow:
+        0 18px 50px
+        rgba(15, 23, 42, 0.07);
+}
+
+.kb-quote-detail-page
+.kb-detail-card-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 0.9rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-heading-icon {
+    display: flex;
+    flex: 0 0 46px;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 46px;
+    height: 46px;
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    font-size: 1rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-heading-icon.is-blue {
+    background:
+        linear-gradient(
+            145deg,
+            #1b86ff,
+            #0757d7
+        );
+
+    box-shadow:
+        0 10px 22px
+        rgba(37, 99, 235, 0.2);
+}
+
+.kb-quote-detail-page
+.kb-detail-heading-icon.is-purple {
+    background:
+        linear-gradient(
+            145deg,
+            #8b5cf6,
+            #6240d8
+        );
+
+    box-shadow:
+        0 10px 22px
+        rgba(112, 71, 232, 0.2);
+}
+
+.kb-quote-detail-page
+.kb-detail-card-heading span {
+    display: block;
+
+    color: #ef3158;
+
+    font-size: 0.62rem;
+    font-weight: 900;
+
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.kb-quote-detail-page
+.kb-detail-card-heading h2 {
+    margin: 0.1rem 0 0;
+
+    color: var(--detail-navy);
+
+    font-size: 1.15rem;
+    font-weight: 900;
+}
+
+.kb-quote-detail-page
+.kb-detail-card-heading p {
+    margin: 0.2rem 0 0;
+
+    color: var(--detail-muted);
+
+    font-size: 0.72rem;
+}
+
+
+/* =========================================================
+   CUSTOMER SIDEBAR
+   ========================================================= */
+
+.kb-quote-detail-page .kb-detail-sidebar {
+    display: grid;
+    gap: 1rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-info-list {
+    display: grid;
+
+    margin-top: 1.3rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-info-row {
+    display: grid;
+
+    grid-template-columns:
+        34px
+        minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: 0.75rem;
+
+    padding: 0.8rem 0;
+
+    border-bottom:
+        1px solid rgba(148, 163, 184, 0.13);
+}
+
+.kb-quote-detail-page
+.kb-detail-info-row:last-child {
+    border-bottom: 0;
+}
+
+.kb-quote-detail-page
+.kb-detail-info-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 0.65rem;
+
+    background: #edf5ff;
+
+    color: #1674ef;
+
+    font-size: 0.8rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-info-icon.is-deadline {
+    background: #fff2df;
+    color: #e98500;
+}
+
+.kb-quote-detail-page
+.kb-detail-info-row span,
+.kb-quote-detail-page
+.kb-detail-info-row strong {
+    display: block;
+}
+
+.kb-quote-detail-page
+.kb-detail-info-row span {
+    margin-bottom: 0.1rem;
+
+    color: #94a3b8;
+
+    font-size: 0.62rem;
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+.kb-quote-detail-page
+.kb-detail-info-row strong {
+    color: #334155;
+
+    font-size: 0.76rem;
+}
+
+.kb-quote-detail-page .kb-detail-break {
+    overflow-wrap: anywhere;
+}
+
+
+/* PDF */
+
+.kb-quote-detail-page
+.kb-detail-pdf-button {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.55rem;
+
+    width: 100%;
+
+    min-height: 46px;
+
+    margin-top: 1rem;
+
+    padding: 0.7rem 0.9rem;
+
+    border-radius: 0.75rem;
+
+    background:
+        linear-gradient(
+            90deg,
+            #1674ef,
+            #7047e8
+        );
+
+    color: #ffffff;
+
+    font-size: 0.74rem;
+    font-weight: 900;
+
+    text-decoration: none;
+
+    box-shadow:
+        0 10px 24px
+        rgba(37, 99, 235, 0.17);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.kb-quote-detail-page
+.kb-detail-pdf-button span {
+    flex: 1;
+    text-align: center;
+}
+
+.kb-quote-detail-page
+.kb-detail-pdf-button:hover {
+    color: #ffffff;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 28px
+        rgba(37, 99, 235, 0.23);
+}
+
+
+/* Reference */
+
+.kb-quote-detail-page
+.kb-detail-reference-card {
+    display: flex;
+
+    gap: 0.8rem;
+
+    padding: 1rem;
+
+    border: 1px solid #dbeafe;
+    border-radius: 1rem;
+
+    background:
+        linear-gradient(
+            120deg,
+            #eff6ff,
+            #f8fbff
+        );
+}
+
+.kb-quote-detail-page
+.kb-detail-reference-icon {
+    display: flex;
+    flex: 0 0 36px;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 50%;
+
+    background: #dbeafe;
+
+    color: #2563eb;
+}
+
+.kb-quote-detail-page
+.kb-detail-reference-card span,
+.kb-quote-detail-page
+.kb-detail-reference-card strong {
+    display: block;
+}
+
+.kb-quote-detail-page
+.kb-detail-reference-card span {
+    color: #64748b;
+
+    font-size: 0.62rem;
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+.kb-quote-detail-page
+.kb-detail-reference-card strong {
+    margin-top: 0.1rem;
+
+    color: #1d4ed8;
+
+    font-size: 0.95rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-reference-card p {
+    margin: 0.25rem 0 0;
+
+    color: #64748b;
+
+    font-size: 0.66rem;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   PRODUCTS
+   ========================================================= */
+
+.kb-quote-detail-page
+.kb-detail-products-heading {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-bottom: 1.25rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-product-count {
+    display: inline-flex;
+    flex-shrink: 0;
+
+    align-items: center;
+
+    gap: 0.35rem;
+
+    padding: 0.45rem 0.7rem;
+
+    border-radius: 999px;
+
+    background: #f0edff;
+
+    color: #7047e8;
+
+    font-size: 0.66rem;
+    font-weight: 900;
+}
+
+.kb-quote-detail-page
+.kb-detail-product-list {
+    display: grid;
+
+    gap: 0.9rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-product {
+    display: grid;
+
+    grid-template-columns:
+        54px
+        minmax(0, 1fr);
+
+    gap: 0.9rem;
+
+    padding: 1rem;
+
+    border:
+        1px solid rgba(148, 163, 184, 0.18);
+
+    border-radius: 1rem;
+
+    background:
+        linear-gradient(
+            110deg,
+            #ffffff,
+            #fbfdff
+        );
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.kb-quote-detail-page
+.kb-detail-product:hover {
+    transform: translateY(-4px);
+
+    border-color:
+        rgba(112, 71, 232, 0.25);
+
+    box-shadow:
+        0 14px 30px
+        rgba(112, 71, 232, 0.08);
+}
+
+.kb-quote-detail-page
+.kb-detail-product-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 54px;
+    height: 54px;
+
+    border-radius: 0.9rem;
+
+    background:
+        linear-gradient(
+            145deg,
+            #eef2ff,
+            #f2eaff
+        );
+
+    color: #7047e8;
+
+    font-size: 1.1rem;
+
+    transition:
+        transform 0.25s ease;
+}
+
+.kb-quote-detail-page
+.kb-detail-product:hover
+.kb-detail-product-icon {
+    transform:
+        rotate(-4deg)
+        scale(1.08);
+}
+
+.kb-quote-detail-page
+.kb-detail-product-body {
+    min-width: 0;
+}
+
+.kb-quote-detail-page
+.kb-detail-product-top {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 1rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-product-category {
+    display: block;
+
+    margin-bottom: 0.15rem;
+
+    color: #ef3158;
+
+    font-size: 0.62rem;
+    font-weight: 900;
+
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.kb-quote-detail-page
+.kb-detail-product h3 {
+    margin: 0;
+
+    color: var(--detail-navy);
+
+    font-size: 0.92rem;
+    font-weight: 900;
+}
+
+.kb-quote-detail-page
+.kb-detail-quantity {
+    flex-shrink: 0;
+
+    min-width: 78px;
+
+    padding: 0.45rem 0.65rem;
+
+    border-radius: 0.7rem;
+
+    background: #f8fafc;
+
+    text-align: center;
+}
+
+.kb-quote-detail-page
+.kb-detail-quantity span,
+.kb-quote-detail-page
+.kb-detail-quantity strong {
+    display: block;
+}
+
+.kb-quote-detail-page
+.kb-detail-quantity span {
+    color: #94a3b8;
+
+    font-size: 0.57rem;
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+.kb-quote-detail-page
+.kb-detail-quantity strong {
+    margin-top: 0.1rem;
+
+    color: #334155;
+
+    font-size: 0.9rem;
+}
+
+
+/* Product notes */
+
+.kb-quote-detail-page
+.kb-detail-product-notes {
+    display: flex;
+
+    gap: 0.55rem;
+
+    margin-top: 0.75rem;
+
+    padding: 0.65rem 0.75rem;
+
+    border-radius: 0.7rem;
+
+    background: #fff8eb;
+}
+
+.kb-quote-detail-page
+.kb-detail-product-notes > i {
+    margin-top: 0.05rem;
+
+    color: #e98a00;
+}
+
+.kb-quote-detail-page
+.kb-detail-product-notes span {
+    display: block;
+
+    color: #b66b00;
+
+    font-size: 0.58rem;
+    font-weight: 900;
+
+    text-transform: uppercase;
+}
+
+.kb-quote-detail-page
+.kb-detail-product-notes p {
+    margin: 0.15rem 0 0;
+
+    color: #6f5b3d;
+
+    font-size: 0.7rem;
+}
+
+
+/* Product link */
+
+.kb-quote-detail-page
+.kb-detail-product-footer {
+    display: flex;
+
+    justify-content: flex-end;
+
+    margin-top: 0.65rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-product-link {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.35rem;
+
+    color: #1674ef;
+
+    font-size: 0.68rem;
+    font-weight: 900;
+
+    text-decoration: none;
+}
+
+.kb-quote-detail-page
+.kb-detail-product-link:hover {
+    color: #0755c9;
+}
+
+
+/* =========================================================
+   PROJECT NOTES
+   ========================================================= */
+
+.kb-quote-detail-page
+.kb-detail-project-notes {
+    display: flex;
+
+    gap: 0.9rem;
+
+    margin-top: 1.2rem;
+
+    padding: 1rem;
+
+    border: 1px solid #fde6b7;
+    border-radius: 1rem;
+
+    background:
+        linear-gradient(
+            110deg,
+            #fff9ed,
+            #fffdf7
+        );
+}
+
+.kb-quote-detail-page
+.kb-detail-project-note-icon {
+    display: flex;
+    flex: 0 0 38px;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    background: #ffedc7;
+
+    color: #e88700;
+}
+
+.kb-quote-detail-page
+.kb-detail-project-notes span {
+    color: #d17a00;
+
+    font-size: 0.6rem;
+    font-weight: 900;
+
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.kb-quote-detail-page
+.kb-detail-project-notes h3 {
+    margin: 0.1rem 0 0;
+
+    color: #5f4b2b;
+
+    font-size: 0.88rem;
+    font-weight: 900;
+}
+
+.kb-quote-detail-page
+.kb-detail-project-notes p {
+    margin: 0.35rem 0 0;
+
+    color: #776447;
+
+    font-size: 0.72rem;
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   NEXT STEPS
+   ========================================================= */
+
+.kb-quote-detail-page
+.kb-detail-next-card {
+    display: flex;
+
+    gap: 0.9rem;
+
+    margin-top: 1rem;
+
+    padding: 1rem 1.1rem;
+
+    border: 1px solid #dbeafe;
+    border-radius: 1rem;
+
+    background:
+        linear-gradient(
+            110deg,
+            #eff6ff,
+            #f7f5ff
+        );
+}
+
+.kb-quote-detail-page
+.kb-detail-next-icon {
+    display: flex;
+    flex: 0 0 40px;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #1674ef,
+            #7047e8
+        );
+
+    color: #ffffff;
+}
+
+.kb-quote-detail-page
+.kb-detail-next-card span {
+    color: #7047e8;
+
+    font-size: 0.6rem;
+    font-weight: 900;
+
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.kb-quote-detail-page
+.kb-detail-next-card h3 {
+    margin: 0.1rem 0 0;
+
+    color: var(--detail-navy);
+
+    font-size: 0.9rem;
+    font-weight: 900;
+}
+
+.kb-quote-detail-page
+.kb-detail-next-card p {
+    margin: 0.35rem 0 0;
+
+    color: var(--detail-muted);
+
+    font-size: 0.7rem;
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+.kb-quote-detail-page .kb-detail-empty {
+    padding: 2rem;
+
+    border:
+        1px dashed rgba(148, 163, 184, 0.4);
+
+    border-radius: 1rem;
+
+    background: #fbfdff;
+
+    text-align: center;
+}
+
+.kb-quote-detail-page
+.kb-detail-empty > div {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 48px;
+    height: 48px;
+
+    margin:
+        0
+        auto
+        0.75rem;
+
+    border-radius: 50%;
+
+    background: #eef2ff;
+
+    color: #7047e8;
+}
+
+.kb-quote-detail-page
+.kb-detail-empty h3 {
+    margin: 0;
+
+    font-size: 0.9rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-empty p {
+    margin: 0.35rem 0 0;
+
+    color: var(--detail-muted);
+
+    font-size: 0.72rem;
+}
+
+
+/* =========================================================
+   PAGE ACTIONS
+   ========================================================= */
+
+.kb-quote-detail-page
+.kb-detail-actions {
+    display: flex;
+
+    flex-wrap: wrap;
+    justify-content: center;
+
+    gap: 0.8rem;
+
+    margin-top: 2rem;
+}
+
+.kb-quote-detail-page
+.kb-detail-primary-button,
+.kb-quote-detail-page
+.kb-detail-secondary-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.5rem;
+
+    min-height: 46px;
+
+    padding: 0.7rem 1.1rem;
+
+    border-radius: 999px;
+
+    font-size: 0.74rem;
+    font-weight: 900;
+
+    text-decoration: none;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.kb-quote-detail-page
+.kb-detail-primary-button {
+    background:
+        linear-gradient(
+            90deg,
+            #1674ef,
+            #7047e8
+        );
+
+    color: #ffffff;
+
+    box-shadow:
+        0 10px 24px
+        rgba(37, 99, 235, 0.18);
+}
+
+.kb-quote-detail-page
+.kb-detail-secondary-button {
+    border: 1px solid #d8e1ec;
+
+    background: #ffffff;
+
+    color: #334155;
+}
+
+.kb-quote-detail-page
+.kb-detail-primary-button:hover,
+.kb-quote-detail-page
+.kb-detail-secondary-button:hover {
+    transform: translateY(-2px);
+}
+
+.kb-quote-detail-page
+.kb-detail-primary-button:hover {
+    color: #ffffff;
+
+    box-shadow:
+        0 14px 30px
+        rgba(37, 99, 235, 0.24);
+}
+
+.kb-quote-detail-page
+.kb-detail-secondary-button:hover {
+    color: #0f172a;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .kb-quote-detail-page
+    .kb-detail-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .kb-quote-detail-page
+    .kb-detail-sidebar {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(260px, 0.7fr);
+
+        align-items: start;
+    }
+}
+
+@media (max-width: 767.98px) {
+
+    .kb-quote-detail-page
+    .kb-detail-hero {
+        padding: 2rem 0 2.5rem;
+    }
+
+    .kb-quote-detail-page
+    .kb-detail-content {
+        padding: 1.5rem 0 3rem;
+    }
+
+    .kb-quote-detail-page
+    .kb-detail-sidebar {
+        grid-template-columns: 1fr;
+    }
+
+    .kb-quote-detail-page
+    .kb-detail-products-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .kb-quote-detail-page
+    .kb-detail-product {
+        grid-template-columns: 1fr;
+    }
+
+    .kb-quote-detail-page
+    .kb-detail-product-top {
+        flex-direction: column;
+    }
+
+    .kb-quote-detail-page
+    .kb-detail-quantity {
+        min-width: 100px;
+    }
+
+    .kb-quote-detail-page
+    .kb-detail-actions {
+        flex-direction: column;
+    }
+
+    .kb-quote-detail-page
+    .kb-detail-primary-button,
+    .kb-quote-detail-page
+    .kb-detail-secondary-button {
+        width: 100%;
+    }
+}
+
+
+/* Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .kb-quote-detail-page
+    .kb-detail-product,
+
+    .kb-quote-detail-page
+    .kb-detail-product-icon,
+
+    .kb-quote-detail-page
+    .kb-detail-primary-button,
+
+    .kb-quote-detail-page
+    .kb-detail-secondary-button,
+
+    .kb-quote-detail-page
+    .kb-detail-pdf-button {
+        transition: none;
+    }
+
+    .kb-quote-detail-page
+    .kb-detail-product:hover,
+
+    .kb-quote-detail-page
+    .kb-detail-primary-button:hover,
+
+    .kb-quote-detail-page
+    .kb-detail-secondary-button:hover,
+
+    .kb-quote-detail-page
+    .kb-detail-pdf-button:hover {
+        transform: none;
+    }
+}

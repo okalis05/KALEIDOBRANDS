@@ -83,19 +83,62 @@
 
 
     function updateCompareButton(button, isAdded) {
-        if (!button) {
-            return;
-        }
-
-        button.classList.toggle("is-added", isAdded);
-        button.setAttribute("aria-pressed", String(isAdded));
-
-        const label = button.querySelector("[data-compare-label]");
-
-        if (label) {
-            label.textContent = isAdded ? "Added to Compare" : "Compare";
-        }
+    if (!button) {
+        return;
     }
+
+    button.classList.toggle("is-added", isAdded);
+    button.setAttribute("aria-pressed", String(isAdded));
+
+    const label = button.querySelector("[data-compare-label]");
+    const icon = button.querySelector("[data-compare-icon]");
+
+    if (label) {
+        label.textContent = isAdded
+            ? "Added to Compare"
+            : "Compare";
+    }
+
+    if (icon) {
+        icon.classList.toggle(
+            "bi-arrow-left-right",
+            !isAdded
+        );
+
+        icon.classList.toggle(
+            "bi-check-lg",
+            isAdded
+        );
+    }
+
+
+    if (icon) {
+        icon.classList.remove(
+            "bi-arrow-left-right",
+            "bi-check-lg"
+        );
+
+        icon.classList.add(
+            isAdded
+                ? "bi-check-lg"
+                : "bi-arrow-left-right"
+        );
+}
+
+    button.setAttribute(
+        "title",
+        isAdded
+            ? "Added to comparison"
+            : "Compare product"
+    );
+
+    button.setAttribute(
+        "aria-label",
+        isAdded
+            ? "Added to comparison"
+            : "Compare product"
+    );
+}
 
 
     function showComparisonMessage(message, type = "success") {
@@ -141,26 +184,29 @@
 
 
     async function handleCompareAdd(button) {
-        const addUrl = button.dataset.addUrl;
+    
 
-        if (!addUrl || button.disabled) {
-            return;
-        }
+    const addUrl = button.dataset.addUrl;
 
-        button.disabled = true;
-
-        try {
-            const data = await postComparisonRequest(addUrl);
-
-            updateComparisonCount(data.compare_count);
-            updateCompareButton(button, true);
-            showComparisonMessage(data.message);
-        } catch (error) {
-            showComparisonMessage(error.message, "error");
-        } finally {
-            button.disabled = false;
-        }
+    if (!addUrl || button.disabled) {
+        return;
     }
+
+    button.disabled = true;
+
+    try {
+        const data = await postComparisonRequest(addUrl);
+
+
+        updateComparisonCount(data.compare_count);
+        updateCompareButton(button, true);
+        showComparisonMessage(data.message);
+    } catch (error) {
+        showComparisonMessage(error.message, "error");
+    } finally {
+        button.disabled = false;
+    }
+}
 
 
     async function handleCompareRemove(button) {

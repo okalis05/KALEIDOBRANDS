@@ -1,102 +1,484 @@
 {% extends "brands/base.html" %}
+{% load static %}
 
-{% block title %}Quote Detail | KaleidoBrands{% endblock %}
+{% block title %}
+    Quote #{{ quote.id }} | KaleidoBrands
+{% endblock %}
+
+{% block meta_description %}
+    Review your KaleidoBrands quote request, selected products, quantities, project details, and contact information.
+{% endblock %}
+
+{% block head %}
+<link
+    rel="stylesheet"
+    href="{% static 'products/css/marketplace.css' %}?v=9"
+>
+{% endblock %}
 
 {% block body %}
-<main class="inner-page">
-    <section class="section-panel">
+
+<main class="kb-quote-detail-page">
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+    <section class="kb-detail-hero">
+
         <div class="container">
-            <div class="section-heading text-center reveal">
-                <span>Quote Detail</span>
-                <h1>{{ quote.project_name|default:"Quote Request" }}</h1>
-                <p class="mx-auto mt-3" style="max-width:720px;">
-                    Submitted on {{ quote.created_at }} by {{ quote.customer_name }}.
-                </p>
-            </div>
 
-            <div class="row g-4 mt-5">
-                <div class="col-lg-4">
-                    <div class="supplier-admin-panel">
-                        <h3>Customer</h3>
+            <div class="kb-detail-hero-inner">
 
-                        <div class="supplier-metric-row">
-                            <span>Name</span>
-                            <strong>{{ quote.customer_name }}</strong>
-                        </div>
+                <a
+                    href="{% url 'products:quote_history' %}{% if not request.user.is_staff and quote.email %}?email={{ quote.email|urlencode }}{% endif %}"
+                    class="kb-detail-back-link"
+                >
+                    <i class="bi bi-arrow-left"></i>
+                    Quote History
+                </a>
 
-                        <div class="supplier-metric-row">
-                            <span>Company</span>
-                            <strong>{{ quote.company|default:"N/A" }}</strong>
-                        </div>
 
-                        <div class="supplier-metric-row">
-                            <span>Email</span>
-                            <strong>{{ quote.email }}</strong>
-                        </div>
+                <div class="kb-detail-heading">
 
-                        <div class="supplier-metric-row">
-                            <span>Phone</span>
-                            <strong>{{ quote.phone|default:"N/A" }}</strong>
-                        </div>
+                    <span class="kb-detail-eyebrow">
+                        <i class="bi bi-file-earmark-check"></i>
+                        Quote #{{ quote.id }}
+                    </span>
 
-                        <div class="supplier-metric-row">
-                            <span>Deadline</span>
-                            <strong>{{ quote.deadline|default:"N/A" }}</strong>
-                        </div>
+                    <h1>
+                        {{ quote.project_name|default:"Quote Request" }}
+                    </h1>
 
-                        {% if quote.pdf_file %}
-                            <div class="mt-4">
-                                <a href="{{ quote.pdf_file.url }}" class="btn btn-kb-primary w-100" target="_blank">
-                                    Download PDF
-                                </a>
-                            </div>
-                        {% endif %}
-                    </div>
+                    <p>
+                        Submitted by
+                        <strong>{{ quote.customer_name }}</strong>
+                        on
+                        {{ quote.created_at|date:"F j, Y" }}.
+                    </p>
+
                 </div>
 
-                <div class="col-lg-8">
-                    <div class="supplier-admin-panel">
-                        <h3>Requested Products</h3>
 
-                        {% for item in quote.items.all %}
-                            <div class="supplier-admin-row">
-                                <div>
-                                    <strong>{{ item.product_name }}</strong>
-                                    <span>
-                                        {{ item.category|default:"Product" }}
-                                        · Qty {{ item.quantity }}
-                                        {% if item.notes %} · {{ item.notes }}{% endif %}
-                                    </span>
+                <div class="kb-detail-hero-status">
+
+                    <span class="kb-detail-submitted">
+                        <i class="bi bi-check-circle-fill"></i>
+                        Submitted
+                    </span>
+
+                    <span class="kb-detail-date">
+                        <i class="bi bi-clock"></i>
+                        {{ quote.created_at|date:"M j, Y \a\t g:i A" }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         QUOTE CONTENT
+         ===================================================== -->
+    <section class="kb-detail-content">
+
+        <div class="container">
+
+            <div class="kb-detail-layout">
+
+
+                <!-- =================================================
+                     CUSTOMER / PROJECT SIDEBAR
+                     ================================================= -->
+                <aside class="kb-detail-sidebar">
+
+                    <div class="kb-detail-card">
+
+                        <div class="kb-detail-card-heading">
+
+                            <div class="kb-detail-heading-icon is-blue">
+                                <i class="bi bi-person"></i>
+                            </div>
+
+                            <div>
+                                <span>Customer</span>
+                                <h2>Contact Information</h2>
+                            </div>
+
+                        </div>
+
+
+                        <div class="kb-detail-info-list">
+
+                            <div class="kb-detail-info-row">
+
+                                <div class="kb-detail-info-icon">
+                                    <i class="bi bi-person"></i>
                                 </div>
 
-                                {% if item.product_url %}
-                                    <a href="{{ item.product_url }}">View Product</a>
-                                {% endif %}
+                                <div>
+                                    <span>Name</span>
+                                    <strong>
+                                        {{ quote.customer_name }}
+                                    </strong>
+                                </div>
+
                             </div>
-                        {% empty %}
-                            <p class="text-muted">No products were attached to this quote.</p>
-                        {% endfor %}
+
+
+                            <div class="kb-detail-info-row">
+
+                                <div class="kb-detail-info-icon">
+                                    <i class="bi bi-building"></i>
+                                </div>
+
+                                <div>
+                                    <span>Company</span>
+                                    <strong>
+                                        {{ quote.company|default:"N/A" }}
+                                    </strong>
+                                </div>
+
+                            </div>
+
+
+                            <div class="kb-detail-info-row">
+
+                                <div class="kb-detail-info-icon">
+                                    <i class="bi bi-envelope"></i>
+                                </div>
+
+                                <div>
+                                    <span>Email</span>
+
+                                    <strong class="kb-detail-break">
+                                        {{ quote.email }}
+                                    </strong>
+                                </div>
+
+                            </div>
+
+
+                            <div class="kb-detail-info-row">
+
+                                <div class="kb-detail-info-icon">
+                                    <i class="bi bi-telephone"></i>
+                                </div>
+
+                                <div>
+                                    <span>Phone</span>
+                                    <strong>
+                                        {{ quote.phone|default:"N/A" }}
+                                    </strong>
+                                </div>
+
+                            </div>
+
+
+                            <div class="kb-detail-info-row">
+
+                                <div class="kb-detail-info-icon is-deadline">
+                                    <i class="bi bi-calendar-event"></i>
+                                </div>
+
+                                <div>
+                                    <span>Requested Deadline</span>
+
+                                    <strong>
+                                        {% if quote.deadline %}
+                                            {{ quote.deadline|date:"F j, Y" }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {% if quote.pdf_file %}
+
+                            <a
+                                href="{{ quote.pdf_file.url }}"
+                                class="kb-detail-pdf-button"
+                                target="_blank"
+                                rel="noopener"
+                            >
+                                <i class="bi bi-file-earmark-pdf"></i>
+
+                                <span>
+                                    Download Quote PDF
+                                </span>
+
+                                <i class="bi bi-download"></i>
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Quote reference card -->
+                    <div class="kb-detail-reference-card">
+
+                        <div class="kb-detail-reference-icon">
+                            <i class="bi bi-hash"></i>
+                        </div>
+
+                        <div>
+                            <span>Quote Reference</span>
+
+                            <strong>
+                                KB-{{ quote.id }}
+                            </strong>
+
+                            <p>
+                                Keep this reference handy when
+                                contacting our team.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </aside>
+
+
+                <!-- =================================================
+                     PRODUCTS
+                     ================================================= -->
+                <div class="kb-detail-main">
+
+                    <div class="kb-detail-card kb-detail-products-card">
+
+                        <div class="kb-detail-products-heading">
+
+                            <div class="kb-detail-card-heading">
+
+                                <div class="kb-detail-heading-icon is-purple">
+                                    <i class="bi bi-bag-check"></i>
+                                </div>
+
+                                <div>
+                                    <span>Quote Items</span>
+                                    <h2>Requested Products</h2>
+
+                                    <p>
+                                        Products and quantities included
+                                        in this quote request.
+                                    </p>
+                                </div>
+
+                            </div>
+
+
+                            <span class="kb-detail-product-count">
+                                <i class="bi bi-box-seam"></i>
+
+                                {{ quote.items.all|length }}
+                                product{{ quote.items.all|length|pluralize }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="kb-detail-product-list">
+
+                            {% for item in quote.items.all %}
+
+                                <article class="kb-detail-product">
+
+                                    <div class="kb-detail-product-icon">
+                                        <i class="bi bi-gift"></i>
+                                    </div>
+
+
+                                    <div class="kb-detail-product-body">
+
+                                        <div class="kb-detail-product-top">
+
+                                            <div>
+
+                                                <span class="kb-detail-product-category">
+                                                    {{ item.category|default:"Product" }}
+                                                </span>
+
+                                                <h3>
+                                                    {{ item.product_name }}
+                                                </h3>
+
+                                            </div>
+
+
+                                            <div class="kb-detail-quantity">
+
+                                                <span>
+                                                    Quantity
+                                                </span>
+
+                                                <strong>
+                                                    {{ item.quantity }}
+                                                </strong>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        {% if item.notes %}
+
+                                            <div class="kb-detail-product-notes">
+
+                                                <i class="bi bi-pencil"></i>
+
+                                                <div>
+                                                    <span>
+                                                        Customization Notes
+                                                    </span>
+
+                                                    <p>
+                                                        {{ item.notes }}
+                                                    </p>
+                                                </div>
+
+                                            </div>
+
+                                        {% endif %}
+
+
+                                        {% if item.product_url %}
+
+                                            <div class="kb-detail-product-footer">
+
+                                                <a
+                                                    href="{{ item.product_url }}"
+                                                    class="kb-detail-product-link"
+                                                >
+                                                    View Product
+
+                                                    <i class="bi bi-arrow-up-right"></i>
+                                                </a>
+
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </article>
+
+
+                            {% empty %}
+
+                                <div class="kb-detail-empty">
+
+                                    <div>
+                                        <i class="bi bi-box"></i>
+                                    </div>
+
+                                    <h3>No Products Attached</h3>
+
+                                    <p>
+                                        No products were attached
+                                        to this quote request.
+                                    </p>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
 
                         {% if quote.notes %}
-                            <div class="mt-4">
-                                <h4>Project Notes</h4>
-                                <p>{{ quote.notes }}</p>
+
+                            <div class="kb-detail-project-notes">
+
+                                <div class="kb-detail-project-note-icon">
+                                    <i class="bi bi-chat-left-text"></i>
+                                </div>
+
+                                <div>
+                                    <span>Project Notes</span>
+
+                                    <h3>
+                                        Additional Project Details
+                                    </h3>
+
+                                    <p>
+                                        {{ quote.notes }}
+                                    </p>
+                                </div>
+
                             </div>
+
                         {% endif %}
+
                     </div>
+
+
+                    <!-- What happens next -->
+                    <div class="kb-detail-next-card">
+
+                        <div class="kb-detail-next-icon">
+                            <i class="bi bi-stars"></i>
+                        </div>
+
+                        <div>
+                            <span>What's Next?</span>
+
+                            <h3>
+                                We're Reviewing Your Request
+                            </h3>
+
+                            <p>
+                                Our branding team will review product
+                                quantities, customization requirements,
+                                pricing, production details, and shipping.
+                                We'll follow up with you to confirm the
+                                next steps.
+                            </p>
+                        </div>
+
+                    </div>
+
                 </div>
+
             </div>
 
-            <div class="text-center mt-5">
-                <a href="{% url 'products:quote_history' %}" class="btn btn-kb-outline btn-lg">
+
+            <!-- =================================================
+                 PAGE ACTIONS
+                 ================================================= -->
+            <div class="kb-detail-actions">
+
+                <a
+                    href="{% url 'products:quote_history' %}{% if not request.user.is_staff and quote.email %}?email={{ quote.email|urlencode }}{% endif %}"
+                    class="kb-detail-secondary-button"
+                >
+                    <i class="bi bi-arrow-left"></i>
                     Back to Quote History
                 </a>
 
-                <a href="{% url 'products:home' %}" class="btn btn-kb-primary btn-lg">
-                    Browse Products
+
+                <a
+                    href="{% url 'products:home' %}"
+                    class="kb-detail-primary-button"
+                >
+                    <i class="bi bi-bag"></i>
+                    Browse More Products
                 </a>
+
             </div>
+
         </div>
+
     </section>
+
 </main>
+
 {% endblock %}

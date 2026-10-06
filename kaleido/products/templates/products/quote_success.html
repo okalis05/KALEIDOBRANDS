@@ -1,39 +1,319 @@
 {% extends "brands/base.html" %}
 {% load static %}
 
-{% block title %}Quote Request Received | KaleidoBrands{% endblock %}
 
-{% block body %}
-<main class="inner-page">
-    <section class="section-panel">
-        <div class="container">
-            <div class="quote-success-card glass-card text-center">
-                <span class="quote-success-icon">✓</span>
 
-                <h1>Thank you.</h1>
-
-                <p>
-                    Your quote request has been received.
-                    Our branding specialists will contact you within one business day.
-                </p>
-
-                <div class="mt-4">
-                    <a href="{% url 'products:home' %}" class="btn btn-kb-primary btn-lg">
-                        Continue Browsing Products
-                    </a>
-
-                    <a href="{% url 'brands:home' %}" class="btn btn-kb-outline btn-lg">
-                        Back to Home
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-</main>
+{% block title %}
+    Quote Request Received | KaleidoBrands
 {% endblock %}
 
+{% block meta_description %}
+    Your KaleidoBrands custom quote request has been received. Our team will review your project and follow up with pricing and production details.
+{% endblock %}
+
+
+{% block head %}
+<link
+    rel="stylesheet"
+    href="{% static 'products/css/marketplace.css' %}?v=6"
+>
+{% endblock %}
+
+
+{% block body %}
+
+<main class="kb-quote-success-page">
+
+    <section class="kb-success-section">
+
+        <div class="container">
+
+            <div class="kb-success-card">
+
+                <!-- Success graphic -->
+                <div class="kb-success-visual">
+
+                    <div class="kb-success-glow"></div>
+
+                    <div class="kb-success-check">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+
+                </div>
+
+
+                <!-- Confirmation -->
+                <div class="kb-success-heading">
+
+                    <span class="kb-success-eyebrow">
+                        Quote Request Received
+                    </span>
+
+                    <h1>
+                        Thank You!
+                        <span>Your Quote Is on Its Way.</span>
+                    </h1>
+
+                    <p>
+                        We've received your custom quote request.
+                        Our branding specialists will review your
+                        products, quantities, customization needs,
+                        and project details.
+                    </p>
+
+                </div>
+
+
+                <!-- Status -->
+                <div class="kb-success-status">
+
+                    <div class="kb-success-status-icon">
+                        <i class="bi bi-envelope-check"></i>
+                    </div>
+
+                    <div>
+                        <strong>Request successfully submitted</strong>
+
+                        <span>
+                            Our team will contact you within one business day.
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <!-- What happens next -->
+                <div class="kb-success-next">
+
+                    <div class="kb-success-next-heading">
+                        <span>What Happens Next?</span>
+                        <h2>We'll Take It From Here</h2>
+                    </div>
+
+
+                    <div class="kb-success-steps">
+
+                        <div class="kb-success-step">
+
+                            <div class="kb-success-step-number">
+                                1
+                            </div>
+
+                            <div class="kb-success-step-icon is-blue">
+                                <i class="bi bi-search"></i>
+                            </div>
+
+                            <strong>Project Review</strong>
+
+                            <p>
+                                We'll review your selected products,
+                                quantities, notes, and project requirements.
+                            </p>
+
+                        </div>
+
+
+                        <div class="kb-success-step">
+
+                            <div class="kb-success-step-number">
+                                2
+                            </div>
+
+                            <div class="kb-success-step-icon is-purple">
+                                <i class="bi bi-calculator"></i>
+                            </div>
+
+                            <strong>Custom Pricing</strong>
+
+                            <p>
+                                We'll prepare pricing based on quantity,
+                                decoration, setup, product options,
+                                and shipping.
+                            </p>
+
+                        </div>
+
+
+                        <div class="kb-success-step">
+
+                            <div class="kb-success-step-number">
+                                3
+                            </div>
+
+                            <div class="kb-success-step-icon is-orange">
+                                <i class="bi bi-chat-heart"></i>
+                            </div>
+
+                            <strong>Personal Follow-Up</strong>
+
+                            <p>
+                                A KaleidoBrands specialist will contact
+                                you to review the quote and next steps.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Reassurance -->
+                <div class="kb-success-reassurance">
+
+                    <div>
+                        <i class="bi bi-shield-check"></i>
+
+                        <span>
+                            <strong>No payment required</strong>
+                            Your quote request does not commit you to an order.
+                        </span>
+                    </div>
+
+                    <div>
+                        <i class="bi bi-clock"></i>
+
+                        <span>
+                            <strong>Fast response</strong>
+                            Expect to hear from us within one business day.
+                        </span>
+                    </div>
+
+                    <div>
+                        <i class="bi bi-stars"></i>
+
+                        <span>
+                            <strong>Personalized service</strong>
+                            We'll help refine products, branding, and quantities.
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <!-- Actions -->
+                <div class="kb-success-actions">
+
+                    <a
+                        href="{% url 'products:home' %}"
+                        class="kb-success-primary"
+                    >
+                        <i class="bi bi-bag"></i>
+                        Continue Shopping
+                    </a>
+
+                    <a
+                        href="{% url 'brands:home' %}"
+                        class="kb-success-secondary"
+                    >
+                        <i class="bi bi-house"></i>
+                        Back to Home
+                    </a>
+
+                </div>
+
+
+                <p class="kb-success-footer-note">
+                    Need to add another product? You can continue browsing
+                    and submit another quote request at any time.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}
+
+
 {% block scripts %}
+
 <script>
-    localStorage.removeItem("kbQuoteCart");
+document.addEventListener("DOMContentLoaded", function () {
+
+    /*
+     * A quote has been submitted successfully.
+     *
+     * Clear the CURRENT scoped Quote Cart instead of
+     * relying only on the old legacy kbQuoteCart key.
+     */
+
+    try {
+
+        if (window.KB_QUOTE_CART_KEY) {
+
+            localStorage.removeItem(
+                window.KB_QUOTE_CART_KEY
+            );
+
+        } else {
+
+            /*
+             * Fallback:
+             * locate the current scoped quote cart.
+             *
+             * We intentionally remove only quote-cart keys,
+             * not compare-cart or other KaleidoBrands data.
+             */
+
+            const keysToRemove = [];
+
+            for (
+                let index = 0;
+                index < localStorage.length;
+                index += 1
+            ) {
+                const key = localStorage.key(index);
+
+                if (
+                    key &&
+                    key.startsWith("kbQuoteCart:")
+                ) {
+                    keysToRemove.push(key);
+                }
+            }
+
+            keysToRemove.forEach(function (key) {
+                localStorage.removeItem(key);
+            });
+
+        }
+
+        /*
+         * Remove the old pre-scoped cart too,
+         * in case it still exists in a browser.
+         */
+        localStorage.removeItem("kbQuoteCart");
+
+
+        /*
+         * Let globally loaded cart UI know that
+         * the successful quote cleared the cart.
+         */
+        window.dispatchEvent(
+            new CustomEvent(
+                "quoteCartUpdated",
+                {
+                    detail: {
+                        items: []
+                    }
+                }
+            )
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Unable to clear Quote Cart after quote submission:",
+            error
+        );
+
+    }
+
+});
 </script>
+
 {% endblock %}

@@ -461,6 +461,99 @@ def _build_active_filter_chips(form, request):
 
     return chips
 
+
+def _build_homepage_category_cards(categories):
+    """
+    Build marketplace homepage category cards from real catalog data.
+
+    Each card includes:
+    - the real Category object
+    - the number of active products in that category tree
+    - one real active product with an image for the card artwork
+
+    This is read-only and does not modify Product or Category records.
+    """
+
+    category_cards = []
+
+    # Prefer representative products that are known to be appropriate
+    # for the current marketplace categories.
+    preferred_product_ids = {
+        "food-candy": 2023,       # Cinnamon Churro Toffee
+        "bags": 599,              # Frosty Cooler Bag: 24 Can
+        "drinkware": 585,         # Rambler 16 Oz Travel Bottle
+        "corporate-gifts": 769,   # Fix-All! Divot Repair Tool
+        "healthcare": 1056,       # Yoga Mat With Strap
+        "trade-shows": 311,       # 36" Small Banner
+        "technology": 12752,      # Universal Fast Charging Cable
+        "office": 148,            # Libretto Notebook
+    }
+
+    for category in categories:
+        child_ids = list(
+            category.children
+            .filter(is_active=True)
+            .values_list("id", flat=True)
+        )
+
+        category_ids = [
+            category.id,
+            *child_ids,
+        ]
+
+        products = (
+            _active_products()
+            .filter(
+                category_id__in=category_ids,
+            )
+            .distinct()
+        )
+
+        product_count = products.count()
+
+        representative_product = None
+
+        preferred_id = preferred_product_ids.get(
+            category.slug
+        )
+
+        if preferred_id:
+            representative_product = (
+                products
+                .filter(pk=preferred_id)
+                .first()
+            )
+
+        # If no explicitly selected representative exists,
+        # choose a real product with an image.
+        if representative_product is None:
+            representative_product = (
+                products
+                .filter(
+                    Q(image__isnull=False)
+                    | ~Q(external_image_url="")
+                )
+                .exclude(
+                    external_image_url__isnull=True,
+                    image__isnull=True,
+                )
+                .order_by(
+                    "-is_featured",
+                    "-updated_at",
+                    "name",
+                )
+                .first()
+            )
+
+        category_cards.append(
+            {
+                "category": category,
+                "product_count": product_count,
+                "representative_product": representative_product,
+            }
+        )
+
+    return category_cards
 # ============================================================
 # MARKETPLACE HOME
 # ============================================================
@@ -482,6 +575,9 @@ def product_home(request):
             "order",
             "name",
         )
+    )
+    category_cards = _build_homepage_category_cards(
+        categories
     )
 
     featured_products = (
@@ -557,6 +653,7 @@ def product_home(request):
 
     context = {
         "categories": categories,
+        "category_cards": category_cards,
         "featured": featured_products,
         "featured_products": featured_products,
         "newest_products": newest_products,
@@ -570,6 +667,210 @@ def product_home(request):
         "products/home.html",
         context,
     )
+
+# ============================================================
+# SHOP DIRECTORY PAGES
+# ============================================================
+
+
+def category_list(request):
+    """
+    Customer-facing directory of active marketplace categories.
+    """
+
+    categories = (
+        Category.objects
+        .filter(
+            is_active=True,
+            parent__isnull=True,
+        )
+        .prefetch_related("children")
+        .annotate(
+            product_count=Count(
+                "products",
+                filter=Q(products__is_active=True),
+                distinct=True,
+            )
+        )
+        .order_by(
+            "order",
+            "name",
+        )
+    )
+
+    category_cards = _build_homepage_category_cards(
+        categories
+    )
+
+    return render(
+        request,
+        "products/category_list.html",
+        {
+            "categories": categories,
+            "category_cards": category_cards,
+        },
+    )
+
+
+def brand_list(request):
+    """
+    Customer-facing directory of marketplace product brands/suppliers.
+    """
+
+    supplier_counts = (
+        _active_products()
+        .filter(
+            supplier_record__isnull=False,
+        )
+        .values("supplier_record_id")
+        .annotate(
+            product_count=Count("id")
+        )
+    )
+
+    count_map = {
+        row["supplier_record_id"]: row["product_count"]
+        for row in supplier_counts
+    }
+
+    suppliers = (
+        Supplier.objects
+        .filter(
+            id__in=count_map.keys()
+        )
+        .order_by("name")
+    )
+
+    brands = []
+
+    for supplier in suppliers:
+        supplier.product_count = count_map.get(
+            supplier.id,
+            0,
+        )
+        brands.append(supplier)
+
+    return render(
+        request,
+        "products/brand_list.html",
+        {
+            "brands": brands,
+        },
+    )
+
+
+def industry_list(request):
+    """
+    Customer-facing directory of all active industries.
+    """
+
+    industries = (
+        Industry.objects
+        .filter(
+            is_active=True,
+        )
+        .annotate(
+            product_count=Count(
+                "products",
+                filter=Q(products__is_active=True),
+                distinct=True,
+            )
+        )
+        .order_by(
+            "order",
+            "name",
+        )
+    )
+
+    return render(
+        request,
+        "products/industry_list.html",
+        {
+            "industries": industries,
+        },
+    )
+
+
+def featured_products(request):
+    """
+    Dedicated listing of active products marked as featured.
+    """
+
+    products = (
+        _active_products()
+        .filter(
+            is_featured=True,
+        )
+        .distinct()
+        .order_by(
+            "-created_at",
+            "name",
+        )
+    )
+
+    paginator = Paginator(
+        products,
+        24,
+    )
+
+    page_obj = paginator.get_page(
+        request.GET.get("page")
+    )
+
+    return render(
+        request,
+        "products/product_listing.html",
+        {
+            "page_title": "Featured Products",
+            "page_subtitle": (
+                "A curated selection of standout promotional products "
+                "from the KaleidoBrands marketplace."
+            ),
+            "products": page_obj.object_list,
+            "page_obj": page_obj,
+            "paginator": paginator,
+        },
+    )
+
+
+def new_arrivals(request):
+    """
+    Dedicated listing of the newest active marketplace products.
+    """
+
+    products = (
+        _active_products()
+        .distinct()
+        .order_by(
+            "-created_at",
+            "name",
+        )
+    )
+
+    paginator = Paginator(
+        products,
+        24,
+    )
+
+    page_obj = paginator.get_page(
+        request.GET.get("page")
+    )
+
+    return render(
+        request,
+        "products/product_listing.html",
+        {
+            "page_title": "New Arrivals",
+            "page_subtitle": (
+                "Explore the latest products added to the "
+                "KaleidoBrands marketplace."
+            ),
+            "products": page_obj.object_list,
+            "page_obj": page_obj,
+            "paginator": paginator,
+        },
+    )
+
 
 
 # ============================================================
@@ -896,9 +1197,27 @@ def product_detail(request, slug):
         )[:8]
     )
 
+# ------------------------------------------------------------
+# PERSONALIZED RECOMMENDATIONS
+# ------------------------------------------------------------
+
     recommendations = RecommendationEngine.recommendations(
         product,
     )
+
+    # Prevent products already shown in "You may also like"
+    # from appearing again in "More ideas selected for you".
+    related_product_ids = {
+        related_product.id
+        for related_product in related_products
+    }
+
+    recommendations = [
+        recommended_product
+        for recommended_product in recommendations
+        if recommended_product.id not in related_product_ids
+        and recommended_product.id != product.id
+    ][:8]
 
     RecommendationEngine.log_recommendations(
         recommendations,
@@ -920,7 +1239,7 @@ def product_detail(request, slug):
         request,
         "products/detail.html",
         context,
-    )
+     )
 
 
 # ============================================================
@@ -1622,11 +1941,26 @@ def quote_builder(request):
 
             try:
                 items = json.loads(raw_items)
-            except json.JSONDecodeError:
+            except (json.JSONDecodeError, TypeError):
                 items = []
 
+            # The submitted JSON must be a list.
+            if not isinstance(items, list):
+                items = []
+
+            # Keep only valid product objects.
+            items = [
+                item
+                for item in items
+                if isinstance(item, dict)
+                and str(item.get("name", "")).strip()
+            ]
+
             if not items:
-                messages.error(request, "Please save at least one product before submitting a quote.")
+                messages.error(
+                    request,
+                    "Please save at least one product before submitting a quote.",
+                )
                 return redirect("products:quote_builder")
 
             quote = Quote.objects.create(
@@ -1638,7 +1972,12 @@ def quote_builder(request):
                 deadline=form.cleaned_data.get("deadline"),
                 notes=form.cleaned_data.get("notes", ""),
             )
-            user = request.user if request.user.is_authenticated else None
+
+            user = (
+                request.user
+                if request.user.is_authenticated
+                else None
+            )
 
             if user:
                 CustomerLead.objects.create(
@@ -1650,53 +1989,137 @@ def quote_builder(request):
                     estimated_value=0,
                     status="new",
                     source="Quote Builder",
-                    notes=f"Auto-created from Quote Builder request: {quote.project_name or 'Quote Request'}",
+                    notes=(
+                        "Auto-created from Quote Builder request: "
+                        f"{quote.project_name or 'Quote Request'}"
+                    ),
                 )
-            pdf_file = generate_quote_pdf(quote)
 
             product_lines = []
+            valid_item_count = 0
 
             for item in items:
-                quote_item = QuoteItem.objects.create(
-                    quote=quote,
-                    product_name=item.get("name", ""),
-                    category=item.get("category", ""),
-                    product_url=item.get("url", ""),
-                    quantity=item.get("quantity") or 1,
-                    notes=item.get("notes", ""),
+                product_id = str(
+                    item.get("id", "")
+                ).strip()
+
+                if not product_id:
+                    continue
+
+                try:
+                    product = Product.objects.get(
+                        pk=product_id,
+                        is_active=True,
+                    )
+                except (Product.DoesNotExist, ValueError, TypeError):
+                    continue
+
+                # --------------------------------------------------------
+                # Validate quantity against the real product MOQ
+                # --------------------------------------------------------
+
+                minimum_quantity = (
+                    product.min_quantity
+                    if product.min_quantity
+                    and product.min_quantity > 0
+                    else 1
                 )
 
+                try:
+                    requested_quantity = int(
+                        item.get("quantity") or minimum_quantity
+                    )
+                except (TypeError, ValueError):
+                    requested_quantity = minimum_quantity
+
+                quantity = max(
+                    requested_quantity,
+                    minimum_quantity,
+                )
+
+                # Customer-entered notes are allowed.
+                notes = str(
+                    item.get("notes", "")
+                ).strip()
+
+                # --------------------------------------------------------
+                # Use trusted product data from Django,
+                # not product information submitted by the browser.
+                # --------------------------------------------------------
+
+                product_name = product.name
+
+                category = (
+                    product.category.name
+                    if product.category
+                    else "Promotional Product"
+                )
+
+                product_url = request.build_absolute_uri(
+                    product.get_absolute_url()
+                )
+
+                quote_item = QuoteItem.objects.create(
+                    quote=quote,
+                    product_name=product_name,
+                    category=category,
+                    product_url=product_url,
+                    quantity=quantity,
+                    notes=notes,
+                )
+
+                valid_item_count += 1
+
                 product_lines.append(
-                                    f"""
-                Product: {quote_item.product_name}
-                Category: {quote_item.category}
-                Quantity: {quote_item.quantity}
-                Notes: {quote_item.notes}
-                URL: {quote_item.product_url}
-                """
-                                )
+                    "\n".join(
+                        [
+                            f"Product: {quote_item.product_name}",
+                            f"Category: {quote_item.category}",
+                            f"Quantity: {quote_item.quantity}",
+                            f"Notes: {quote_item.notes or 'None'}",
+                            f"URL: {quote_item.product_url}",
+                            "",
+                        ]
+                    )
+                )
 
-                body = f"""
-                New KaleidoBrands Quote Builder Request
+            if valid_item_count == 0:
+                quote.delete()
 
-                Customer
-                --------------------
-                Name: {quote.customer_name}
-                Company: {quote.company}
-                Email: {quote.email}
-                Phone: {quote.phone}
+                messages.error(
+                    request,
+                    "We could not validate the selected products. "
+                    "Please add your products again and retry.",
+                )
 
-                Project
-                --------------------
-                Project Name: {quote.project_name}
-                Deadline: {quote.deadline}
-                Notes:
-                {quote.notes}
+                return redirect(
+                    "products:quote_builder"
+                )
 
-                Products
-                --------------------
-                {''.join(product_lines)}
-                """
+            # Generate the PDF AFTER QuoteItems exist.
+            pdf_file = generate_quote_pdf(quote)
+
+            body = f"""
+New KaleidoBrands Quote Builder Request
+
+Customer
+--------------------
+Name: {quote.customer_name}
+Company: {quote.company}
+Email: {quote.email}
+Phone: {quote.phone}
+
+Project
+--------------------
+Project Name: {quote.project_name}
+Deadline: {quote.deadline}
+Notes:
+{quote.notes}
+
+Products
+--------------------
+{chr(10).join(product_lines)}
+""".strip()
 
             email = EmailMessage(
                 subject="New Quote Builder Request - KaleidoBrands",
@@ -1706,27 +2129,38 @@ def quote_builder(request):
                 reply_to=[quote.email],
             )
 
-            if pdf_file:
-                email.attach_file(quote.pdf_file.path)
+            if pdf_file and quote.pdf_file:
+                email.attach_file(
+                    quote.pdf_file.path
+                )
 
-            email.send(fail_silently=False)
+            email.send(
+                fail_silently=False
+            )
 
-            return redirect("products:quote_success")
+            return redirect(
+                "products:quote_success"
+            )
 
     else:
         form = QuoteBuilderForm()
 
     recommended_products = (
-        RecommendationEngine.customer_recommendations(request.user)
+        RecommendationEngine.customer_recommendations(
+            request.user
+        )
         if request.user.is_authenticated
-        else Product.objects.filter(is_active=True, is_featured=True)[:8]
+        else Product.objects.filter(
+            is_active=True,
+            is_featured=True,
+        )[:8]
     )
 
     RecommendationEngine.log_recommendations(
-    recommended_products,
-    context="quote_builder",
-    user=request.user,
-)
+        recommended_products,
+        context="quote_builder",
+        user=request.user,
+    )
 
     return render(
         request,

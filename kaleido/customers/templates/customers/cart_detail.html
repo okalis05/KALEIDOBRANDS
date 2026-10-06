@@ -2,90 +2,651 @@
 
 {% block title %}Shopping Cart | KaleidoBrands{% endblock %}
 
+
 {% block body %}
-<main class="inner-page">
+
+<main class="inner-page kb-cart-page">
+
     <section class="section-panel">
+
         <div class="container">
-            <div class="section-heading text-center reveal">
+
+            <!-- =====================================================
+                 PAGE HEADING
+                 ===================================================== -->
+
+            <div class="section-heading text-center reveal kb-cart-page-heading">
+
                 <span>Shopping Cart</span>
+
                 <h1>Your Cart</h1>
+
                 <p class="mx-auto mt-3" style="max-width:720px;">
-                    Review products before checkout or quote request.
+                    Review your products, adjust quantities, and continue
+                    when you're ready.
                 </p>
+
             </div>
 
+
+            <!-- =====================================================
+                 MESSAGES
+                 ===================================================== -->
+
             {% if messages %}
-                <div class="supplier-message-wrap">
+
+                <div class="supplier-message-wrap kb-cart-messages">
+
                     {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} rounded-4 shadow-sm">
+
+                        <div
+                            class="alert alert-{{ message.tags }} rounded-4 shadow-sm"
+                        >
                             {{ message }}
                         </div>
+
                     {% endfor %}
+
                 </div>
+
             {% endif %}
 
-            <div class="row g-4 mt-5">
+
+            <!-- =====================================================
+                 CART LAYOUT
+                 ===================================================== -->
+
+            <div class="row g-4 mt-4 align-items-start">
+
+                <!-- ================================================
+                     LEFT — CART ITEMS
+                     ================================================ -->
+
                 <div class="col-lg-8">
-                    <div class="supplier-admin-panel">
-                        <h3>Cart Items</h3>
 
-                        {% for item in cart.items.all %}
-                            <div class="supplier-admin-row">
-                                <div>
-                                    <strong>{{ item.product_name }}</strong>
-                                    <span>
-                                        ${{ item.unit_price }} each · Line total ${{ item.line_total }}
-                                    </span>
-                                </div>
+                    <div class="kb-cart-card">
 
-                                <form method="post" action="{% url 'customers:update_cart_item' item.id %}" class="d-flex gap-2 align-items-center">
-                                    {% csrf_token %}
-                                    <input
-                                        type="number"
-                                        name="quantity"
-                                        value="{{ item.quantity }}"
-                                        min="0"
-                                        class="form-control"
-                                        style="width:90px;"
-                                    >
-                                    <button class="btn btn-kb-outline" type="submit">
-                                        Update
-                                    </button>
-                                </form>
+                        <div class="kb-cart-card-heading">
 
-                                <a href="{% url 'customers:remove_cart_item' item.id %}" class="btn btn-kb-outline">
-                                    Remove
-                                </a>
+                            <div class="kb-cart-heading-icon">
+
+                                <i class="bi bi-bag"></i>
+
                             </div>
-                        {% empty %}
-                            <p class="text-muted">Your shopping cart is empty.</p>
-                        {% endfor %}
-                    </div>
-                </div>
 
-                <div class="col-lg-4">
-                    <div class="supplier-admin-panel">
-                        <h3>Summary</h3>
+                            <div>
 
-                        <div class="supplier-metric-row">
-                            <span>Subtotal</span>
-                            <strong>${{ cart.subtotal }}</strong>
+                                <span class="kb-cart-kicker">
+                                    Selected Products
+                                </span>
+
+                                <h2>Cart Items</h2>
+
+                                <p>
+                                    Review product details and quantities
+                                    before checkout.
+                                </p>
+
+                            </div>
+
                         </div>
 
-                        <div class="mt-4 d-grid gap-3">
-                            <a href="{% url 'products:home' %}" class="btn btn-kb-outline">
+
+                        {% for item in cart.items.all %}
+
+                            <article class="kb-cart-product">
+
+                                <!-- ================================
+                                     PRODUCT IMAGE
+                                     ================================ -->
+
+                                <a
+                                    href="{{ item.product.get_absolute_url }}"
+                                    class="kb-cart-product-image"
+                                    aria-label="View {{ item.product_name }}"
+                                >
+
+                                    {% if item.product.image %}
+
+                                        <img
+                                            src="{{ item.product.image.url }}"
+                                            alt="{{ item.product_name }}"
+                                            loading="lazy"
+                                        >
+
+                                    {% elif item.product.external_image_url %}
+
+                                        <img
+                                            src="{{ item.product.external_image_url }}"
+                                            alt="{{ item.product_name }}"
+                                            loading="lazy"
+                                        >
+
+                                    {% else %}
+
+                                        <span class="kb-cart-image-placeholder">
+
+                                            <i class="bi bi-image"></i>
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </a>
+
+
+                                <!-- ================================
+                                     PRODUCT INFORMATION
+                                     ================================ -->
+
+                                <div class="kb-cart-product-content">
+
+                                    <div class="kb-cart-product-top">
+
+                                        <div class="kb-cart-product-info">
+
+                                            {% if item.product.category %}
+
+                                                <span class="kb-cart-category">
+                                                    {{ item.product.category.name|default:item.product.category }}
+                                                </span>
+
+                                            {% endif %}
+
+
+                                            <a
+                                                href="{{ item.product.get_absolute_url }}"
+                                                class="kb-cart-product-name"
+                                            >
+                                                {{ item.product_name }}
+                                            </a>
+
+
+                                            <div class="kb-cart-product-meta">
+
+                                                {% if item.product.sku %}
+
+                                                    <span>
+                                                        <i class="bi bi-upc-scan"></i>
+                                                        {{ item.product.sku }}
+                                                    </span>
+
+                                                {% endif %}
+
+
+                                                <span>
+                                                    <i class="bi bi-box-seam"></i>
+                                                    Minimum
+                                                    {{ item.product.min_quantity|default:1 }}
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <!-- ========================
+                                             LINE TOTAL
+                                             ======================== -->
+
+                                        <div class="kb-cart-line-total">
+
+                                            <span>Line Total</span>
+
+                                            <strong>
+                                                ${{ item.line_total|floatformat:2 }}
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- ============================
+                                         PRICE INFORMATION
+                                         ============================ -->
+
+                                    <div class="kb-cart-price-strip">
+
+                                        <div>
+
+                                            <span>Cart Unit Price</span>
+
+                                            <strong>
+                                                ${{ item.unit_price|floatformat:2 }}
+                                            </strong>
+
+                                        </div>
+
+
+                                        {% if item.product.starting_price %}
+
+                                            <div>
+
+                                                <span>Product Starting Price</span>
+
+                                                <strong>
+                                                    ${{ item.product.starting_price|floatformat:2 }}
+                                                </strong>
+
+                                            </div>
+
+                                        {% endif %}
+
+
+                                        <div>
+
+                                            <span>Quantity</span>
+
+                                            <strong>
+                                                {{ item.quantity }}
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- ============================
+                                         CART CONTROLS
+                                         ============================ -->
+
+                                    <div class="kb-cart-product-actions">
+
+                                        <form
+                                            method="post"
+                                            action="{% url 'customers:update_cart_item' item.id %}"
+                                            class="kb-cart-quantity-form"
+                                        >
+
+                                            {% csrf_token %}
+
+                                            <label
+                                                for="cart-quantity-{{ item.id }}"
+                                            >
+                                                Quantity
+                                            </label>
+
+                                            <div class="kb-cart-quantity-controls">
+
+                                                <input
+                                                    id="cart-quantity-{{ item.id }}"
+                                                    type="number"
+                                                    name="quantity"
+                                                    value="{{ item.quantity }}"
+                                                    min="0"
+                                                    class="form-control"
+                                                >
+
+                                                <button
+                                                    class="kb-cart-update"
+                                                    type="submit"
+                                                >
+                                                    <i class="bi bi-arrow-repeat"></i>
+                                                    Update
+                                                </button>
+
+                                            </div>
+
+                                        </form>
+
+
+                                        <div class="kb-cart-secondary-actions">
+
+                                            <a
+                                                href="{{ item.product.get_absolute_url }}"
+                                                class="kb-cart-view"
+                                            >
+                                                <i class="bi bi-eye"></i>
+                                                View Product
+                                            </a>
+
+
+                                            <a
+                                                href="{% url 'customers:remove_cart_item' item.id %}"
+                                                class="kb-cart-remove"
+                                            >
+                                                <i class="bi bi-trash3"></i>
+                                                Remove
+                                            </a>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+
+                        {% empty %}
+
+                            <!-- ================================
+                                 EMPTY CART
+                                 ================================ -->
+
+                            <div class="kb-cart-empty">
+
+                                <div class="kb-cart-empty-icon">
+
+                                    <i class="bi bi-bag"></i>
+
+                                </div>
+
+                                <h3>Your shopping cart is empty</h3>
+
+                                <p>
+                                    Browse our products and add something
+                                    to your cart when you're ready.
+                                </p>
+
+                                <a
+                                    href="{% url 'products:home' %}"
+                                    class="btn btn-kb-primary"
+                                >
+                                    <i class="bi bi-arrow-left"></i>
+                                    Browse Products
+                                </a>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================
+                     RIGHT — ORDER SUMMARY
+                     ================================================ -->
+
+                <div class="col-lg-4">
+
+                    <aside class="kb-cart-summary">
+
+                        <div class="kb-cart-card-heading">
+
+                            <div class="kb-cart-heading-icon is-red">
+
+                                <i class="bi bi-receipt"></i>
+
+                            </div>
+
+                            <div>
+
+                                <span class="kb-cart-kicker">
+                                    Order Summary
+                                </span>
+
+                                <h2>Your Order</h2>
+
+                                <p>
+                                    Review your current cart before checkout.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ================================
+                             ORDER BREAKDOWN
+                             ================================ -->
+
+                        <div class="kb-cart-summary-products">
+
+                            {% for item in cart.items.all %}
+
+                                <div class="kb-cart-summary-product">
+
+                                    <div class="kb-cart-summary-product-info">
+
+                                        <strong>
+                                            {{ item.product_name }}
+                                        </strong>
+
+                                        <span>
+                                            {{ item.quantity }}
+                                            ×
+                                            ${{ item.unit_price|floatformat:2 }}
+                                        </span>
+
+                                    </div>
+
+                                    <strong class="kb-cart-summary-product-total">
+                                        ${{ item.line_total|floatformat:2 }}
+                                    </strong>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- ================================
+                             COST SUMMARY
+                             ================================ -->
+
+                        <div class="kb-cart-summary-lines">
+
+                            <div>
+
+                                <span>Merchandise Subtotal</span>
+
+                                <strong>
+                                    ${{ cart.subtotal|floatformat:2 }}
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>Shipping</span>
+
+                                <strong class="kb-cart-summary-pending">
+                                    Calculated at checkout
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>Estimated Tax</span>
+
+                                <strong class="kb-cart-summary-pending">
+                                    Calculated at checkout
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ================================
+                             ESTIMATED TOTAL
+                             ================================ -->
+
+                        <div class="kb-cart-summary-total">
+
+                            <div>
+
+                                <span>Estimated Total</span>
+
+                                <small>
+                                    Before shipping and applicable taxes
+                                </small>
+
+                            </div>
+
+                            <strong>
+                                ${{ cart.subtotal|floatformat:2 }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="kb-cart-summary-note">
+
+                            <i class="bi bi-info-circle"></i>
+
+                            <span>
+                                Shipping and applicable taxes are
+                                finalized during checkout.
+                            </span>
+
+                        </div>
+
+
+                        <!-- ================================
+                             ACTIONS
+                             ================================ -->
+
+                        <div class="kb-cart-summary-actions">
+
+                            <a
+                                href="{% url 'products:home' %}"
+                                class="kb-cart-continue"
+                            >
+                                <i class="bi bi-arrow-left"></i>
                                 Continue Shopping
                             </a>
 
-                            <a href="{% url 'customers:checkout' %}" class="btn btn-kb-primary">
-                                Checkout
-                            </a>
+
+                            {% if cart.items.all %}
+
+                                <a
+                                    href="{% url 'customers:checkout' %}"
+                                    class="kb-cart-checkout"
+                                >
+                                    <span>Checkout</span>
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+
+                            {% endif %}
+
                         </div>
-                    </div>
+
+
+                        <!-- ================================
+                             REASSURANCE
+                             ================================ -->
+
+                        <div class="kb-cart-security">
+
+                            <i class="bi bi-shield-check"></i>
+
+                            <div>
+
+                                <strong>Secure checkout</strong>
+
+                                <span>
+                                    Your order and payment information
+                                    are handled securely.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </aside>
+
                 </div>
+
             </div>
 
         </div>
+
     </section>
+
 </main>
+
+
+<style>
+
+/* =========================================================
+   ORDER SUMMARY — PRODUCT BREAKDOWN
+   ========================================================= */
+
+.kb-cart-summary-products {
+    margin: 4px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.kb-cart-summary-product {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+}
+
+.kb-cart-summary-product + .kb-cart-summary-product {
+    border-top: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.kb-cart-summary-product-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.kb-cart-summary-product-info strong {
+    display: block;
+    color: #26354a;
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1.4;
+}
+
+.kb-cart-summary-product-info span {
+    display: block;
+    margin-top: 4px;
+    color: #738196;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.kb-cart-summary-product-total {
+    flex: 0 0 auto;
+    color: #0758ae;
+    font-size: 0.82rem;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.kb-cart-summary-pending {
+    max-width: 145px;
+    color: #748399 !important;
+    font-size: 0.70rem !important;
+    font-weight: 700 !important;
+    line-height: 1.35;
+    text-align: right;
+}
+
+.kb-cart-summary-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 12px 0 16px;
+    padding: 10px 12px;
+    border: 1px solid rgba(13, 110, 253, 0.10);
+    border-radius: 12px;
+    background: rgba(13, 110, 253, 0.035);
+    color: #6d7c90;
+    font-size: 0.68rem;
+    line-height: 1.45;
+}
+
+.kb-cart-summary-note i {
+    flex: 0 0 auto;
+    margin-top: 1px;
+    color: #0d6efd;
+}
+
+</style>
+
 {% endblock %}
