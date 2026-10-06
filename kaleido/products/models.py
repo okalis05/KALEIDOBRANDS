@@ -848,3 +848,39 @@ from .models_purchase_order_activity import *
 from .models_quote import *
 from .models_marketplace import *
 from .models_integrations import *
+
+class HPGWeeklySyncCheckpoint(models.Model):
+    brand = models.CharField(
+        max_length=40,
+        unique=True,
+        db_index=True,
+    )
+    completed_product_ids = models.JSONField(
+        default=list,
+        blank=True,
+    )
+    window_days = models.PositiveIntegerField(
+        default=8,
+    )
+    cycle_started_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+    cycle_completed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+    last_product_id = models.CharField(
+        max_length=120,
+        blank=True,
+        default="",
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+        ordering = ("brand",)
+
+    def __str__(self):
+        return f"HPG weekly checkpoint: {self.brand}"

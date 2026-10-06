@@ -117,6 +117,36 @@ class Command(BaseCommand):
             ),
         )
 
+        parser.add_argument(
+            "--weekly-batch",
+            action="store_true",
+            help=(
+                "Run suppliers using bounded production batch sizes. "
+                "Dedicated family catalogs also resume from their "
+                "existing production checkpoints."
+            ),
+        )
+
+        parser.add_argument(
+            "--family-batch-size",
+            type=int,
+            default=50,
+            help=(
+                "Maximum parent families per dedicated supplier when "
+                "--weekly-batch is enabled. Default: 50."
+            ),
+        )
+
+        parser.add_argument(
+            "--generic-batch-size",
+            type=int,
+            default=25,
+            help=(
+                "Maximum products per generic HPG brand when "
+                "--weekly-batch is enabled. Default: 25."
+            ),
+        )
+
     def _selected(self, key, only):
         return not only or key in only
 
@@ -229,6 +259,16 @@ class Command(BaseCommand):
         if limit is not None:
             kwargs["limit"] = limit
 
+        # Dedicated family commands already maintain their own
+        # production checkpoints. Resume is enabled by the weekly
+        # batch runner without changing supplier-specific logic.
+        if (
+            not dry_run
+            and getattr(self, "_weekly_batch", False)
+            and key != "jornik"
+        ):
+            kwargs["resume"] = True
+
         # Jornik has its own command interface and does not
         # implement --continue-on-error.
         if key != "jornik":
@@ -268,6 +308,16 @@ class Command(BaseCommand):
         if limit is not None:
             kwargs["limit"] = limit
 
+        if (
+            not dry_run
+            and getattr(
+                self,
+                "_weekly_batch",
+                False,
+            )
+        ):
+            kwargs["resume"] = True
+
         call_command(
             "sync_hpg",
             **kwargs,
@@ -279,6 +329,27 @@ class Command(BaseCommand):
         limit = options["limit"]
         only = set(options["only"] or [])
         pause = max(options["pause"], 0)
+
+        weekly_batch = options["weekly_batch"]
+        family_batch_size = options["family_batch_size"]
+        generic_batch_size = options["generic_batch_size"]
+
+        if family_batch_size < 1:
+            raise CommandError(
+                "--family-batch-size must be at least 1."
+            )
+
+        if generic_batch_size < 1:
+            raise CommandError(
+                "--generic-batch-size must be at least 1."
+            )
+
+        if weekly_batch and limit is not None:
+            raise CommandError(
+                "--weekly-batch and --limit cannot be used together."
+            )
+
+        self._weekly_batch = weekly_batch
 
         skip_family = options[
             "skip_family_catalogs"
@@ -302,6 +373,17 @@ class Command(BaseCommand):
         self.stdout.write(
             f"LIMIT: {limit if limit is not None else 'NONE'}"
         )
+
+        if weekly_batch:
+            self.stdout.write(
+                "WEEKLY BATCH: ENABLED"
+            )
+            self.stdout.write(
+                f"FAMILY BATCH SIZE: {family_batch_size}"
+            )
+            self.stdout.write(
+                f"GENERIC HPG BATCH SIZE: {generic_batch_size}"
+            )
 
         if only:
             self.stdout.write(
@@ -343,7 +425,11 @@ class Command(BaseCommand):
                             command,
                             dry_run=dry_run,
                             since_days=since_days,
-                            limit=limit,
+                            limit=(
+                                family_batch_size
+                                if weekly_batch
+                                else limit
+                            ),
                         )
                     except Exception as exc:
                         failed.append(
@@ -376,7 +462,11 @@ class Command(BaseCommand):
                             brand,
                             dry_run=dry_run,
                             since_days=since_days,
-                            limit=limit,
+                            limit=(
+                                generic_batch_size
+                                if weekly_batch
+                                else limit
+                            ),
                         )
                     except Exception as exc:
                         failed.append(
