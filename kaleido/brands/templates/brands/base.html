@@ -726,20 +726,28 @@
                                     {% endif %}
                                 ">
 
-                                    {% if brand.logo %}
-
-                                        <img
-                                            src="{{ brand.logo.url }}"
-                                            alt="{{ brand.name }} logo"
-                                            loading="lazy"
-                                        >
-
+                                    {% if brand.slug == "beacon" %}
+                                        <img src="{% static 'brands/images/brand-logos/beacon.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                    {% elif brand.slug == "best" %}
+                                        <img src="{% static 'brands/images/brand-logos/best.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                    {% elif brand.slug == "denwell" %}
+                                        <img src="{% static 'brands/images/brand-logos/denwell.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                    {% elif brand.slug == "hub-pen" %}
+                                        <img src="{% static 'brands/images/brand-logos/hub-pen.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                    {% elif brand.slug == "handstands" %}
+                                        <img src="{% static 'brands/images/brand-logos/handstands.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                    {% elif brand.slug == "maple-ridge" %}
+                                        <img src="{% static 'brands/images/brand-logos/maple-ridge.png' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                    {% elif brand.slug == "mixie" %}
+                                        <img src="{% static 'brands/images/brand-logos/mixie.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                    {% elif brand.slug == "origaudio" %}
+                                        <img src="{% static 'brands/images/brand-logos/origaudio.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                    {% elif brand.slug == "sugarspot" %}
+                                        <img src="{% static 'brands/images/brand-logos/sugarspot.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
                                     {% else %}
-
                                         <span class="kb-brand-wordmark">
                                             {{ brand.name }}
                                         </span>
-
                                     {% endif %}
 
                                 </div>
