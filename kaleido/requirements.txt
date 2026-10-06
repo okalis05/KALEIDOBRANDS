@@ -10,3 +10,5 @@ reportlab==4.4.2
 stripe==11.6.0
 
 zeep==4.3.2
+
+python-dotenv==1.0.1
