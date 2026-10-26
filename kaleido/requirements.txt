@@ -12,3 +12,4 @@ stripe==11.6.0
 zeep==4.3.2
 
 python-dotenv==1.0.1
+Markdown>=3.7,<4
