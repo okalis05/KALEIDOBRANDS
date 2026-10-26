@@ -1,3 +1,4 @@
+from .hero_campaigns import weekly_image, seasonal_campaign
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -5,6 +6,12 @@ from django.shortcuts import render, redirect
 from django.core.mail import EmailMessage
 from .models import ContactMessage, QuoteRequest
 from products.models import Product
+from pathlib import Path
+
+import markdown
+from django.conf import settings
+from django.http import Http404
+from django.shortcuts import render
 
 
 CATALOG_CATEGORIES = [
@@ -374,7 +381,58 @@ Project Details:
             "featured_products": FEATURED_PRODUCTS,
             "featured_marketplace_products": featured_marketplace_products,
             "newest_marketplace_products": newest_marketplace_products,
+            "hero_new_arrivals": list(
+                Product.objects.filter(is_active=True)
+                .exclude(image="", external_image_url="")
+                .order_by("-created_at", "-pk")[:3]
+            ),
+            "hero_weekly_image": weekly_image(),
+            "hero_season": seasonal_campaign(),
             "home_industry_cards": build_home_industry_cards(),
             
         },
+    )
+
+def privacy_policy(request):
+    file_path = (
+        Path(settings.BASE_DIR)
+        / "README_PRIVACY_POLICY_KALEIDOBRANDS.md"
+    )
+
+    if not file_path.is_file():
+        raise Http404("Privacy Policy not found.")
+
+    content = file_path.read_text(encoding="utf-8")
+
+    policy_html = markdown.markdown(
+        content,
+        extensions=["extra", "sane_lists"],
+    )
+
+    return render(
+        request,
+        "brands/privacy_policy.html",
+        {"policy_html": policy_html},
+    )
+
+def terms_of_service(request):
+    file_path = (
+        Path(settings.BASE_DIR)
+        / "README_TERMS_OF_SERVICE_KALEIDOBRANDS.md"
+    )
+
+    if not file_path.is_file():
+        raise Http404("Terms of Service not found.")
+
+    content = file_path.read_text(encoding="utf-8")
+
+    terms_html = markdown.markdown(
+        content,
+        extensions=["extra", "sane_lists"],
+    )
+
+    return render(
+        request,
+        "brands/terms_of_service.html",
+        {"terms_html": terms_html},
     )

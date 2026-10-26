@@ -1,0 +1,1 @@
+Add licensed KaleidoBrands-branded images named by their Monday publication date, e.g. 2026-11-02.webp. Each new dated image automatically replaces the last on/after that Monday. Supported jpg/jpeg/png/webp. Files must be deployed to production static storage.

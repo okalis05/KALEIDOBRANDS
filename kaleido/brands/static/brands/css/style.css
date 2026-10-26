@@ -70,8 +70,8 @@ img {
 }
 
 .nav-logo {
-    width: 38px;
-    height: 38px;
+    width: 100px;
+    height: 100px;
     object-fit: contain;
 }
 
@@ -1282,7 +1282,7 @@ label {
 
 
 .kb-brand-showcase-stat strong {
-    color: #0b1730;
+    color: #f73003;
 
     font-size: 3rem;
     font-weight: 950;
@@ -1598,7 +1598,7 @@ label {
 
     margin-top: 38px;
 
-    padding: 26px 0 4px;
+    padding: 10px 0 4px;
 
     border-top:
         1px solid rgba(148, 163, 184, 0.18);
@@ -1610,7 +1610,7 @@ label {
     align-items: center;
     justify-content: flex-start;
 
-    gap: 9px;
+    gap: 2px;
 
     min-width: 0;
 
@@ -1620,7 +1620,9 @@ label {
         1px solid rgba(148, 163, 184, 0.17);
 }
 
-
+#point{
+    color: rgb(245, 33, 33);
+}
 .kb-brand-value:first-child {
     padding-left: 0;
 }
@@ -1726,7 +1728,6 @@ label {
 .kb-footer-wave {
     position: absolute;
 
-    left: -5%;
     width: 110%;
 
     pointer-events: none;
@@ -1755,47 +1756,6 @@ label {
     transform: rotate(-1.4deg);
 }
 
-
-.kb-footer-wave-red {
-    z-index: -2;
-
-    top: -30px;
-
-    height: 110px;
-
-    border-radius: 42% 50% 55% 45%;
-
-    background:
-        linear-gradient(
-            90deg,
-            #d9273d,
-            #e63946,
-            #f04d5e
-        );
-
-    transform: rotate(1.1deg);
-}
-
-
-.kb-footer-wave-gold {
-    z-index: -3;
-
-    top: -11px;
-
-    height: 92px;
-
-    border-radius: 50% 43% 50% 57%;
-
-    background:
-        linear-gradient(
-            90deg,
-            #f59e0b,
-            #f5a623,
-            #ffbd45
-        );
-
-    transform: rotate(-0.6deg);
-}
 
 
 /* ---------- content ---------- */
@@ -1951,6 +1911,7 @@ label {
     display: flex;
     align-items: center;
     gap: 9px;
+
 }
 
 
@@ -6621,7 +6582,7 @@ label {
     right: -2%;
     top: 0;
 
-    height: 66px;
+    height: 20px;
 
     background:
         linear-gradient(
@@ -6653,7 +6614,7 @@ label {
     right: -2%;
     bottom: 0;
 
-    height: 37px;
+    height: 27px;
 
     background:
         linear-gradient(
@@ -6678,28 +6639,7 @@ label {
 
 /* SMALL GOLD ACCENT */
 
-.kb-footer-wave-gold {
-    position: absolute;
 
-    left: 29%;
-    bottom: 5px;
-
-    width: 190px;
-    height: 4px;
-
-    border-radius: 999px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            #ffb000,
-            #ff7a00,
-            transparent
-        );
-
-    transform: rotate(-1.5deg);
-}
 
 /* =========================================================
    KALEIDOBRANDS — PREMIUM FOOTER SWOOSH
@@ -6721,7 +6661,7 @@ label {
     left: -4%;
 
     width: 108%;
-    height: 130px;
+    height: 110px;
 
     background: linear-gradient(
         90deg,
@@ -6737,54 +6677,6 @@ label {
 }
 
 
-/* GOLD — subtle highlight */
-.kb-footer-ribbon-gold {
-    position: absolute;
-    left: 27%;
-    bottom: 30px;
-
-    width: 38%;
-    height: 3px;
-
-    border-radius: 999px;
-
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        #ffc400 20%,
-        #ff9d00 72%,
-        transparent 100%
-    );
-
-    transform: rotate(-0.7deg);
-
-    z-index: 5;
-}
-
-
-/* RED — thin finishing accent */
-.kb-footer-ribbon-red {
-    position: absolute;
-    left: 37%;
-    right: -4%;
-    bottom: 12px;
-
-    height: 13px;
-
-    background: linear-gradient(
-        90deg,
-        #ff8a00 0%,
-        #ff6438 38%,
-        #ff3158 100%
-    );
-
-    border-radius: 70% 0 0 0 / 100% 0 0 0;
-
-    transform: rotate(-0.65deg);
-    transform-origin: right center;
-
-    z-index: 4;
-}
 
 /* =========================================================
    KALEIDOBRANDS — REAL PRODUCT INDUSTRY CARDS
@@ -7097,3 +6989,229 @@ label {
     }
 
 }
+
+/* KALEIDOBRANDS LOGO APPEARANCE ONLY */
+
+.navbar-brand .nav-logo {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.navbar-brand > span {
+    font-size: 1.45rem;
+    font-weight: 900;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+.kb-footer-brand-logo .kb-footer-k-logo {
+    width: 58px;
+    height: 58px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.kb-footer-brand-logo .kb-footer-brand-name {
+    font-size: 1.8rem;
+    font-weight: 950;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+    .navbar-brand .nav-logo {
+        width: 46px;
+        height: 46px;
+    }
+
+    .navbar-brand > span {
+        font-size: 1.15rem;
+    }
+
+    .kb-footer-brand-logo .kb-footer-k-logo {
+        width: 46px;
+        height: 46px;
+    }
+
+    .kb-footer-brand-logo .kb-footer-brand-name {
+        font-size: 1.4rem;
+    }
+}
+
+
+/* ==========================================================
+   KALEIDOBRANDS — COMPACT BRAND SHOWCASE MARQUEE
+   Scoped to the brand showcase only
+========================================================== */
+
+.kb-brand-showcase {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+}
+
+.kb-brand-showcase .kb-brand-showcase-header {
+    margin-bottom: 20px !important;
+}
+
+.kb-brand-showcase .kb-brand-showcase-heading h2 {
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+}
+
+.kb-brand-showcase .kb-brand-showcase-heading p {
+    margin-bottom: 0;
+}
+
+.kb-brand-marquee {
+    width: 100%;
+    overflow: hidden;
+}
+
+.kb-brand-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: kbBrandMarquee 35s linear infinite;
+}
+
+.kb-brand-marquee .kb-brand-logo-grid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    width: max-content;
+    gap: 14px;
+}
+
+.kb-brand-marquee .kb-brand-logo-card {
+    flex: 0 0 190px;
+    width: 190px;
+    animation: none !important;
+}
+
+.kb-brand-marquee .kb-brand-logo-inner {
+    min-height: 90px !important;
+    height: 90px !important;
+    padding: 10px !important;
+    border-radius: 14px;
+}
+
+.kb-brand-marquee .kb-brand-logo-media {
+    height: 66px !important;
+    padding: 5px 10px !important;
+}
+
+.kb-brand-marquee .kb-brand-logo-media img {
+    max-height: 52px !important;
+    max-width: 95%;
+}
+
+.kb-brand-marquee .kb-brand-logo-media-dark {
+    height: 66px !important;
+    border-radius: 10px;
+}
+
+.kb-brand-marquee .kb-brand-wordmark {
+    font-size: 0.95rem;
+}
+
+.kb-brand-marquee:hover .kb-brand-marquee-track {
+    animation-play-state: paused;
+}
+
+@keyframes kbBrandMarquee {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(calc(-50% - 7px));
+    }
+}
+
+@media (max-width: 767px) {
+    .kb-brand-showcase {
+        padding-top: 20px !important;
+        padding-bottom: 20px !important;
+    }
+
+    .kb-brand-marquee .kb-brand-logo-card {
+        flex-basis: 155px;
+        width: 155px;
+    }
+
+    .kb-brand-marquee .kb-brand-logo-inner {
+        min-height: 76px !important;
+        height: 76px !important;
+    }
+
+    .kb-brand-marquee .kb-brand-logo-media,
+    .kb-brand-marquee .kb-brand-logo-media-dark {
+        height: 56px !important;
+    }
+
+    .kb-brand-marquee .kb-brand-logo-media img {
+        max-height: 44px !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kb-brand-marquee-track {
+        animation: none;
+        gap: 14px;
+    }
+
+    .kb-brand-marquee {
+        overflow-x: auto;
+    }
+}
+
+
+
+
+
+/* ===== KaleidoBrands homepage campaign carousel: isolated styles ===== */
+.kb-campaign-hero{padding:clamp(105px,11vw,145px) 20px 70px;background:#f5f7fb}
+.kb-campaign-stage{position:relative;isolation:isolate;max-width:1500px;margin:auto;min-height:clamp(510px,43vw,620px);border-radius:28px;overflow:hidden;background:#0b2445;box-shadow:0 25px 70px rgba(12,30,58,.17)}
+.kb-campaign-slide{position:absolute;inset:0;display:flex;align-items:center;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .7s ease,visibility .7s ease;color:#fff}
+.kb-campaign-slide.is-active{opacity:1;visibility:visible;pointer-events:auto}
+.kb-campaign-inner{position:relative;z-index:2;width:100%;padding:clamp(28px,5vw,76px) clamp(24px,6vw,92px) 120px;display:flex;align-items:center;justify-content:space-between;gap:36px}
+.kb-campaign-copy{max-width:630px}
+.kb-campaign-eyebrow{display:block;margin-bottom:17px;font-size:.75rem;letter-spacing:.16em;font-weight:900;color:#f7b948}
+.kb-campaign-hero h1,.kb-campaign-hero h2{font-size:clamp(2.2rem,4.6vw,4.8rem);font-weight:900;line-height:1.06;letter-spacing:-.055em;color:#fff;margin:0 0 17px}
+.kb-campaign-hero h1 em,.kb-campaign-hero h2 em{font-style:normal;color:#f7b948}
+.kb-campaign-copy p{color:#e0eaf7;font-size:clamp(.95rem,1.4vw,1.15rem);max-width:510px;margin:0}
+.kb-campaign-steps{background:radial-gradient(circle at 80% 20%,#1a5682,transparent 48%),linear-gradient(125deg,#071a36,#103b66)}
+.kb-campaign-steps-inner{display:block}
+.kb-campaign-steps .kb-campaign-copy{max-width:100%;margin-bottom:34px}
+.kb-campaign-steps h1{font-size:clamp(2rem,3.7vw,3.8rem)}
+.kb-steps-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.kb-step{min-width:0;padding:20px 15px;border:1px solid rgba(255,255,255,.2);border-radius:18px;background:rgba(255,255,255,.085);display:flex;flex-direction:column;gap:9px}
+.kb-step span{color:#f7b948;font-size:1.05rem;font-weight:900}
+.kb-step strong{color:#fff;font-size:clamp(.9rem,1.3vw,1.15rem);line-height:1.15}
+.kb-step small{color:#d9e4f2;font-size:.8rem;line-height:1.4}
+.kb-campaign-photo{background:linear-gradient(120deg,#081c35,#1a4b75)}
+.kb-campaign-season{background:linear-gradient(120deg,#452313,#b2682f)}
+.kb-campaign-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.kb-campaign-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(4,16,34,.94),rgba(4,16,34,.7) 50%,rgba(4,16,34,.12))}
+.kb-campaign-logo{max-width:180px;max-height:180px;object-fit:contain;filter:drop-shadow(0 6px 18px rgba(0,0,0,.35))}
+.kb-campaign-arrivals{background:linear-gradient(125deg,#0b2445,#174d78)}
+.kb-arrivals-inner{display:grid;grid-template-columns:1.1fr .9fr}
+.kb-arrivals-display{position:relative;min-height:310px;display:grid;place-items:center}
+.kb-arrival-product{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;color:#fff;text-decoration:none}
+.kb-arrival-product.is-active{display:flex}
+.kb-arrival-product img{max-width:100%;width:min(290px,80%);height:235px;object-fit:contain;border-radius:18px;background:#fff;padding:10px}
+.kb-arrival-product strong{color:#fff;max-width:340px;font-size:1rem}
+.kb-arrival-product small{color:#f7b948}
+.kb-arrivals-empty{display:flex;flex-direction:column;gap:12px;color:#fff;text-align:center}
+.kb-campaign-controls{position:absolute;z-index:5;bottom:24px;left:clamp(24px,6vw,92px);right:clamp(24px,6vw,92px);display:flex;align-items:center;justify-content:space-between;gap:15px}
+.kb-campaign-actions{display:flex;flex-wrap:wrap;gap:12px}
+.kb-campaign-actions .btn{border-radius:999px;padding:12px 22px;font-weight:800}
+.kb-campaign-quote{color:#fff!important;border:1px solid rgba(255,255,255,.9)!important;background:rgba(5,18,39,.28)!important}
+.kb-campaign-quote:hover{background:#fff!important;color:#102744!important}
+.kb-campaign-navigation{display:flex;align-items:center;gap:9px}
+.kb-campaign-dot{width:10px;height:10px;border-radius:50%;border:0;background:rgba(255,255,255,.48);padding:0;cursor:pointer}
+.kb-campaign-dot.is-active{width:28px;border-radius:12px;background:#f7b948}
+.kb-campaign-arrow{width:33px;height:33px;border-radius:50%;border:1px solid rgba(255,255,255,.6);color:#fff;background:rgba(0,0,0,.2);font-size:24px;line-height:1;cursor:pointer}
+.kb-campaign-hero button:focus-visible,.kb-campaign-hero a:focus-visible{outline:3px solid #f7b948;outline-offset:3px}
+@media(max-width:900px){.kb-steps-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.kb-campaign-stage{min-height:670px}.kb-arrivals-inner{grid-template-columns:1fr}.kb-arrivals-display{min-height:260px}.kb-arrival-product img{height:175px}.kb-campaign-logo{max-width:110px}.kb-campaign-inner{padding-bottom:135px}}
+@media(max-width:600px){.kb-campaign-hero{padding:95px 10px 45px}.kb-campaign-stage{min-height:680px;border-radius:18px}.kb-campaign-inner{padding:28px 20px 135px;display:block}.kb-campaign-hero h1,.kb-campaign-hero h2{font-size:clamp(1.85rem,8vw,2.7rem)}.kb-campaign-steps .kb-campaign-copy{margin-bottom:22px}.kb-steps-grid{gap:8px}.kb-step{padding:13px 10px;gap:5px}.kb-step strong{font-size:.85rem}.kb-step small{font-size:.7rem}.kb-campaign-logo{display:none}.kb-campaign-controls{left:20px;right:20px;bottom:19px;flex-direction:column;align-items:stretch}.kb-campaign-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.kb-campaign-actions .btn{padding:11px 8px;font-size:.82rem}.kb-campaign-navigation{justify-content:center}.kb-campaign-shade{background:linear-gradient(180deg,rgba(4,16,34,.85),rgba(4,16,34,.3))}.kb-arrivals-display{margin-top:20px}.kb-arrival-product img{height:170px}}
+@media(prefers-reduced-motion:reduce){.kb-campaign-slide{transition:none}}

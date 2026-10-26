@@ -49,3 +49,21 @@ var/
 *.before_*
 *.save
 *.pyes
+
+# Local database backups
+database_backups/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# macOS files
+.DS_Store
+
+# Generated static files
+staticfiles/
+
+# Local installation and backup files
+install_kaleidobrands_hero.py
+*.brand-backup
+*.backup-*
