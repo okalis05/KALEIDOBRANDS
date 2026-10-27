@@ -69,10 +69,42 @@ img {
     padding-inline: clamp(18px, 3vw, 48px);
 }
 
-.nav-logo {
-    width: 100px;
-    height: 100px;
+/* ============================
+   KALEIDOBRANDS NAVBAR LOGO
+============================ */
+
+.kb-navbar-brand {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    padding: 0;
+    margin-right: 24px;
+}
+
+.kb-navbar-brand .nav-logo {
+    display: block;
+    width: 190px;
+    height: 58px;
+    max-width: 100%;
     object-fit: contain;
+    object-position: left center;
+}
+
+/* Tablet */
+@media (max-width: 991.98px) {
+    .kb-navbar-brand .nav-logo {
+        width: 165px;
+        height: 52px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 575.98px) {
+    .kb-navbar-brand .nav-logo {
+        width: 145px;
+        height: 46px;
+    }
 }
 
 .navbar-brand {
@@ -347,10 +379,7 @@ img {
         font-size: 1.12rem;
     }
 
-    .nav-logo {
-        width: 34px;
-        height: 34px;
-    }
+    
 
     .kb-nav-actions {
         flex-direction: column;
@@ -1712,7 +1741,7 @@ label {
         linear-gradient(
             135deg,
             #07162d 0%,
-            #0a1d3c 48%,
+            #0f2e60 48%,
             #08182f 100%
         );
 
@@ -1806,32 +1835,7 @@ label {
 }
 
 
-.kb-footer-logo-k {
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
-    width: 40px;
-    height: 40px;
-
-    border-radius: 13px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #1674ef,
-            #e63946 62%,
-            #f5a623
-        );
-
-    color: #fff;
-
-    font-size: 1.25rem;
-    font-weight: 950;
-
-    box-shadow:
-        0 8px 22px rgba(0, 0, 0, 0.18);
-}
 
 
 .kb-footer-brand p {
@@ -1845,42 +1849,6 @@ label {
     line-height: 1.7;
 }
 
-
-/* ---------- footer nav ---------- */
-
-.kb-footer-nav {
-    display: grid;
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 15px 30px;
-
-    padding-top: 9px;
-}
-
-
-.kb-footer-nav a {
-    position: relative;
-
-    width: fit-content;
-
-    color: rgba(255, 255, 255, 0.76);
-
-    font-size: 0.8rem;
-    font-weight: 800;
-
-    text-decoration: none;
-
-    transition:
-        color 0.22s ease,
-        transform 0.22s ease;
-}
-
-
-.kb-footer-nav a:hover {
-    color: #fff;
-    transform: translateX(3px);
-}
 
 
 /* ---------- connect ---------- */
@@ -7260,3 +7228,148 @@ label {
  .kb-split-slide .kb-split-placeholder strong {font-size:1.5rem}
  .kb-campaign-controls {padding:9px 10px;border-radius:14px;background:rgba(7,24,46,.72);backdrop-filter:blur(9px)}
 }
+
+/* KALEIDOBRANDS — RESPONSIVE NAVBAR LOGO */
+
+.kb-navbar .navbar-brand {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 0;
+    margin-right: 24px;
+}
+
+.kb-navbar .nav-logo {
+    display: block;
+    width: 220px;
+    height: auto;
+    max-height: 65px;
+    object-fit: contain;
+}
+
+@media (max-width: 991.98px) {
+    .kb-navbar .nav-logo {
+        width: 185px;
+        max-height: 55px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .kb-navbar .nav-logo {
+        width: 155px;
+        max-height: 48px;
+    }
+}
+
+/* ==========================================
+   KALEIDOBRANDS — PREMIUM FOOTER ALIGNMENT
+========================================== */
+
+/* Footer content stretches across available width */
+.kb-footer-content {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 48px;
+}
+
+/* Logo and description — far left */
+.kb-footer-brand {
+    flex: 0 1 440px;
+    min-width: 0;
+    margin-right: auto;
+}
+
+.kb-footer-logo {
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    line-height: 1;
+}
+
+.kb-footer-brand-image {
+    display: block;
+    width: 250px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Existing footer navigation */
+.kb-footer-nav {
+    flex: 0 1 300px;
+}
+
+/* Social media links — far right */
+.kb-footer-connect {
+    flex: 0 0 auto;
+    margin-left: auto;
+    align-items: flex-end;
+    text-align: right;
+}
+
+.kb-footer-connect .footer-socials {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Tablet */
+@media (max-width: 991.98px) {
+    .kb-footer-content {
+        flex-wrap: wrap;
+        gap: 32px;
+    }
+
+    .kb-footer-brand {
+        flex: 1 1 55%;
+    }
+
+    .kb-footer-nav {
+        flex: 1 1 35%;
+    }
+
+    .kb-footer-connect {
+        flex: 1 1 100%;
+        margin-left: 0;
+        align-items: flex-end;
+        text-align: right;
+    }
+
+    .kb-footer-brand-image {
+        width: 220px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 575.98px) {
+    .kb-footer-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 28px;
+    }
+
+    .kb-footer-brand,
+    .kb-footer-nav,
+    .kb-footer-connect {
+        flex: none;
+        width: 100%;
+        margin: 0;
+    }
+
+    .kb-footer-brand-image {
+        width: 200px;
+    }
+
+    .kb-footer-connect {
+        align-items: flex-end;
+        text-align: right;
+    }
+
+    .kb-footer-connect .footer-socials {
+        justify-content: flex-end;
+    }
+}
+

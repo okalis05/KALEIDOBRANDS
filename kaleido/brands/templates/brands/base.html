@@ -162,19 +162,13 @@
     >
         <div class="container-fluid kb-nav-container">
 
-            <a
-                class="navbar-brand d-flex align-items-center gap-2"
-                href="{% url 'brands:home' %}#home"
-            >
-                <img
-                    src="{% static 'brands/images/kb.png' %}"
-                    alt="KaleidoBrands logo"
-                    class="nav-logo"
-                >
-
-                <span>
-                    Kaleido<span>Brands</span>
-                </span>
+            <a class="navbar-brand kb-navbar-brand"
+                href="{% url 'brands:home' %}">
+                    <img
+                        src="{% static 'brands/images/kb.png' %}"
+                        alt="KaleidoBrands"
+                        class="nav-logo"
+                    >
             </a>
 
             <button
@@ -869,31 +863,15 @@
             <!-- LEFT: KALEIDOBRANDS -->
             <div class="kb-footer-brand">
 
-                <a
-                    href="{% url 'brands:home' %}"
-                    class="kb-footer-brand-logo"
-                    aria-label="KaleidoBrands home"
-                >
+                <a href="/" class="kb-footer-logo">
                     <img
-                        src="{% static 'brands/images/kb-k.png' %}"
-                        alt="KaleidoBrands logo"
-                        class="kb-footer-k-logo"
+                        src="{% static 'brands/images/kb.png' %}"
+                        alt="KaleidoBrands"
+                        class="kb-footer-brand-image"
                     >
-
-                    <span class="kb-footer-brand-name">
-                        <span class="kb-footer-kaleido">Kaleido</span><span class="kb-footer-brands">Brands</span>
-                    </span>
                 </a>
 
-                <p class="kb-footer-tagline">
-                    Branding That Inspires.Impressions That Last.
-                </p>
-
             </div>
-
-
-            
-
 
             <!-- RIGHT: SOCIAL -->
             <div class="kb-footer-connect">
