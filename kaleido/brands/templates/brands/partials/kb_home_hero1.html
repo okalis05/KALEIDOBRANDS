@@ -1,0 +1,76 @@
+{% load static %}
+<section id="home" class="kb-campaign-hero" aria-label="KaleidoBrands featured campaigns">
+  <div class="kb-campaign-stage" id="kbCampaignStage" aria-roledescription="carousel">
+    <article class="kb-campaign-slide is-active kb-campaign-steps" data-kb-slide="0" aria-label="1 of 4: How KaleidoBrands works">
+      <div class="kb-campaign-inner kb-campaign-steps-inner">
+        <div class="kb-campaign-copy">
+          <span class="kb-campaign-eyebrow">KALEIDOBRANDS · YOUR BRAND JOURNEY</span>
+          <h1>From Your Vision <em>to Your Brand.</em></h1>
+          <p>Four simple steps to make your brand stand out.</p>
+        </div>
+        <div class="kb-steps-grid" aria-label="Four steps to create branded merchandise">
+          <div class="kb-step"><span>01</span><strong>Discover</strong><small>Explore products and ideas</small></div>
+          <div class="kb-step"><span>02</span><strong>Build Your Quote</strong><small>Share your needs and budget</small></div>
+          <div class="kb-step"><span>03</span><strong>Approve Your Design</strong><small>Review artwork and details</small></div>
+          <div class="kb-step"><span>04</span><strong>Bring Your Brand to Life</strong><small>Production and delivery</small></div>
+        </div>
+      </div>
+    </article>
+    <article class="kb-campaign-slide kb-campaign-photo" data-kb-slide="1" aria-label="2 of 4: Weekly brand showcase" aria-hidden="true">
+      {% if hero_weekly_image %}<img class="kb-campaign-bg" src="{% static hero_weekly_image %}" alt="" loading="lazy">{% endif %}
+      <div class="kb-campaign-shade"></div>
+      <div class="kb-campaign-inner">
+        <div class="kb-campaign-copy">
+          <span class="kb-campaign-eyebrow">WEEKLY BRAND SHOWCASE</span>
+          <h2>Your Brand. <em>Everywhere.</em></h2>
+          <p>Creative branding that leaves a lasting impression.</p>
+        </div>
+        <img class="kb-campaign-logo" src="{% static 'brands/images/kb.png' %}" alt="KaleidoBrands logo" loading="lazy">
+      </div>
+    </article>
+    <article class="kb-campaign-slide kb-campaign-arrivals" data-kb-slide="2" aria-label="3 of 4: New arrivals" aria-hidden="true">
+      <div class="kb-campaign-inner kb-arrivals-inner">
+        <div class="kb-campaign-copy">
+          <span class="kb-campaign-eyebrow">FRESH FROM OUR CATALOG</span>
+          <h2>Just Added. <em>Worth Discovering.</em></h2>
+          <p>Meet the latest products from our supplier collections.</p>
+        </div>
+        <div class="kb-arrivals-display">
+          {% for product in hero_new_arrivals %}
+            <a class="kb-arrival-product{% if forloop.first %} is-active{% endif %}" data-kb-product="{{ forloop.counter0 }}" href="{{ product.get_absolute_url }}" {% if not forloop.first %}tabindex="-1"{% endif %}>
+              {% if product.display_image_url %}<img src="{{ product.display_image_url }}" alt="{{ product.name }}" loading="lazy">{% endif %}
+              <strong>{{ product.name }}</strong>
+              <small>Explore this product</small>
+            </a>
+          {% empty %}
+            <div class="kb-arrivals-empty"><strong>New products are on the way.</strong><span>Explore our full catalog today.</span></div>
+          {% endfor %}
+        </div>
+      </div>
+    </article>
+    <article class="kb-campaign-slide kb-campaign-season" data-kb-slide="3" aria-label="4 of 4: Seasonal campaign" aria-hidden="true">
+      {% if hero_season.image %}<img class="kb-campaign-bg" src="{% static hero_season.image %}" alt="" loading="lazy">{% endif %}
+      <div class="kb-campaign-shade"></div>
+      <div class="kb-campaign-inner">
+        <div class="kb-campaign-copy">
+          <span class="kb-campaign-eyebrow">{{ hero_season.label }}</span>
+          <h2>{{ hero_season.title }}</h2>
+          <p>{{ hero_season.description }}</p>
+        </div>
+        <img class="kb-campaign-logo" src="{% static 'brands/images/kb.png' %}" alt="KaleidoBrands logo" loading="lazy">
+      </div>
+    </article>
+    <div class="kb-campaign-controls">
+      <div class="kb-campaign-actions">
+        <a href="{% url 'products:home' %}" class="btn btn-kb-primary">Shop Products</a>
+        <a href="{% url 'products:quote_builder' %}" class="btn kb-campaign-quote">Build a Quote</a>
+      </div>
+      <div class="kb-campaign-navigation" aria-label="Slideshow navigation">
+        <button type="button" class="kb-campaign-arrow" data-kb-prev aria-label="Previous slide">&#8249;</button>
+        {% for n in '1234' %}<button type="button" class="kb-campaign-dot{% if forloop.first %} is-active{% endif %}" data-kb-dot="{{ forloop.counter0 }}" aria-label="Go to slide {{ forloop.counter }}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}"></button>{% endfor %}
+        <button type="button" class="kb-campaign-arrow" data-kb-next aria-label="Next slide">&#8250;</button>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="{% static 'brands/js/kb-home-hero.js' %}" defer></script>

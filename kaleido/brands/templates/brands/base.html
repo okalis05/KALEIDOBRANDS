@@ -10,12 +10,6 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        {% block title %}
-            KaleidoBrands | Promotional Products, Branded Apparel & Corporate Gifts
-        {% endblock %}
-    </title>
-
     <meta
         name="description"
         content="{% block meta_description %}KaleidoBrands provides premium promotional products, custom branded apparel, corporate gifts, catalogs, and branding solutions that help businesses create lasting impressions.{% endblock %}"
@@ -28,6 +22,12 @@
 
     <meta name="author" content="KaleidoBrands">
     <meta name="robots" content="index, follow">
+
+    <title>
+        {% block title %}
+            KaleidoBrands | Promotional Products, Branded Apparel & Corporate Gifts
+        {% endblock %}
+    </title>
 
     <link
         rel="canonical"
@@ -167,8 +167,8 @@
                 href="{% url 'brands:home' %}#home"
             >
                 <img
-                    src="{% static 'brands/images/kb-k.png' %}"
-                    alt="KaleidoBrands K logo"
+                    src="{% static 'brands/images/kb.png' %}"
+                    alt="KaleidoBrands logo"
                     class="nav-logo"
                 >
 
@@ -685,11 +685,12 @@
 
                     <span class="kb-brand-eyebrow">
                         <span class="kb-brand-eyebrow-line"></span>
-                        Trusted brands. Endless possibilities.
+                        Trusted brands. Endless possibilities
+                        <span class="kb-brand-eyebrow-line"></span>
                     </span>
 
                     <h2 id="kbBrandShowcaseTitle">
-                        Brands we <span>carry.</span>
+                        Brands <span>we carry</span><span id="point">.</span>
                     </h2>
 
                     <p>
@@ -710,78 +711,63 @@
 
             {% if showcase_brands %}
 
-                <div class="kb-brand-logo-grid">
+                <div class="kb-brand-marquee" aria-label="Featured supplier brands">
+                    <div class="kb-brand-marquee-track">
+                        <div class="kb-brand-logo-grid">
 
-                    {% for brand in showcase_brands %}
+                            {% for brand in showcase_brands %}
 
-                        <article
-                            class="kb-brand-logo-card"
-                            style="--brand-index: {{ forloop.counter0 }};"
-                        >
-                            <div class="kb-brand-logo-inner">
+                                <article
+                                    class="kb-brand-logo-card"
+                                    style="--brand-index: {{ forloop.counter0 }};"
+                                >
+                                    <div class="kb-brand-logo-inner">
 
-                                <div class="kb-brand-logo-media
-                                    {% if brand.slug == 'denwell' or brand.slug == 'hub-pen' or brand.slug == 'sugarspot' or brand.slug == 'beacon' or brand.slug == 'best' or brand.slug == 'handstands' or brand.slug == 'mixie' or brand.slug == 'origaudio' %}
-                                        kb-brand-logo-media-dark
-                                    {% endif %}
-                                ">
+                                        <div class="kb-brand-logo-media
+                                            {% if brand.slug == 'denwell' or brand.slug == 'hub-pen' or brand.slug == 'sugarspot' or brand.slug == 'beacon' or brand.slug == 'best' or brand.slug == 'handstands' or brand.slug == 'mixie' or brand.slug == 'origaudio' %}
+                                                kb-brand-logo-media-dark
+                                            {% endif %}
+                                        ">
 
-                                    {% if brand.slug == "beacon" %}
-                                        <img src="{% static 'brands/images/brand-logos/beacon.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
-                                    {% elif brand.slug == "best" %}
-                                        <img src="{% static 'brands/images/brand-logos/best.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
-                                    {% elif brand.slug == "denwell" %}
-                                        <img src="{% static 'brands/images/brand-logos/denwell.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
-                                    {% elif brand.slug == "hub-pen" %}
-                                        <img src="{% static 'brands/images/brand-logos/hub-pen.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
-                                    {% elif brand.slug == "handstands" %}
-                                        <img src="{% static 'brands/images/brand-logos/handstands.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
-                                    {% elif brand.slug == "maple-ridge" %}
-                                        <img src="{% static 'brands/images/brand-logos/maple-ridge.png' %}" alt="{{ brand.name }} logo" loading="lazy">
-                                    {% elif brand.slug == "mixie" %}
-                                        <img src="{% static 'brands/images/brand-logos/mixie.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
-                                    {% elif brand.slug == "origaudio" %}
-                                        <img src="{% static 'brands/images/brand-logos/origaudio.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
-                                    {% elif brand.slug == "sugarspot" %}
-                                        <img src="{% static 'brands/images/brand-logos/sugarspot.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
-                                    {% else %}
-                                        <span class="kb-brand-wordmark">
-                                            {{ brand.name }}
-                                        </span>
-                                    {% endif %}
+                                            {% if brand.slug == "beacon" %}
+                                                <img src="{% static 'brands/images/brand-logos/beacon.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                            {% elif brand.slug == "best" %}
+                                                <img src="{% static 'brands/images/brand-logos/best.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                            {% elif brand.slug == "denwell" %}
+                                                <img src="{% static 'brands/images/brand-logos/denwell.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                            {% elif brand.slug == "hub-pen" %}
+                                                <img src="{% static 'brands/images/brand-logos/hub-pen.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                            {% elif brand.slug == "handstands" %}
+                                                <img src="{% static 'brands/images/brand-logos/handstands.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                            {% elif brand.slug == "maple-ridge" %}
+                                                <img src="{% static 'brands/images/brand-logos/maple-ridge.png' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                            {% elif brand.slug == "mixie" %}
+                                                <img src="{% static 'brands/images/brand-logos/mixie.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                            {% elif brand.slug == "origaudio" %}
+                                                <img src="{% static 'brands/images/brand-logos/origaudio.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                            {% elif brand.slug == "sugarspot" %}
+                                                <img src="{% static 'brands/images/brand-logos/sugarspot.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                            {% elif brand.slug == "sanmar" %}
+                                                <img src="{% static 'brands/images/brand-logos/sanmar.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                            {% elif brand.slug == "pcna" %}
+                                                <img src="{% static 'brands/images/brand-logos/pcna.webp' %}" alt="{{ brand.name }} logo" loading="lazy">
+                                            {% else %}
+                                                <span class="kb-brand-wordmark">
+                                                    {{ brand.name }}
+                                                </span>
+                                            {% endif %}
 
-                                </div>
+                                        </div>
 
-                            </div>
-                        </article>
-
-                    {% endfor %}
-
-
-                    <!-- Locked-design final discovery tile -->
-                    <article class="kb-brand-logo-card kb-brand-more-card">
-
-                        <div class="kb-brand-logo-inner">
-
-                            <div class="kb-brand-more-inner">
-
-                                <span class="kb-brand-more-plus">
-                                    +
-                                </span>
-
-                                <strong>
-                                    And More
-                                </strong>
-
-                                <small>
-                                    Great Brands
-                                </small>
-
-                            </div>
-
+                                    </div>
+                                </article>
+                            {% endfor %}
                         </div>
+                    </div>
+                </div>
 
-                    </article>
+
+                    
 
                 </div>
 
@@ -890,7 +876,7 @@
                 >
                     <img
                         src="{% static 'brands/images/kb-k.png' %}"
-                        alt="KaleidoBrands K logo"
+                        alt="KaleidoBrands logo"
                         class="kb-footer-k-logo"
                     >
 
@@ -906,31 +892,7 @@
             </div>
 
 
-            <!-- CENTER: NAVIGATION -->
-            <nav
-                class="kb-footer-nav"
-                aria-label="Footer navigation"
-            >
-                <div class="kb-footer-nav-column">
-                    <a href="{% url 'brands:home' %}">
-                        Home
-                    </a>
-
-                    <a href="{% url 'products:home' %}">
-                        Shop
-                    </a>
-                </div>
-
-                <div class="kb-footer-nav-column">
-                    <a href="{% url 'brands:home' %}#about">
-                        About
-                    </a>
-
-                    <a href="{% url 'brands:home' %}#contact">
-                        Contact
-                    </a>
-                </div>
-            </nav>
+            
 
 
             <!-- RIGHT: SOCIAL -->
@@ -994,11 +956,10 @@
             </span>
 
             <div class="kb-footer-legal">
-                <a href="#">Privacy Policy</a>
+                <a href="{% url 'brands:privacy_policy' %}">Privacy Policy</a>
 
                 <span>•</span>
-
-                <a href="#">Terms of Service</a>
+                <a href="{% url 'brands:terms_of_service' %}">Terms of Service</a>
             </div>
 
         </div>
@@ -1081,6 +1042,34 @@
 
     <!-- Page-specific scripts -->
     {% block scripts %}{% endblock %}
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const track = document.querySelector(
+        ".kb-brand-marquee-track"
+    );
+
+    if (!track || track.dataset.initialized === "true") {
+        return;
+    }
+
+    const original = track.querySelector(
+        ".kb-brand-logo-grid"
+    );
+
+    if (!original) return;
+
+    const duplicate = original.cloneNode(true);
+
+    duplicate.setAttribute("aria-hidden", "true");
+
+    duplicate.querySelectorAll("a, button, input").forEach(el => {
+        el.setAttribute("tabindex", "-1");
+    });
+
+    track.appendChild(duplicate);
+    track.dataset.initialized = "true";
+});
+</script>
 
 </body>
 </html>
