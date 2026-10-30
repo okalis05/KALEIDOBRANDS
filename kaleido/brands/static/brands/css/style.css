@@ -7373,3 +7373,240 @@ label {
     }
 }
 
+
+
+/* ==========================================
+   KALEIDOBRANDS — PRECISE LAYOUT FIXES
+   ========================================== */
+
+/* 1. Keep the five feature items closer together */
+.kb-footer .kb-brand-value-row {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+}
+
+.kb-footer .kb-brand-value {
+    flex: 0 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 8px 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+/* 2. Logo stays left; socials move to far right */
+.kb-footer .kb-footer-main-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    width: 100% !important;
+    gap: 24px !important;
+}
+
+.kb-footer .kb-footer-brand {
+    justify-self: start !important;
+    text-align: left !important;
+}
+
+.kb-footer .kb-footer-connect {
+    justify-self: end !important;
+    margin-left: auto !important;
+    width: max-content !important;
+    max-width: 100% !important;
+    text-align: right !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+}
+
+.kb-footer .kb-footer-socials {
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+/* 3. Responsive layout */
+@media (max-width: 767px) {
+    .kb-footer .kb-brand-value-row {
+        gap: 8px !important;
+    }
+
+    .kb-footer .kb-brand-value {
+        padding: 8px 10px !important;
+    }
+
+    .kb-footer .kb-footer-main-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .kb-footer .kb-footer-connect {
+        justify-self: start !important;
+        margin-left: 0 !important;
+        align-items: flex-start !important;
+        text-align: left !important;
+    }
+
+    .kb-footer .kb-footer-socials {
+        justify-content: flex-start !important;
+    }
+}
+
+.kb-footer .kb-brand-value {
+    margin-bottom: 0 !important;
+}
+
+
+
+
+
+
+
+
+
+
+/* =========================================
+   KALEIDOBRANDS — PRODUCT CARD IMAGE FIX
+   ========================================= */
+
+/* Keep product image containers compact */
+.product-card > a.product-card-image {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: 100% !important;
+    height: 230px !important;
+    min-height: 0 !important;
+    max-height: 230px !important;
+
+    padding: 14px !important;
+    overflow: hidden !important;
+    position: relative;
+    flex-shrink: 0 !important;
+}
+
+/* Prevent images from stretching vertically */
+.product-card > a.product-card-image > img {
+    display: block !important;
+
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+
+    object-fit: contain !important;
+    object-position: center !important;
+}
+
+/* Keep product badges positioned inside the image */
+.product-card > a.product-card-image .product-card-badges {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+}
+
+
+
+
+/* ==========================================
+   SHARED CATEGORY + INDUSTRY DIRECTORY CARDS
+   ========================================== */
+
+.kb-directory-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 24px;
+    background: #fff;
+}
+
+.kb-directory-card .kb-directory-card-image {
+    width: 100%;
+    height: 225px !important;
+    min-height: 225px !important;
+    max-height: 225px !important;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.kb-directory-card .kb-directory-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.kb-directory-card .kb-directory-card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.kb-directory-card .kb-directory-card-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.kb-directory-card .kb-directory-card-link {
+    font-weight: 700;
+    color: #0066e6;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.kb-directory-card .kb-directory-card-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 767px) {
+    .kb-directory-card .kb-directory-card-image {
+        height: 190px !important;
+        min-height: 190px !important;
+        max-height: 190px !important;
+    }
+}
+
+
+
+
+/* Orange gradient Explore button */
+.kb-directory-card .kb-directory-card-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 50px;
+
+    background: linear-gradient(110deg, #ff3030 0%, #ff7900 55%, #ffb900 100%);
+    color: #ffffff !important;
+
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none !important;
+    white-space: nowrap;
+
+    box-shadow: 0 8px 22px rgba(255, 95, 35, 0.25);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.kb-directory-card .kb-directory-card-link:hover {
+    color: #ffffff !important;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(255, 95, 35, 0.45);
+}

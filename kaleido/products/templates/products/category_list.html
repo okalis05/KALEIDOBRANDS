@@ -2,7 +2,7 @@
 
 {% block title %}Shop by Category | KaleidoBrands{% endblock %}
 
-{% block content %}
+{% block body %}
 
 <section class="section-panel">
     <div class="container">
@@ -19,66 +19,22 @@
         <div class="row g-4">
 
             {% for card in category_cards %}
-                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                
+<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
 
-                    <a
-                        href="{% url 'products:category' card.category.slug %}"
-                        class="text-decoration-none text-dark"
-                    >
-                        <article class="product-card h-100">
+    {% if card.representative_product.image %}
+        {% with image_url=card.representative_product.image.url %}
+            {% url 'products:category' card.category.slug as destination %}
+            {% include "products/partials/directory_card.html" with card_image=image_url card_name=card.category.name card_type="Product Category" card_description=card.category.description card_count=card.product_count card_url=destination %}
+        {% endwith %}
 
-                            <div class="product-card-image">
+    {% else %}
+        {% url 'products:category' card.category.slug as destination %}
+        {% include "products/partials/directory_card.html" with card_image=card.representative_product.external_image_url card_name=card.category.name card_type="Product Category" card_description=card.category.description card_count=card.product_count card_url=destination %}
+    {% endif %}
 
-                                {% if card.representative_product %}
+</div>
 
-                                    {% if card.representative_product.image %}
-                                        <img
-                                            src="{{ card.representative_product.image.url }}"
-                                            alt="{{ card.category.name }}"
-                                            loading="lazy"
-                                        >
-
-                                    {% elif card.representative_product.external_image_url %}
-                                        <img
-                                            src="{{ card.representative_product.external_image_url }}"
-                                            alt="{{ card.category.name }}"
-                                            loading="lazy"
-                                        >
-                                    {% endif %}
-
-                                {% endif %}
-
-                            </div>
-
-                            <div class="product-card-content">
-
-                                <div class="product-card-meta">
-                                    Product Category
-                                </div>
-
-                                <h3 class="product-card-title">
-                                    {{ card.category.name }}
-                                </h3>
-
-                                {% if card.category.description %}
-                                    <p class="product-card-description">
-                                        {{ card.category.description|truncatewords:18 }}
-                                    </p>
-                                {% endif %}
-
-                                <div class="mt-auto pt-3">
-                                    <strong>
-                                        {{ card.product_count }}
-                                    </strong>
-                                    product{{ card.product_count|pluralize }}
-                                </div>
-
-                            </div>
-
-                        </article>
-                    </a>
-
-                </div>
 
             {% empty %}
 

@@ -158,7 +158,6 @@ HPG_CATALOGS = {
         ),
     },
 
-
     "jornik": {
         "external_id": "jornik-promostandards",
         "name": "Jornik Manufacturing Corp PromoStandards Catalog",

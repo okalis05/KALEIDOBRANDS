@@ -2,7 +2,7 @@
 
 {% block title %}Shop by Industry | KaleidoBrands{% endblock %}
 
-{% block content %}
+{% block body %}
 
 <section class="section-panel">
     <div class="container">
@@ -19,58 +19,22 @@
         <div class="row g-4">
 
             {% for industry in industries %}
+            
+           
+<div class="col-12 col-sm-6 col-lg-4 col-xl-3">
 
-                <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+    {% url 'products:industry' industry.slug as destination %}
 
-                    <a
-                        href="{% url 'products:industry' industry.slug %}"
-                        class="text-decoration-none text-dark"
-                    >
+    {% if industry.product.image %}
+        {% include "products/partials/directory_card.html" with card_image=industry.product.image.url card_name=industry.name card_type="Shop by Industry" card_description=industry.description card_count=industry.product_count card_url=destination %}
 
-                        <article class="product-card h-100">
+    {% else %}
+        {% include "products/partials/directory_card.html" with card_image=industry.product.external_image_url card_name=industry.name card_type="Shop by Industry" card_description=industry.description card_count=industry.product_count card_url=destination %}
+    {% endif %}
 
-                            <div class="product-card-content">
+</div>
 
-                                <div class="product-card-meta">
-                                    Industry
-                                </div>
 
-                                <h3 class="product-card-title">
-                                    {{ industry.name }}
-                                </h3>
-
-                                {% if industry.description %}
-
-                                    <p class="product-card-description">
-                                        {{ industry.description|truncatewords:20 }}
-                                    </p>
-
-                                {% else %}
-
-                                    <p class="product-card-description">
-                                        Explore products selected for
-                                        {{ industry.name }} organizations.
-                                    </p>
-
-                                {% endif %}
-
-                                <div class="mt-auto pt-3">
-
-                                    <strong>
-                                        {{ industry.product_count }}
-                                    </strong>
-
-                                    product{{ industry.product_count|pluralize }}
-
-                                </div>
-
-                            </div>
-
-                        </article>
-
-                    </a>
-
-                </div>
 
             {% empty %}
 

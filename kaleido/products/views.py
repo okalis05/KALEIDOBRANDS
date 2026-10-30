@@ -24,6 +24,8 @@ from .models import (
     SupplierPurchaseOrder,
     SupplierSyncLog,
 )
+from django.utils.text import slugify
+from brands.views import HOME_INDUSTRIES, build_home_industry_cards
 from django.views.decorators.http import require_POST
 import csv
 import tempfile
@@ -760,27 +762,10 @@ def brand_list(request):
 
 
 def industry_list(request):
-    """
-    Customer-facing directory of all active industries.
-    """
+    industries = build_home_industry_cards()
 
-    industries = (
-        Industry.objects
-        .filter(
-            is_active=True,
-        )
-        .annotate(
-            product_count=Count(
-                "products",
-                filter=Q(products__is_active=True),
-                distinct=True,
-            )
-        )
-        .order_by(
-            "order",
-            "name",
-        )
-    )
+    for industry in industries:
+        industry["slug"] = slugify(industry["name"])
 
     return render(
         request,
@@ -965,34 +950,77 @@ def category_detail(request, slug):
 # ============================================================
 
 
+
 def industry_detail(request, slug):
-    industry = get_object_or_404(
-        Industry,
+    # First, check the eight homepage industry collections.
+    home_config = next(
+        (
+            item for item in HOME_INDUSTRIES
+            if slugify(item["name"]) == slug
+        ),
+        None,
+    )
+
+    # Preserve support for existing Industry database records.
+    industry = Industry.objects.filter(
         slug=slug,
         is_active=True,
-    )
+    ).first()
 
-    products = (
-        _active_products()
-        .filter(
-            industry_groups=industry,
+    if home_config is not None:
+        # Use the same category mapping as the homepage.
+        category_slugs = home_config["category_slugs"]
+
+        products = (
+            _active_products()
+            .filter(category__slug__in=category_slugs)
+            .distinct()
         )
-        .distinct()
-        .order_by(
-            "-is_featured",
-            "name",
+
+        categories = (
+            Category.objects
+            .filter(
+                is_active=True,
+                slug__in=category_slugs,
+            )
+            .order_by("order", "name")
         )
-    )
 
-    query = request.GET.get(
-        "q",
-        "",
-    ).strip()
+        # Provide the fields expected by the existing template.
+        if industry is None:
+            industry = {
+                "name": home_config["name"],
+                "slug": slug,
+                "description": home_config["description"],
+            }
 
-    category_slug = request.GET.get(
-        "category",
-        "",
-    ).strip()
+    else:
+        # Original behavior for database-backed industries.
+        industry = get_object_or_404(
+            Industry,
+            slug=slug,
+            is_active=True,
+        )
+
+        products = (
+            _active_products()
+            .filter(industry_groups=industry)
+            .distinct()
+        )
+
+        categories = (
+            Category.objects
+            .filter(
+                is_active=True,
+                products__industry_groups=industry,
+                products__is_active=True,
+            )
+            .distinct()
+            .order_by("order", "name")
+        )
+
+    query = request.GET.get("q", "").strip()
+    category_slug = request.GET.get("category", "").strip()
 
     if query:
         products = products.filter(
@@ -1007,30 +1035,17 @@ def industry_detail(request, slug):
 
     if category_slug:
         products = products.filter(
-            category__slug=category_slug,
+            category__slug=category_slug
         )
 
-    categories = (
-        Category.objects
-        .filter(
-            is_active=True,
-            products__industry_groups=industry,
-            products__is_active=True,
-        )
-        .distinct()
-        .order_by(
-            "order",
-            "name",
-        )
+    products = products.distinct().order_by(
+        "-is_featured",
+        "name",
     )
 
-    paginator = Paginator(
-        products,
-        24,
-    )
-
+    paginator = Paginator(products, 24)
     page_obj = paginator.get_page(
-        request.GET.get("page"),
+        request.GET.get("page")
     )
 
     context = {
@@ -1048,6 +1063,7 @@ def industry_detail(request, slug):
         "products/industry.html",
         context,
     )
+
 
 
 # ============================================================

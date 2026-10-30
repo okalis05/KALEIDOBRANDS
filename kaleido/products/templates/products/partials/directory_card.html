@@ -1,0 +1,52 @@
+
+<article class="product-card kb-directory-card h-100">
+
+    <!-- Shared image area -->
+    <div class="product-card-image kb-directory-card-image">
+
+        {% if card_image %}
+            <img
+                src="{{ card_image }}"
+                alt="{{ card_name }} promotional products"
+                loading="lazy"
+            >
+        {% else %}
+            <div class="product-placeholder-themed">
+                <span>✦</span>
+                <strong>{{ card_name|slice:":2"|upper }}</strong>
+            </div>
+        {% endif %}
+
+    </div>
+
+    <!-- Shared content area -->
+    <div class="product-card-content kb-directory-card-content">
+
+        <div class="product-card-meta">
+            {{ card_type }}
+        </div>
+
+        <h3 class="product-card-title">
+            {{ card_name }}
+        </h3>
+
+        {% if card_description %}
+            <p class="product-card-description">
+                {{ card_description }}
+            </p>
+        {% endif %}
+
+        <div class="kb-directory-card-footer">
+            <span>
+                <strong>{{ card_count }}</strong>
+                product{{ card_count|pluralize }}
+            </span>
+
+            <a href="{{ card_url }}" class="kb-directory-card-link">
+                Explore <span aria-hidden="true">↗</span>
+            </a>
+        </div>
+
+    </div>
+
+</article>
