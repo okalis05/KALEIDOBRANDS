@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const revealElements = document.querySelectorAll(".reveal");
     const scrollTopButton = document.getElementById("scrollTop");
-    const navLinks = document.querySelectorAll(".nav-link, .navbar-brand, .hero-actions a, .catalog-pill");
-
     const revealObserver = new IntersectionObserver(
         function (entries) {
             entries.forEach(function (entry) {
@@ -35,19 +33,42 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    navLinks.forEach(function (link) {
-        link.addEventListener("click", function () {
-            const navbarCollapse = document.querySelector(".navbar-collapse");
+    
+/* ==========================================
+   KALEIDOBRANDS — MOBILE NAVBAR FIX
+   Close navbar only when a navigation link
+   is selected, not when opening a dropdown.
+   ========================================== */
 
-            if (navbarCollapse && navbarCollapse.classList.contains("show")) {
-                const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
+document.querySelectorAll(
+    ".kb-navbar .navbar-brand, " +
+    ".kb-navbar .navbar-collapse .nav-link:not(.dropdown-toggle), " +
+    ".kb-navbar .navbar-collapse .dropdown-item"
+).forEach(function (link) {
 
-                if (bsCollapse) {
-                    bsCollapse.hide();
-                }
-            }
-        });
+    link.addEventListener("click", function () {
+
+        const navbarCollapse = document.getElementById("mainNav");
+
+        if (!navbarCollapse ||
+            !navbarCollapse.classList.contains("show")) {
+            return;
+        }
+
+        if (window.bootstrap) {
+            const bsCollapse =
+                bootstrap.Collapse.getOrCreateInstance(
+                    navbarCollapse,
+                    { toggle: false }
+                );
+
+            bsCollapse.hide();
+        }
+
     });
+
+});
+
 
     const params = new URLSearchParams(window.location.search);
 
