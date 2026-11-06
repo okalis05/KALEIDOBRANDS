@@ -1,54 +1,507 @@
+
 {% extends "brands/base.html" %}
 
-{% block title %}
-Create Shipment | KaleidoBrands
-{% endblock %}
+{% block title %}Create Shipment | KaleidoBrands{% endblock %}
 
 {% block body %}
-<main class="inner-page">
-    <section class="section-panel">
-        <div class="container">
 
-            <div class="section-heading text-center">
-                <span>Shipping Operations</span>
-                <h1>Create Shipment</h1>
-                <p>
-                    Customer Order {{ order.order_number }}
-                </p>
+<style>
+/* KaleidoBrands Create Shipment — Quote Builder aesthetic */
+
+.kb-ship-page {
+    min-height: 85vh;
+    background: #f8fbff;
+    color: #101b33;
+}
+
+.kb-ship-hero {
+    padding: 46px 20px 48px;
+    text-align: center;
+    background:
+        radial-gradient(ellipse at 5% 30%, rgba(60, 133, 255, .15), transparent 48%),
+        radial-gradient(ellipse at 95% 25%, rgba(255, 91, 130, .13), transparent 48%),
+        linear-gradient(110deg, #eef5ff, #fff, #fff3f6);
+    border-bottom: 1px solid #e5ebf4;
+}
+
+.kb-ship-eyebrow {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 30px;
+    background: #fff;
+    color: #1765e8;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.kb-ship-hero h1 {
+    margin: 16px 0 12px;
+    font-size: clamp(36px, 5vw, 58px);
+    font-weight: 850;
+    letter-spacing: -2px;
+    color: #101b33;
+}
+
+.kb-ship-hero h1 span {
+    background: linear-gradient(100deg, #1479ef, #6853ef, #e12e86, #ff8b16);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.kb-ship-hero p {
+    margin: 0 auto;
+    max-width: 650px;
+    color: #526581;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.kb-ship-order {
+    display: inline-block;
+    margin-top: 17px;
+    padding: 8px 17px;
+    border-radius: 30px;
+    background: rgba(255,255,255,.8);
+    border: 1px solid #e0e8f4;
+    color: #315681;
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.kb-ship-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 0 75px;
+}
+
+.kb-ship-card {
+    height: 100%;
+    background: #fff;
+    border: 1px solid #e5ebf3;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 14px 38px rgba(24, 50, 93, .055);
+}
+
+.kb-ship-card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.kb-ship-icon {
+    width: 49px;
+    height: 49px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 21px;
+    flex-shrink: 0;
+    box-shadow: 0 10px 22px rgba(30, 103, 239, .15);
+}
+
+.kb-ship-icon--blue {
+    background: linear-gradient(135deg, #1b8aff, #1459e9);
+}
+
+.kb-ship-icon--pink {
+    background: linear-gradient(135deg, #ff527b, #f02560);
+    box-shadow: 0 10px 22px rgba(240, 37, 96, .14);
+}
+
+.kb-ship-overline {
+    margin-bottom: 3px;
+    color: #637694;
+    font-size: 10px;
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+.kb-ship-card-header h2 {
+    margin: 0;
+    color: #101b33;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -.6px;
+}
+
+.kb-ship-card-header p {
+    margin: 5px 0 0;
+    color: #657894;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.kb-ship-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 19px 16px;
+}
+
+.kb-ship-field {
+    min-width: 0;
+}
+
+.kb-ship-field--full {
+    grid-column: 1 / -1;
+}
+
+.kb-ship-field label,
+.kb-ship-item label {
+    display: block;
+    margin-bottom: 8px;
+    color: #15223b;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.kb-ship-field input:not([type="checkbox"]):not([type="radio"]),
+.kb-ship-field select,
+.kb-ship-field textarea,
+.kb-ship-item input:not([type="checkbox"]):not([type="radio"]),
+.kb-ship-item select,
+.kb-ship-item textarea {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-height: 45px;
+    padding: 10px 12px;
+    background: #fff;
+    color: #172842;
+    border: 1px solid #d8e2f0;
+    border-radius: 11px;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.kb-ship-field textarea,
+.kb-ship-item textarea {
+    min-height: 105px;
+    resize: vertical;
+}
+
+.kb-ship-field input:focus,
+.kb-ship-field select:focus,
+.kb-ship-field textarea:focus,
+.kb-ship-item input:focus,
+.kb-ship-item select:focus,
+.kb-ship-item textarea:focus {
+    outline: none;
+    border-color: #3785f5;
+    box-shadow: 0 0 0 3px rgba(55,133,245,.1);
+}
+
+.kb-ship-field input[type="checkbox"],
+.kb-ship-item input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+}
+
+.kb-ship-items {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.kb-ship-item {
+    padding: 18px;
+    border: 1px solid #e0e8f3;
+    border-radius: 15px;
+    background: #fbfcff;
+}
+
+.kb-ship-item input[type="number"] {
+    max-width: 190px;
+}
+
+.kb-ship-help {
+    display: block;
+    margin-top: 6px;
+    color: #72829b;
+    font-size: 11px;
+}
+
+.kb-ship-error {
+    margin-top: 7px;
+    color: #c92c47;
+    font-size: 12px;
+}
+
+.kb-ship-error ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.kb-ship-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 23px;
+    padding: 17px;
+    border: 1px solid #dce9ff;
+    border-radius: 15px;
+    background: #f1f6ff;
+    color: #2565d7;
+}
+
+.kb-ship-info i {
+    font-size: 19px;
+}
+
+.kb-ship-info strong {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 12px;
+}
+
+.kb-ship-info p {
+    margin: 0;
+    color: #59708f;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.kb-ship-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 55px;
+    padding: 13px 38px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(105deg, #ff3030, #ff7818 65%, #ffb400);
+    color: #fff;
+    font-size: 17px;
+    font-weight: 800;
+    box-shadow: 0 12px 28px rgba(255, 105, 35, .2);
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+}
+
+.kb-ship-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px rgba(255, 105, 35, .25);
+    color: #fff;
+}
+
+.kb-ship-submit:focus-visible {
+    outline: 3px solid #1765e8;
+    outline-offset: 4px;
+}
+
+@media (max-width: 767.98px) {
+    .kb-ship-hero {
+        padding: 36px 15px;
+    }
+
+    .kb-ship-hero h1 {
+        letter-spacing: -1px;
+    }
+
+    .kb-ship-card {
+        padding: 21px;
+        border-radius: 19px;
+    }
+
+    .kb-ship-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .kb-ship-field--full {
+        grid-column: auto;
+    }
+
+    .kb-ship-submit {
+        width: 100%;
+    }
+}
+</style>
+
+<main class="kb-ship-page">
+
+    <!-- Quote Builder-inspired header -->
+    <section class="kb-ship-hero">
+        <div class="container">
+            <div class="kb-ship-eyebrow">
+                KaleidoBrands Shipping Studio
             </div>
 
-            <form method="post" class="mt-5">
-                {% csrf_token %}
+            <h1>Create <span>Shipment</span></h1>
 
-                <div class="row g-4">
+            <p>
+                Enter the shipping details and specify the items to ship.
+            </p>
 
-                    <div class="col-lg-6">
-                        <div class="supplier-admin-panel">
-                            <h3>Shipment Details</h3>
-                            {{ shipment_form.as_p }}
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <div class="supplier-admin-panel">
-                            <h3>Shipment Items</h3>
-                            {{ item_form.as_p }}
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="text-center mt-4">
-                    <button
-                        type="submit"
-                        class="btn btn-kb-primary btn-lg"
-                    >
-                        Create Shipment
-                    </button>
-                </div>
-            </form>
-
+            <div class="kb-ship-order">
+                Customer Order {{ order.order_number }}
+            </div>
         </div>
     </section>
+
+    <section class="container kb-ship-content">
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if shipment_form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ shipment_form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {% if item_form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ item_form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="row g-4 align-items-stretch">
+
+                <!-- Shipment details -->
+                <div class="col-lg-6">
+                    <div class="kb-ship-card">
+
+                        <div class="kb-ship-card-header">
+                            <div class="kb-ship-icon kb-ship-icon--blue">
+                                <i class="bi bi-truck" aria-hidden="true"></i>
+                            </div>
+
+                            <div>
+                                <div class="kb-ship-overline">
+                                    Shipping Information
+                                </div>
+                                <h2>Shipment Details</h2>
+                                <p>
+                                    Enter the shipping and tracking information.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="kb-ship-fields">
+
+                            {% for field in shipment_form %}
+                                {% if field.is_hidden %}
+                                    {{ field }}
+                                {% else %}
+                                    <div class="kb-ship-field {% if field.name == 'notes' %}kb-ship-field--full{% endif %}">
+
+                                        <label for="{{ field.id_for_label }}">
+                                            {{ field.label }}
+                                            {% if field.field.required %}
+                                                <span class="text-danger">*</span>
+                                            {% endif %}
+                                        </label>
+
+                                        {{ field }}
+
+                                        {% if field.help_text %}
+                                            <small class="kb-ship-help">
+                                                {{ field.help_text }}
+                                            </small>
+                                        {% endif %}
+
+                                        {% if field.errors %}
+                                            <div class="kb-ship-error">
+                                                {{ field.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipment items -->
+                <div class="col-lg-6">
+                    <div class="kb-ship-card">
+
+                        <div class="kb-ship-card-header">
+                            <div class="kb-ship-icon kb-ship-icon--pink">
+                                <i class="bi bi-box-seam" aria-hidden="true"></i>
+                            </div>
+
+                            <div>
+                                <div class="kb-ship-overline">
+                                    Order Fulfillment
+                                </div>
+                                <h2>Shipment Items</h2>
+                                <p>
+                                    Specify the quantities being shipped.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="kb-ship-items">
+
+                            {% for field in item_form %}
+                                {% if field.is_hidden %}
+                                    {{ field }}
+                                {% else %}
+                                    <div class="kb-ship-item">
+
+                                        <label for="{{ field.id_for_label }}">
+                                            {{ field.label }}
+                                            {% if field.field.required %}
+                                                <span class="text-danger">*</span>
+                                            {% endif %}
+                                        </label>
+
+                                        {{ field }}
+
+                                        {% if field.help_text %}
+                                            <small class="kb-ship-help">
+                                                {{ field.help_text }}
+                                            </small>
+                                        {% endif %}
+
+                                        {% if field.errors %}
+                                            <div class="kb-ship-error">
+                                                {{ field.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="kb-ship-info">
+                            <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+                            <div>
+                                <strong>Shipment Information</strong>
+                                <p>
+                                    Review the shipping details and quantities
+                                    before creating the shipment.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="text-center mt-4 pt-2">
+                <button type="submit" class="kb-ship-submit">
+                    <i class="bi bi-truck" aria-hidden="true"></i>
+                    Create Shipment
+                </button>
+            </div>
+
+        </form>
+
+    </section>
 </main>
+
 {% endblock %}

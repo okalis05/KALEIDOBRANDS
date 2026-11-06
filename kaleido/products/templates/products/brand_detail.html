@@ -1,0 +1,62 @@
+
+{% extends "brands/base.html" %}
+
+{% block title %}{{ supplier_name }} Products | KaleidoBrands{% endblock %}
+
+{% block body %}
+<main class="inner-page marketplace-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center">
+                <span>Shop by Brand</span>
+                <h1>{{ supplier_name }}</h1>
+                <p>Explore promotional products from {{ supplier_name }}.</p>
+            </div>
+
+            <form method="get" class="product-filter-panel mt-5">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-9">
+                        <label for="brandSearch">Search products</label>
+                        <input
+                            id="brandSearch"
+                            type="search"
+                            name="q"
+                            value="{{ query }}"
+                            class="form-control"
+                            placeholder="Search {{ supplier_name }} products..."
+                        >
+                    </div>
+                    <div class="col-md-3 d-grid">
+                        <button class="btn btn-kb-primary" type="submit">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="marketplace-results-heading mt-5">
+                <div>
+                    <span>Products</span>
+                    <h2>{{ paginator.count }} results</h2>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-2">
+                {% for product in products %}
+                    <div class="col-md-6 col-lg-3 reveal">
+                        {% include "products/partials/product_card.html" %}
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <h3>No matching products found.</h3>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% include "products/partials/pagination.html" %}
+
+        </div>
+    </section>
+</main>
+{% endblock %}

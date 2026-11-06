@@ -714,50 +714,75 @@ def category_list(request):
     )
 
 
+
 def brand_list(request):
-    """
-    Customer-facing directory of marketplace product brands/suppliers.
-    """
+    from django.db.models import Count
+    from django.urls import reverse
+    from django.utils.text import slugify
 
-    supplier_counts = (
-        _active_products()
-        .filter(
-            supplier_record__isnull=False,
-        )
-        .values("supplier_record_id")
-        .annotate(
-            product_count=Count("id")
-        )
+    excluded_names = ["HPG", "Kaeser & Blair"]
+
+    supplier_rows = (
+        Product.objects
+        .filter(is_active=True, supplier_record__name="HPG")
+        .exclude(supplier__isnull=True)
+        .exclude(supplier__exact="")
+        .exclude(supplier__in=excluded_names)
+        .values("supplier")
+        .annotate(product_count=Count("pk"))
+        .order_by("supplier")
     )
 
-    count_map = {
-        row["supplier_record_id"]: row["product_count"]
-        for row in supplier_counts
-    }
+    supplier_cards = []
 
-    suppliers = (
-        Supplier.objects
-        .filter(
-            id__in=count_map.keys()
+    for row in supplier_rows:
+        supplier_name = row["supplier"]
+
+        supplier_products = Product.objects.filter(
+            is_active=True,
+            supplier_record__name="HPG",
+            supplier=supplier_name,
         )
-        .order_by("name")
-    )
 
-    brands = []
-
-    for supplier in suppliers:
-        supplier.product_count = count_map.get(
-            supplier.id,
-            0,
+        representative = (
+            supplier_products
+            .exclude(image="")
+            .exclude(image__isnull=True)
+            .first()
         )
-        brands.append(supplier)
+
+        if representative is None:
+            representative = (
+                supplier_products
+                .exclude(external_image_url="")
+                .exclude(external_image_url__isnull=True)
+                .first()
+            )
+
+        image_url = ""
+
+        if representative:
+            if representative.image:
+                image_url = representative.image.url
+            elif representative.external_image_url:
+                image_url = representative.external_image_url
+
+        supplier_cards.append({
+            "name": supplier_name,
+            "slug": slugify(supplier_name),
+            "description": f"Explore promotional products from {supplier_name}.",
+            "product_count": row["product_count"],
+            "image_url": image_url,
+            "url": reverse(
+                "products:brand_detail",
+                kwargs={"slug": slugify(supplier_name)},
+            ),
+        })
 
     return render(
         request,
         "products/brand_list.html",
-        {
-            "brands": brands,
-        },
+        {"supplier_cards": supplier_cards},
     )
 
 
@@ -1310,7 +1335,9 @@ def product_search(request):
         suppliers = form.cleaned_data.get(
             "suppliers",
         )
-
+        brands = form.cleaned_data.get(
+            "brands"
+        ) or []
         colors = form.cleaned_data.get(
             "colors",
         ) or []
@@ -1381,6 +1408,12 @@ def product_search(request):
         if suppliers:
             products = products.filter(
                 supplier_record__in=suppliers,
+            )
+
+        if brands:
+            products = products.filter(
+                supplier_record__name="HPG",
+                supplier__in=brands,
             )
 
         if colors:
@@ -1473,6 +1506,7 @@ def product_search(request):
     if form.is_valid():
         cleaned_data = form.cleaned_data
 
+
         if cleaned_data.get("q"):
             active_filter_chips.append(
                 {
@@ -1491,6 +1525,14 @@ def product_search(request):
                         request,
                         "categories",
                     ),
+                }
+            )
+        for brand in cleaned_data.get("brands", []):
+            active_filter_chips.append(
+                {
+                    "label": "Brand",
+                    "value": brand,
+                    "url": _query_string_without(request, "brands"),
                 }
             )
 
@@ -2891,5 +2933,63 @@ def product_compare(request):
             "compare_ids": valid_ids,
             "compare_count": len(valid_ids),
             "maximum_compare_products": MAX_COMPARE_PRODUCTS,
+        },
+    )
+
+
+def brand_detail(request, slug):
+    from django.http import Http404
+    from django.core.paginator import Paginator
+    from django.utils.text import slugify
+
+    excluded_names = {"HPG", "Kaeser & Blair"}
+
+    supplier_names = (
+        Product.objects
+        .filter(is_active=True, supplier_record__name="HPG")
+        .exclude(supplier__isnull=True)
+        .exclude(supplier="")
+        .values_list("supplier", flat=True)
+        .distinct()
+    )
+
+    supplier_name = next(
+        (
+            name for name in supplier_names
+            if name not in excluded_names and slugify(name) == slug
+        ),
+        None,
+    )
+
+    if supplier_name is None:
+        raise Http404("Supplier not found.")
+
+    products = (
+        Product.objects
+        .filter(
+            is_active=True,
+            supplier_record__name="HPG",
+            supplier=supplier_name,
+        )
+        .order_by("name", "pk")
+    )
+
+    query = request.GET.get("q", "").strip()
+
+    if query:
+        products = products.filter(name__icontains=query)
+
+    paginator = Paginator(products, 24)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
+    return render(
+        request,
+        "products/brand_detail.html",
+        {
+            "supplier_name": supplier_name,
+            "products": page_obj.object_list,
+            "page_obj": page_obj,
+            "paginator": paginator,
+            "query": query,
         },
     )

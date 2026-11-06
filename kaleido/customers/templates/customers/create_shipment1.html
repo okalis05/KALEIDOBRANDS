@@ -1,0 +1,54 @@
+{% extends "brands/base.html" %}
+
+{% block title %}
+Create Shipment | KaleidoBrands
+{% endblock %}
+
+{% block body %}
+<main class="inner-page">
+    <section class="section-panel">
+        <div class="container">
+
+            <div class="section-heading text-center">
+                <span>Shipping Operations</span>
+                <h1>Create Shipment</h1>
+                <p>
+                    Customer Order {{ order.order_number }}
+                </p>
+            </div>
+
+            <form method="post" class="mt-5">
+                {% csrf_token %}
+
+                <div class="row g-4">
+
+                    <div class="col-lg-6">
+                        <div class="supplier-admin-panel">
+                            <h3>Shipment Details</h3>
+                            {{ shipment_form.as_p }}
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="supplier-admin-panel">
+                            <h3>Shipment Items</h3>
+                            {{ item_form.as_p }}
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="text-center mt-4">
+                    <button
+                        type="submit"
+                        class="btn btn-kb-primary btn-lg"
+                    >
+                        Create Shipment
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </section>
+</main>
+{% endblock %}

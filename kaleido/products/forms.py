@@ -137,6 +137,13 @@ class ProductSearchForm(forms.Form):
         widget=forms.CheckboxSelectMultiple,
     )
 
+    brands = forms.MultipleChoiceField(
+        required=False,
+        label="Brands",
+        choices=(),
+        widget=forms.CheckboxSelectMultiple,
+    )
+
     colors = forms.MultipleChoiceField(
         required=False,
         choices=(),
@@ -209,6 +216,22 @@ class ProductSearchForm(forms.Form):
                 "name",
             )
         )
+
+        brand_names = (
+            Product.objects
+            .filter(is_active=True, supplier_record__name="HPG")
+            .exclude(supplier__isnull=True)
+            .exclude(supplier="")
+            .exclude(supplier__in=["HPG", "Kaeser & Blair"])
+            .order_by("supplier")
+            .values_list("supplier", flat=True)
+            .distinct()
+        )
+
+        self.fields["brands"].choices = [
+            (name, name)
+            for name in brand_names
+        ]
 
         self.fields["industries"].queryset = (
             Industry.objects

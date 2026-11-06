@@ -23,18 +23,20 @@
                     <span>Start Exploring</span>
                     <h2>What are you looking for?</h2>
                 </div>
-
-                <form action="{% url 'products:search' %}" method="get" class="home-marketplace-search">
+               
+                <form action="{% url 'products:search' %}" method="get" class="home-marketplace-search kb-home-search">
+                    
+                    <i class="bi bi-search kb-market-search-icon aria-hidden="true"></i>
                     <input
                         type="search"
                         name="q"
-                        class="catalog-search-input"
-                        placeholder="Search drinkware, apparel, bags, tech, gifts..."
+                        placeholder="search products..."
+                        class="kb-home-search-input"
                         autocomplete="off"
                     >
 
-                    <button type="submit" class="btn btn-kb-primary">
-                        Search Products
+                    <button type="submit" class="btn btn-kb-primary kb-home-search-button">
+                        Search 
                     </button>
                 </form>
 

@@ -228,7 +228,11 @@ urlpatterns = [
         views.compare_clear,
         name="compare_clear",
     ),
-
+    path(
+        "brand/<slug:slug>/",
+        views.brand_detail,
+        name="brand_detail",
+    ),
     path(
         "<slug:slug>/",
         views.product_detail,

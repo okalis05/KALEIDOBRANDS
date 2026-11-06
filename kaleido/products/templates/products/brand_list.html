@@ -1,3 +1,4 @@
+
 {% extends "brands/base.html" %}
 
 {% block title %}Shop by Brand | KaleidoBrands{% endblock %}
@@ -18,47 +19,11 @@
 
         <div class="row g-4">
 
-            {% for brand in brands %}
+            {% for card in supplier_cards %}
 
                 <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
 
-                    <a
-                        href="{% url 'products:supplier_detail' brand.slug %}"
-                        class="text-decoration-none text-dark"
-                    >
-
-                        <article class="product-card h-100">
-
-                            <div class="product-card-content">
-
-                                <div class="product-card-meta">
-                                    Product Brand
-                                </div>
-
-                                <h3 class="product-card-title">
-                                    {{ brand.name }}
-                                </h3>
-
-                                <p class="product-card-description">
-                                    Explore promotional products from
-                                    {{ brand.name }}.
-                                </p>
-
-                                <div class="mt-auto pt-3">
-
-                                    <strong>
-                                        {{ brand.product_count }}
-                                    </strong>
-
-                                    product{{ brand.product_count|pluralize }}
-
-                                </div>
-
-                            </div>
-
-                        </article>
-
-                    </a>
+                    {% include "products/partials/directory_card.html" with card_name=card.name card_image=card.image_url card_type="Product Brand" card_description=card.description card_count=card.product_count card_url=card.url %}
 
                 </div>
 
@@ -66,7 +31,7 @@
 
                 <div class="col-12">
                     <div class="text-center py-5">
-                        <h3>No brands available yet.</h3>
+                        <h3>No product brands available yet.</h3>
                     </div>
                 </div>
 

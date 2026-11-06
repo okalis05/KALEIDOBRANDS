@@ -304,7 +304,7 @@ img {
     outline-offset: 2px;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1200px) and (hover: hover) and (pointer: fine) {
     .kb-navbar .dropdown:hover > .dropdown-menu {
         display: block;
         margin-top: 0;
@@ -7609,4 +7609,487 @@ label {
     color: #ffffff !important;
     transform: translateY(-3px);
     box-shadow: 0 12px 30px rgba(255, 95, 35, 0.45);
+}
+
+
+
+/* KaleidoBrands marketplace search refinement */
+
+.kb-search-layout {
+    align-items: start;
+}
+
+.kb-search-sidebar {
+    background: #fff;
+    border: 1px solid #e8eaf0;
+    border-radius: 20px;
+    padding: 22px;
+}
+
+.kb-search-sidebar-title {
+    font-size: 1.15rem;
+    font-weight: 750;
+    margin: 0 0 20px;
+}
+
+.kb-search-sidebar .marketplace-filter-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+}
+
+.kb-search-sidebar .marketplace-filter-group {
+    width: 100%;
+    margin: 0;
+    padding: 12px 0;
+    border-bottom: 1px solid #eceef2;
+}
+
+.kb-search-sidebar .marketplace-filter-group summary {
+    cursor: pointer;
+    font-weight: 650;
+}
+
+.kb-search-sidebar .filter-checkbox-list {
+    max-height: 230px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px 0;
+}
+
+.kb-search-sidebar .filter-checkbox-list label {
+    overflow-wrap: anywhere;
+}
+
+.kb-search-sidebar input[type="number"] {
+    width: 100%;
+    max-width: 100%;
+}
+
+.kb-search-results {
+    min-width: 0;
+}
+
+.kb-search-results .marketplace-results-toolbar {
+    margin-top: 0 !important;
+}
+
+.kb-search-results .row > [class*="col-"] {
+    min-width: 0;
+}
+
+@media (min-width: 992px) {
+    .kb-search-sidebar {
+        position: sticky;
+        top: 95px;
+        max-height: calc(100vh - 115px);
+        overflow-y: auto;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .kb-search-sidebar {
+        position: static;
+        margin-top: 14px;
+    }
+
+    .kb-search-results {
+        width: 100%;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .kb-search-sidebar {
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    .kb-search-results .row {
+        row-gap: 18px;
+    }
+}
+
+
+/*===============================================*/
+/*================================================*/
+
+/* ==============================================
+   KALEIDOBRANDS — PRODUCT MARKETPLACE HERO ONLY
+   ============================================== */
+
+/* Hero background and spacing */
+.kb-market-home .kb-market-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(72px, 9vw, 126px) 0 88px;
+
+    background:
+        radial-gradient(
+            ellipse at 0% 36%,
+            rgba(128, 185, 255, .27),
+            transparent 43%
+        ),
+        radial-gradient(
+            ellipse at 100% 33%,
+            rgba(255, 153, 198, .23),
+            transparent 43%
+        ),
+        linear-gradient(
+            112deg,
+            #f0f7ff 0%,
+            #fff 51%,
+            #fff2f7 100%
+        );
+}
+
+/* Decorative circles */
+.kb-market-home .kb-market-hero::before,
+.kb-market-home .kb-market-hero::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+}
+
+.kb-market-home .kb-market-hero::before {
+    left: -195px;
+    top: 80px;
+    background: linear-gradient(
+        135deg,
+        rgba(106, 169, 255, .19),
+        rgba(167, 204, 255, .07)
+    );
+    border: 2px dashed rgba(72, 153, 255, .2);
+}
+
+.kb-market-home .kb-market-hero::after {
+    right: -205px;
+    top: 105px;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 124, 160, .14),
+        rgba(172, 132, 255, .1)
+    );
+    border: 2px dashed rgba(239, 100, 177, .23);
+}
+
+/* Centered hero content */
+.kb-market-home .kb-market-hero-inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+/* Product Marketplace badge */
+.kb-market-home .kb-market-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: rgba(225, 235, 255, .76);
+    color: #0750ba;
+    font-size: 12px;
+    font-weight: 850;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+}
+
+/* Original single red dot */
+.kb-market-home .kb-market-eyebrow::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
+    border-radius: 50%;
+    background: #ff3b42;
+}
+
+/* Main headline */
+.kb-market-home .kb-market-title {
+    max-width: 1030px;
+    margin: 28px auto 22px;
+    color: #0d1d45;
+    font-size: clamp(36px, 5.15vw, 70px);
+    font-weight: 850;
+    line-height: 1.12;
+    letter-spacing: -.052em;
+}
+
+/* Multicolor "your brand." text */
+.kb-market-home .kb-market-title-accent {
+    background: linear-gradient(
+        95deg,
+        #086af7 0%,
+        #7045ed 35%,
+        #e52192 66%,
+        #ff8714 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Supporting description */
+.kb-market-home .kb-market-description {
+    max-width: 760px;
+    margin: 0 auto;
+    color: #50627e;
+    font-size: clamp(15px, 1.35vw, 18px);
+    line-height: 1.7;
+}
+
+/* Search bar container */
+.kb-market-home .kb-market-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 790px;
+    min-height: 68px;
+    margin: 38px auto 0;
+    padding: 7px 7px 7px 24px;
+    background: #fff;
+    border-radius: 999px;
+    border: 1px solid #e7edf8;
+    box-shadow: 0 18px 38px rgba(41, 70, 132, .10);
+}
+
+/* Search icon */
+.kb-market-home .kb-market-search-icon {
+    flex: 0 0 auto;
+    color: #164baf;
+    font-size: 22px;
+    margin-right: 15px;
+}
+
+/* Search input */
+.kb-market-home .kb-market-search .catalog-search-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 10px 0;
+    color: #152444;
+    font-size: 16px;
+    border-radius: 0;
+}
+
+.kb-market-home .kb-market-search .catalog-search-input:focus {
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+}
+
+/* Gradient Search button */
+.kb-market-home .kb-market-search-button {
+    flex: 0 0 auto;
+    min-width: 155px;
+    min-height: 52px;
+    border: 0;
+    border-radius: 999px;
+
+    background: linear-gradient(
+        100deg,
+        #ff263c,
+        #ff7715 65%,
+        #ffae00
+    );
+
+    color: white;
+    font-size: 16px;
+    font-weight: 800;
+    box-shadow: 0 9px 20px rgba(255, 106, 42, .18);
+    cursor: pointer;
+}
+
+.kb-market-home .kb-market-search-button:hover {
+    color: white;
+    filter: brightness(1.04);
+}
+
+.kb-market-home .kb-market-search-button:focus-visible {
+    outline: 3px solid #164baf;
+    outline-offset: 3px;
+}
+
+/* Live search results dropdown */
+.kb-market-home .kb-market-search .live-results {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 20px;
+    right: 20px;
+    z-index: 30;
+    text-align: left;
+}
+
+/* Mobile adjustments */
+@media (max-width: 767.98px) {
+    .kb-market-home .kb-market-hero {
+        padding: 62px 0 64px;
+    }
+
+    .kb-market-home .kb-market-search {
+        padding-left: 16px;
+        min-height: 60px;
+    }
+
+    .kb-market-home .kb-market-search-icon {
+        margin-right: 9px;
+    }
+
+    .kb-market-home .kb-market-search-button {
+        min-width: 95px;
+        min-height: 45px;
+        font-size: 14px;
+    }
+}
+/*===========================================*/
+/*=============================================*/
+
+
+
+/* HOMEPAGE SEARCH AREA ONLY */
+
+.kb-home-search {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    max-width: 790px;
+    min-height: 68px;
+    margin: 0 auto;
+    padding: 7px 7px 7px 24px;
+    background: #ffffff;
+    border: 1px solid #e7edf8;
+    border-radius: 999px;
+    box-shadow: 0 18px 38px rgba(41, 70, 132, .10);
+}
+
+.kb-home-search-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+    padding: 10px 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    box-shadow: none;
+    color: #152444;
+    font-size: 16px;
+}
+
+.kb-home-search-input:focus {
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+}
+
+.kb-home-search-button {
+    flex: 0 0 auto;
+    min-width: 155px;
+    min-height: 52px;
+    padding: 12px 24px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(
+        100deg,
+        #ff263c,
+        #ff7715 65%,
+        #ffae00
+    );
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 9px 20px rgba(255, 106, 42, .18);
+}
+
+.kb-home-search-button:hover {
+    color: #ffffff;
+    filter: brightness(1.04);
+}
+
+@media (max-width: 767.98px) {
+    .kb-home-search {
+        min-height: 60px;
+        padding: 7px 7px 7px 16px;
+    }
+
+    .kb-home-search-button {
+        min-width: 95px;
+        min-height: 45px;
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+}
+/* Search icon — shared between homepages */
+.kb-market-search-icon{
+    flex: 0 0 auto;
+    color: #164baf;
+    font-size: 22px;
+    margin-right: 15px;
+    line-height: 1;
+}
+
+
+/* ==========================================
+   KALEIDOBRANDS — MOBILE NAVBAR DROPDOWNS
+   ========================================== */
+
+@media (max-width: 1199.98px) {
+
+    .kb-navbar {
+        position: relative;
+        z-index: 1050;
+    }
+
+    .kb-navbar .navbar-collapse {
+        position: relative;
+        max-height: calc(100dvh - 100px);
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .kb-navbar .kb-main-nav .dropdown-menu.kb-dropdown {
+        position: static !important;
+        inset: auto !important;
+        transform: none !important;
+        float: none;
+        width: 100%;
+        min-width: 0;
+        margin: 6px 0 12px;
+        padding: 8px;
+        border-radius: 14px;
+        background: var(--kb-soft);
+        box-shadow: none;
+    }
+
+    .kb-navbar .kb-main-nav .dropdown-menu.kb-dropdown:not(.show) {
+        display: none !important;
+    }
+
+    .kb-navbar .kb-main-nav .dropdown-menu.kb-dropdown.show {
+        display: block !important;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .kb-navbar .kb-main-nav .kb-dropdown .dropdown-item {
+        display: block;
+        width: 100%;
+        padding: 13px 16px;
+        white-space: normal;
+        transform: none;
+        touch-action: manipulation;
+    }
 }

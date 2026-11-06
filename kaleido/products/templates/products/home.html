@@ -8,62 +8,38 @@ Explore promotional apparel, drinkware, healthcare products, technology accessor
 {% endblock %}
 
 {% block body %}
-<main class="inner-page marketplace-page">
 
-    <section class="section-panel marketplace-hero">
+<main class="inner-page marketplace-page kb-market-home">
+
+    <section class="kb-market-hero">
+        <!----------------------------->
         <div class="container">
-
             <div class="section-heading text-center reveal">
-                <span>Product Marketplace</span>
-
-                <h1>
-                    Promotional products built around your brand.
-                </h1>
-
-                <p class="mx-auto mt-3" style="max-width: 780px;">
-                    Explore custom apparel, drinkware, healthcare products,
-                    corporate gifts, trade-show merchandise, bags, technology
-                    accessories, and workplace essentials.
-                </p>
+                <span>Product Marketplace</span>          
             </div>
-
-            <form
-                action="{% url 'products:search' %}"
-                method="get"
-                class="catalog-search-wrap reveal"
-                role="search"
-            >
-                <label for="marketplaceSearch" class="visually-hidden">
-                    Search products
-                </label>
-
-                <input
-                    id="marketplaceSearch"
-                    type="search"
-                    name="q"
-                    class="catalog-search-input"
-                    placeholder="Search products..."
-                    autocomplete="off"
-                >
-
-                <button
-                    type="submit"
-                    class="btn btn-kb-primary"
-                >
-                    Search
-                </button>
-
-                <div
-                    id="liveResults"
-                    class="live-results"
-                    aria-live="polite"
-                ></div>
+        </div>
+        <!---------------------------------------->
+        <div class="container kb-market-hero-inner">
+            
+            <h1 class="kb-market-title">
+                Promotional products<br>
+                built around <span class="kb-market-title-accent">your brand.</span>
+            </h1>
+            <p class="kb-market-description">
+                Explore custom apparel, drinkware, healthcare products, corporate gifts,
+                trade-show merchandise, bags, technology accessories, and workplace essentials.
+            </p>
+            <form action="{% url 'products:search' %}" method="get"
+                  class="catalog-search-wrap kb-market-search" role="search">
+                <label for="marketplaceSearch" class="visually-hidden">Search products</label>
+                <i class="bi bi-search kb-market-search-icon" aria-hidden="true"></i>
+                <input id="marketplaceSearch" type="search" name="q"
+                       class="catalog-search-input" placeholder="Search products..." autocomplete="off">
+                <button type="submit" class="kb-market-search-button">Search</button>
+                <div id="liveResults" class="live-results" aria-live="polite"></div>
             </form>
-
         </div>
     </section>
-
-
     {% if category_cards %}
     <section class="section-panel marketplace-category-section">
         <div class="container">
