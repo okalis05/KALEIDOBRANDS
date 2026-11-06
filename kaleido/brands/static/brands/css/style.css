@@ -8093,3 +8093,106 @@ label {
         touch-action: manipulation;
     }
 }
+
+
+/* KALEIDOBRANDS — MOBILE FOOTER ALIGNMENT */
+@media (max-width: 767.98px) {
+
+    .kb-footer-main-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .kb-footer-brand,
+    .kb-footer-connect {
+        min-width: 0;
+    }
+
+    .kb-footer-connect {
+        text-align: right;
+    }
+
+    .kb-footer-socials {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .kb-footer-bottom {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .kb-footer-legal {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        text-align: right;
+    }
+}
+
+
+/* KALEIDOBRANDS — MOBILE SOCIAL ALIGNMENT */
+@media (max-width: 767.98px) {
+
+    .kb-footer-main .kb-footer-main-grid {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        align-items: center !important;
+        gap: 12px !important;
+    }
+
+    .kb-footer-main .kb-footer-brand {
+        grid-column: 1;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .kb-footer-main .kb-footer-connect {
+        grid-column: 2;
+        width: 100%;
+        min-width: 0;
+        text-align: right !important;
+        margin: 0 !important;
+    }
+
+    .kb-footer-main .kb-footer-connect-title {
+        display: block;
+        text-align: right !important;
+        font-size: 11px;
+        letter-spacing: 1px;
+    }
+
+    .kb-footer-main .kb-footer-socials {
+        display: flex !important;
+        justify-content: flex-end !important;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 6px;
+    }
+
+    .kb-footer-main .kb-footer-socials a {
+        flex: 0 0 auto;
+        width: 36px;
+        height: 36px;
+    }
+
+    .kb-footer-main .kb-footer-socials img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .kb-footer-main .kb-footer-brand-image {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
